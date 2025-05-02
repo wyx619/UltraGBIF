@@ -117,7 +117,7 @@ check_occ_name <- function(occ_import = NA,
   result <- rbindlist(result,fill = T)%>%unique()}else{
     check_initial <- data.frame(ID = 1:length(name_search_wcvp),
                                 taxon = name_search_wcvp%>%
-                                  stri_replace_all_regex( "×\\s*(\\S)", "× $1")%>%
+                                  stri_replace_all_regex( "<U+00D7>\\s*(\\S)", "<U+00D7> $1")%>%
                                   stri_replace_all_regex(" +", " "))
     check_result <- NULL
     attempt <- 1

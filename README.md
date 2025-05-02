@@ -14,7 +14,7 @@ To address these limitations, we present UltraGBIF – an ultra-fast and user-fr
 
 4.  **`Coordinate Verification & Occurrence Status Annotation`** Performs automated coordinate validation via CoordinateCleaner [@zizka2019] integration, complemented by WCVP-[WGSRPD](https://www.tdwg.org/standards/wgsrpd/)-based(Govaerts et al. 2021) annotations for species occurrence status (native/introduced/extinct/location_doubtful/unknown[)]{.underline}.
 
-5.  **`Map and Visualization`** This optional module enables the processed species distribution data (including different [WGSRPD](https://www.tdwg.org/standards/wgsrpd/) attributions) to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research. Additionally, the results can be readily
+5.  **`Map and Visualization`** This optional module enables the processed species distribution data (including different [WGSRPD](https://www.tdwg.org/standards/wgsrpd/) attributions) to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research.
 
 This unified pipeline/workflow enables rapid processing of different datasets while maintaining rigorous quality control standards.
 

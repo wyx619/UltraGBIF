@@ -33,6 +33,8 @@ utils::globalVariables(
     "wcvp_taxon_name_and_wcvp_plant_name_id","i","geohash","family","genus","iso2",
     "Ctrl_eventDate","Ctrl_basisOfRecord","Ctrl_level0Name","TAXON_NAME_U","..col_tmp",
     "..cols_to_keep","data","sp","native_simplified","continent","continent_code_l1",
-    "plant_locality_id","region","region_code_l2"
+    "plant_locality_id","region","region_code_l2","Accepted_family","Accepted_name","Accepted_name_author",
+    "Accepted_name_id","Accepted_name_rank","Author_matched","Name_matched","Name_matched_id
+    Name_submitted","Taxonomic_status"
   )
 )
