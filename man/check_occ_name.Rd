@@ -2,11 +2,11 @@
 % Please edit documentation in R/check_occ_name.R
 \name{check_occ_name}
 \alias{check_occ_name}
-\title{(Step 2) Use the WCVP database to check accepted names and update synonyms at once}
+\title{(Step 2) Use local or online taxon resolution service to check accepted taxon names and update synonyms at once}
 \usage{
 check_occ_name(
   occ_import = NA,
-  loacl_taxon_resolution = TRUE,
+  local_taxon_resolution = TRUE,
   threads = 4,
   if_author_fails_try_without_combinations = TRUE
 )
@@ -14,7 +14,7 @@ check_occ_name(
 \arguments{
 \item{occ_import}{imported GBIF occurrence data from step1}
 
-\item{loacl_taxon_resolution}{if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead.}
+\item{local_taxon_resolution}{if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead.}
 
 \item{threads}{your threads requirement, a number >0. Default=4}
 

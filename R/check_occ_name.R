@@ -1,4 +1,4 @@
-#' @title (Step 2) Use the WCVP database to check accepted names and update synonyms at once
+#' @title (Step 2) Use local or online taxon resolution service to check accepted taxon names and update synonyms at once
 #'
 #' @name check_occ_name
 #'
@@ -6,7 +6,7 @@
 #' To verify individual names, the function wcvp_check_name is used.
 #'
 #' @param occ_import imported GBIF occurrence data from step1
-#' @param loacl_taxon_resolution if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead.
+#' @param local_taxon_resolution if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead.
 #' @param threads your threads requirement, a number >0. Default=4
 #' @param if_author_fails_try_without_combinations option for partial verification of the authorship of the species.
 #' Remove the authors of combinations, in parentheses.
@@ -32,7 +32,7 @@
 #'
 #' @export
 check_occ_name <- function(occ_import = NA,
-                           loacl_taxon_resolution = TRUE,
+                           local_taxon_resolution = TRUE,
                            threads = 4,
                            if_author_fails_try_without_combinations = TRUE)
 { start=Sys.time()
@@ -65,7 +65,7 @@ check_occ_name <- function(occ_import = NA,
   occ_all <- cbind(occ[, .(Ctrl_gbifID,wcvp_searchedName = Ctrl_scientificName)], wcvp_na)
   name_search_wcvp <- occ_all[stri_trans_toupper(occ[,Ctrl_taxonRank]) %in% taxon_levels, wcvp_searchedName]%>%unique()
 
-  if(loacl_taxon_resolution){
+  if(local_taxon_resolution){
   genus_ref <- occ_all[,wcvp_searchedName]%>%unique()%>%stri_extract_first_regex("^\\S+")%>%unique()
   family_ref <- occ[,Ctrl_family] %>% unique()
   wcvp_names_database1 <- wcvp_names_database[family %in% family_ref,]
