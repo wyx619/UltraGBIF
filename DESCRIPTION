@@ -1,0 +1,23 @@
+Package: UltraGBIF
+Title: An Ultra-Fast and User-Friendly Tool to Parse and Merge Enormous GBIF Occurrence Data in Darwin-Core-Archive
+Version: 2.4.6
+Date: 2025-05-02
+Type: Package
+Maintainer: Yuxuan Wang <wyx1743@gmail.com>
+Authors@R: 
+    person("Yuxuan", "Wang", , "wyx1743@gmail.com", role = c("aut", "cre"))
+Description: The Global Biodiversity Information Facility (GBIF) is the largest biodiversity data repository around the world, hosting over 3 billion occurrence records. However, data integration from heterogeneous databases often introduces redundancy and errors, which can compromise the accuracy of species richness measurements and subsequently affect ecological, biogeographic, and evolutionary studies. Moreover, processing massive occurrence datasets typically involves cumbersome workflows and time-consuming operations, posing significant challenges for researchers. To address these limitations, we present UltraGBIF – an ultra-fast and user-friendly tool designed for efficient processing of GBIF occurrence data in Darwin-Core-Archive. Guided by the design principles of accessibility, computational efficiency, and optimal resource utilization, UIltraGBIF implements an integrated workflow comprising four key modules:
+    1)[Taxon Name Resolution]Standardizes taxon using the World Checklist of Vascular Plants (WCVP).
+    2)[Reduce Duplication of Records]Collates duplicate records into unique "collection events" while retaining spatial data entries with maximal completeness.
+    3)[Data Quality Evaluation]Assesses record validity and spatial data quality through GBIF standardized issue flagging system.
+    4)[Coordinate Verification & Occurrence Status Annotation]Performs automated coordinate validation via CoordinateCleaner integration, complemented by WCVP-based annotations for species occurrence status (native/introduced/extinct/location_doubtful/unknown).
+    This unified pipeline enables rapid processing of different scale datasets while maintaining rigorous quality control standards.
+License: GPL (>= 3) | file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+LazyData: true
+LazyDataCompression: xz
+Depends: R (>= 4.1)
+Imports: data.table,dplyr,stringi,terra,lubridate,CoordinateCleaner,rWCVP,rWCVPdata,TNRS,geohashTools,mapview,foreach,doParallel,rnaturalearthdata
+Suggests: leaflet,rnaturalearth,sf

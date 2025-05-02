@@ -1,0 +1,38 @@
+# globals.R
+utils::globalVariables(
+  c(
+    ".", "taxon_name", "taxon_authors", "Ctrl_scientificName", "wcvp_searchedName",
+    "sp_tmp", "wcvp_plant_name_id", "wcvp_taxon_rank", "wcvp_taxon_status",
+    "wcvp_family", "wcvp_taxon_name", "wcvp_accepted_plant_name_id", "wcvp_reviewed",
+    "wcvp_taxon_status_of_searchedName", "wcvp_plant_name_id_of_searchedName",
+    "wcvp_taxon_authors_of_searchedName", "wcvp_verified_author", "wcvp_verified_speciesName",
+    "wcvp_searchNotes", "ori_sp_name", "UltraGBIF_dataset_result", "Ctrl_gbifID",
+    "Ctrl_countryCode", "geometry", "occurrence_type", "name", "wcvp_area_status",
+    "parseGBIF_wcvp_family", "parseGBIF_decimalLongitude", "parseGBIF_decimalLatitude",
+    "Ctrl_hasCoordinate", "Ctrl_issue", "constant", "n_occ", "COUNTRY_INVALID",
+    "Ctrl_recordedBy", "Ctrl_recordNumber", "Ctrl_year", "Ctrl_nameRecordedBy_Standard",
+    "Ctrl_institutionCode", "Ctrl_catalogNumber", "Ctrl_stateProvince", "Ctrl_municipality",
+    "Ctrl_locality", "Ctrl_fieldNotes", "Ctrl_geospatial_quality", "Ctrl_verbatim_quality",
+    "temColetor", "temNumeroColeta", "temAnoColeta", "temCodigoInstituicao", "temNumeroCatalogo",
+    "temLocalidade", "temMunicipio", "temUF", "temPais", "temNotas", "Ctrl_taxonRank",
+    "UltraGBIF_digital_voucher", "UltraGBIF_duplicates", "UltraGBIF_num_duplicates",
+    "UltraGBIF_non_groupable_duplicates", "UltraGBIF_duplicates_grouping_status",
+    "UltraGBIF_unidentified_sample", "UltraGBIF_wcvp_plant_name_id", "UltraGBIF_sample_taxon_name",
+    "UltraGBIF_sample_taxon_name_status", "UltraGBIF_number_taxon_names",
+    "UltraGBIF_useful_for_spatial_analysis", "id_accept", "accepted_plant_name_id",
+    "plant_name_id", "taxon_status", "number_of_Records","Ctrl_coordinates_validated_by_gbif_issue",
+    "Ctrl_decimalLatitude","Ctrl_decimalLongitude","Ctrl_family",
+    "Ctrl_key_family_recordedBy_recordNumber",
+    "Ctrl_key_year_recordedBy_recordNumber","Ctrl_moreInformativeRecord",
+    "Ctrl_nameRecordedBy_Standard_x","Ctrl_recordNumber_Standard","N",
+    "UltraGBIF_decimalLatitude","UltraGBIF_decimalLongitude",
+    "UltraGBIF_wcvp_family","UltraGBIF_wcvp_reviewed",
+    "UltraGBIF_wcvp_taxon_authors","UltraGBIF_wcvp_taxon_name",
+    "UltraGBIF_wcvp_taxon_rank","UltraGBIF_wcvp_taxon_status",
+    "parseGBIF_wcvp_plant_name_id","r","wcvp_taxon_authors",
+    "wcvp_taxon_name_and_wcvp_plant_name_id","i","geohash","family","genus","iso2",
+    "Ctrl_eventDate","Ctrl_basisOfRecord","Ctrl_level0Name","TAXON_NAME_U","..col_tmp",
+    "..cols_to_keep","data","sp","native_simplified","continent","continent_code_l1",
+    "plant_locality_id","region","region_code_l2"
+  )
+)
