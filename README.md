@@ -1,7 +1,3 @@
----
----
----
-
 ## Introduction of **UltraGBIF** <img src="images/logo.png" style="width: 58px;"/>
 
 Understanding and mapping species distributions is fundamental to biodiversity conservation, as it underpins critical assessments of species vulnerability, habitat integrity, and ecosystem resilience. Precise distribution data enable the identification of biodiversity hotspots, quantification of anthropogenic impacts, and predictive modeling of range shifts under climate change. However, existing biodiversity databases, including GBIF, often contain taxonomic inaccuracies, spatial biases, and incomplete records due to historical inconsistencies, synonymy issues, or uneven sampling efforts. These limitations compromise the reliability of downstream analyses, leading to flawed conservation prioritization, misdirected resource allocation, and ineffective policy decisions.
