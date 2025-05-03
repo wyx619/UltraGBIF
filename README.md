@@ -12,7 +12,7 @@ To address these limitations, we present UltraGBIF – an ultra-fast and user-fr
 
 3.  **`Data Quality Evaluation`** Assesses record validity and spatial data quality through GBIF standardized issue flagging system.
 
-4.  **`Coordinate Verification & Occurrence Status Annotation`** Performs automated coordinate validation via CoordinateCleaner [@zizka2019] integration, complemented by WCVP-[WGSRPD](https://www.tdwg.org/standards/wgsrpd/)-based(Govaerts et al. 2021) annotations for species occurrence status (native/introduced/extinct/location_doubtful/unknown[)]{.underline}.
+4.  **`Coordinate Verification & Occurrence Status Annotation`** Performs automated coordinate validation via CoordinateCleaner(Zizka et al. 2019) integration, complemented by WCVP-[WGSRPD](https://www.tdwg.org/standards/wgsrpd/)-based(Govaerts et al. 2021) annotations for species occurrence status *(native/introduced/extinct/location_doubtful/unknown)*.
 
 5.  **`Map and Visualization`** This optional module enables the processed species distribution data (including different [WGSRPD](https://www.tdwg.org/standards/wgsrpd/) attributions) to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research.
 
@@ -20,7 +20,9 @@ This unified pipeline/workflow enables rapid processing of different datasets wh
 
 **Note:** UltraGBIF is currently under **active development**. If you encounter any bugs during use, please feel free to submit an issue. Your feedback is greatly appreciated!
 
-![pipeline of UltraGBIF](images/pipeline.jpg)
+## Pipeline of UltraGBIF
+
+![](images/pipeline.jpg)
 
 ## Installation
 
