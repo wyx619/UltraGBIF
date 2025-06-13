@@ -109,7 +109,7 @@ coordinate_refine<-function(voucher = NA,
     introduced == 0 & extinct == 0 & location_doubtful == 0, "native",
     default = "unknown")][,c("introduced", "extinct", "location_doubtful") := NULL]
 
-  kt <- vect(rWCVP::wgsrpd3)
+  kt <- terra::vect(rWCVP::wgsrpd3)
 
   powo_mark <- function(taxon=NA_character_,results_final_sf_ori="") {
 
