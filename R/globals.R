@@ -35,6 +35,7 @@ utils::globalVariables(
     "..cols_to_keep","data","sp","native_simplified","continent","continent_code_l1",
     "plant_locality_id","region","region_code_l2","Accepted_family","Accepted_name","Accepted_name_author",
     "Accepted_name_id","Accepted_name_rank","Author_matched","Name_matched","Name_matched_id
-    Name_submitted","Taxonomic_status"
+    Name_submitted","Taxonomic_status", "LEVEL3_COD", "Name_matched_id", "Name_submitted",
+    "area_code_l3", "extinct",  "introduced", "location_doubtful" ,"usable"
   )
 )

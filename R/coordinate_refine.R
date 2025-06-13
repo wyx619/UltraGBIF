@@ -14,10 +14,10 @@
 #' `native_records` for native cleaned occurrence records and `native_range` for their occurrence range,
 #' `native_simplified` for simplified `native_records` by rounding the longitude and latitude coordinates of them to two decimal places
 #'
-#'
 #' @import data.table
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else inner_join
 #' @import foreach
+#' @importFrom terra vect merge extract subset
 #' @import doParallel
 #' @import rnaturalearthdata
 #' @importFrom stats quantile
@@ -88,55 +88,66 @@ coordinate_refine<-function(voucher = NA,
 
   results_final_sf_ori <- foreach(data=chunks_list,
                                   .multicombine = T,
-                                  .errorhandling = "remove",
+                                  .errorhandling = "stop",
                                   .packages = c("CoordinateCleaner","rnaturalearthdata"),
                                   .inorder = F) %dopar% {coord(data)}
 
   results_final_sf_ori <- results_final_sf_ori%>%rbindlist()
 
   parallel::stopCluster(cl)
-  species=results_final_sf_ori$UltraGBIF_wcvp_taxon_name%>%unique()
+  species <- results_final_sf_ori$UltraGBIF_wcvp_taxon_name%>%unique()
 
-  df <- rWCVPdata::wcvp_names %>%
+  local <- rWCVPdata::wcvp_names %>%
     select(plant_name_id,taxon_name) %>%
-    filter(plant_name_id%in%results_final_sf_ori$UltraGBIF_wcvp_plant_name_id)%>%
+    filter(taxon_name%in%results_final_sf_ori$UltraGBIF_wcvp_taxon_name)%>%
     inner_join(rWCVPdata::wcvp_distributions,by = "plant_name_id")%>%
     select(-continent_code_l1,-continent,-region_code_l2,-region,-plant_locality_id)%>%setDT()
 
-  distribution <- rWCVP::wgsrpd3 %>%
-    mutate(
-      occurrence_type = case_when(
-        LEVEL3_COD %in% df[location_doubtful == 1, area_code_l3] ~ "location_doubtful",
-        LEVEL3_COD %in% df[location_doubtful == 0 & extinct == 0 & introduced == 0, area_code_l3] ~ "native",
-        LEVEL3_COD %in% df[extinct == 1, area_code_l3] ~ "extinct",
-        LEVEL3_COD %in% df[introduced == 1, area_code_l3] ~ "introduced",
-        TRUE ~ "unknown")) %>% terra::vect()
+  local[,wcvp_area_status := fcase(
+    location_doubtful == 1,"location_doubtful",
+    introduced == 1, "introduced",
+    extinct == 1,"extinct",
+    introduced == 0 & extinct == 0 & location_doubtful == 0, "native",
+    default = "unknown")][,c("introduced", "extinct", "location_doubtful") := NULL]
 
-  tmp_file <- tempfile(fileext = ".gpkg")
-  terra::writeVector(distribution, tmp_file)
+  kt <- vect(rWCVP::wgsrpd3)
 
-  powo_mark <- function(taxon_name) {
-    distribution <- terra::vect(tmp_file)
-    target_points <- results_final_sf_ori[UltraGBIF_wcvp_taxon_name == taxon_name]%>%
-      terra::vect(
-        geom = c("UltraGBIF_decimalLongitude", "UltraGBIF_decimalLatitude"),
-        crs = "EPSG:4326")
+  powo_mark <- function(taxon=NA_character_,results_final_sf_ori="") {
 
-    extracted_data <- terra::extract(distribution,target_points)%>%setDT()%>%unique(by="id.y")
-    rm(distribution)
-    extracted_data[,.(Ctrl_gbifID=target_points$Ctrl_gbifID,
-                      wcvp_area_status=fifelse(is.na(occurrence_type),"unknown",occurrence_type))]
+    species_df <- local[taxon_name == taxon,.(area_code_l3, wcvp_area_status)]
+
+    if (nrow(species_df) == 0) {
+      return(data.table(
+        LEVEL3_CODE="",
+        wcvp_area_status = "unknown",
+        Ctrl_gbifID = usable[UltraGBIF_wcvp_taxon_name == taxon]$Ctrl_gbifID
+      ))
+    }
+
+    occurrence_points <- results_final_sf_ori[UltraGBIF_wcvp_taxon_name == taxon,.(Ctrl_gbifID,UltraGBIF_decimalLongitude,UltraGBIF_decimalLatitude)] %>%
+      vect(geom = c("UltraGBIF_decimalLongitude", "UltraGBIF_decimalLatitude"), crs = "EPSG:4326")
+
+    distribution <-  merge(kt,species_df,
+                                  by.x = "LEVEL3_COD",
+                                  by.y = "area_code_l3")%>%.[, c("LEVEL3_COD", "wcvp_area_status")]
+
+    extracted_data <- extract(distribution,occurrence_points)%>%setDT()%>%unique(by="id.y")
+
+    extracted_data[,.(Ctrl_gbifID=results_final_sf_ori[UltraGBIF_wcvp_taxon_name == taxon,Ctrl_gbifID],
+                      LEVEL3_COD=LEVEL3_COD,
+                      wcvp_area_status=fifelse(is.na(wcvp_area_status),"unknown",wcvp_area_status))]
+
   }
 
-  cluster <- parallel::makeCluster(numCores)
-  registerDoParallel(cluster)
+  area_final <- list()
+  message("extracting WGSRPD information")
+  for (i in 1:length(species)) {
+    area_final[[i]] <- powo_mark(taxon = species[i],results_final_sf_ori=results_final_sf_ori)
+    if (i%%1000==0) {
+      message(paste0(i,"/",length(species)))
+    }
+  }
 
-  area_final <- foreach(taxon_name=species,
-                        .multicombine = T,
-                        .errorhandling = "stop",
-                        .inorder = F,
-                        .packages = c("dplyr","data.table","terra"))%dopar%{powo_mark(taxon_name)}
-  parallel::stopCluster(cluster)
   area_final <- area_final%>%rbindlist(fill = T)%>%unique()
 
   results <- merge(voucher,area_final, by = "Ctrl_gbifID")
@@ -159,33 +170,6 @@ coordinate_refine<-function(voucher = NA,
                   "UltraGBIF_decimalLongitude",
                   "UltraGBIF_decimalLatitude"))
 
-  native_range <- native_records[,.(Ctrl_gbifID,
-                                 UltraGBIF_wcvp_plant_name_id,
-                                 UltraGBIF_wcvp_taxon_rank,
-                                 UltraGBIF_wcvp_taxon_status,
-                                 UltraGBIF_wcvp_family,
-                                 UltraGBIF_wcvp_taxon_name,
-                                 UltraGBIF_wcvp_taxon_authors,
-                                 UltraGBIF_wcvp_reviewed,
-                                 UltraGBIF_decimalLongitude,
-                                 UltraGBIF_decimalLatitude)]%>%
-    unique(by=c("UltraGBIF_wcvp_plant_name_id",
-                "UltraGBIF_decimalLongitude",
-                "UltraGBIF_decimalLatitude"))
-
-  native_range <- native_range[, .(`longitude_2.5%` = quantile(UltraGBIF_decimalLongitude, 0.025, na.rm = TRUE),
-                                   `longitude_50%` = quantile(UltraGBIF_decimalLongitude, 0.50, na.rm = TRUE),
-                                   `longitude_97.5%` = quantile(UltraGBIF_decimalLongitude, 0.975, na.rm = TRUE),
-                                   `latitude_2.5%` = quantile(UltraGBIF_decimalLatitude, 0.025, na.rm = TRUE),
-                                   `latitude_50%` = quantile(UltraGBIF_decimalLatitude, 0.50, na.rm = TRUE),
-                                   `latitude_97.5%` = quantile(UltraGBIF_decimalLatitude, 0.975, na.rm = TRUE)),
-                               by = .(UltraGBIF_wcvp_plant_name_id,
-                                      UltraGBIF_wcvp_taxon_rank,
-                                      UltraGBIF_wcvp_taxon_status,
-                                      UltraGBIF_wcvp_family,
-                                      UltraGBIF_wcvp_taxon_name,
-                                      UltraGBIF_wcvp_taxon_authors,
-                                      UltraGBIF_wcvp_reviewed)]
 
   if(!is.na(save_to_disk_path)){
     fwrite(results,
@@ -193,9 +177,6 @@ coordinate_refine<-function(voucher = NA,
            encoding = "UTF-8")
     fwrite(native_records,
            file = paste0(save_to_disk_path,'/native_data_refined_powo_checked.csv'),
-           encoding = "UTF-8")
-    fwrite(native_range,
-           file = paste0(save_to_disk_path,'/native_distribution_range.csv'),
            encoding = "UTF-8")
     fwrite(native_simplified,
            file = paste0(save_to_disk_path,'/native_simplified.csv'),
@@ -207,6 +188,5 @@ coordinate_refine<-function(voucher = NA,
   return(list(all_records=results,
               native_records=native_records,
               native_simplified=native_simplified,
-              native_range=native_range,
               used_time=end-start))
 }
