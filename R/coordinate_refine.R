@@ -17,7 +17,6 @@
 #' @import data.table
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else inner_join
 #' @import foreach
-#' @importFrom terra vect merge extract subset
 #' @import doParallel
 #' @import rnaturalearthdata
 #' @importFrom stats quantile
@@ -125,13 +124,13 @@ coordinate_refine<-function(voucher = NA,
     }
 
     occurrence_points <- results_final_sf_ori[UltraGBIF_wcvp_taxon_name == taxon,.(Ctrl_gbifID,UltraGBIF_decimalLongitude,UltraGBIF_decimalLatitude)] %>%
-      vect(geom = c("UltraGBIF_decimalLongitude", "UltraGBIF_decimalLatitude"), crs = "EPSG:4326")
+      terra::vect(geom = c("UltraGBIF_decimalLongitude", "UltraGBIF_decimalLatitude"), crs = "EPSG:4326")
 
-    distribution <-  merge(kt,species_df,
+    distribution <-  terra::merge(kt,species_df,
                                   by.x = "LEVEL3_COD",
                                   by.y = "area_code_l3")%>%.[, c("LEVEL3_COD", "wcvp_area_status")]
 
-    extracted_data <- extract(distribution,occurrence_points)%>%setDT()%>%unique(by="id.y")
+    extracted_data <- terra::extract(distribution,occurrence_points)%>%setDT()%>%unique(by="id.y")
 
     extracted_data[,.(Ctrl_gbifID=results_final_sf_ori[UltraGBIF_wcvp_taxon_name == taxon,Ctrl_gbifID],
                       LEVEL3_COD=LEVEL3_COD,
