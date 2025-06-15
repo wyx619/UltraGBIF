@@ -12,7 +12,7 @@ import_GBIF_archive(gbif_occurrence_file = "", only_PRESERVED_SPECIMEN = F)
 \item{only_PRESERVED_SPECIMEN}{if TRUE, occurrence data will be filtered by \code{Ctrl_basisOfRecord="PRESERVED_SPECIMEN"}}
 }
 \value{
-A list with timer and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
+A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
 }
 \description{
 Returns a list contains processed GBIF occurrence data and GBIF issue data which is useful for downstream analysis.

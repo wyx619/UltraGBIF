@@ -22,9 +22,9 @@ coordinate_refine(
 \item{tests}{CoordinateCleaner coordinates checks. Choose one or more from \code{c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")}}
 }
 \value{
-A list with timer and 4 data.table: \code{all_records} for all cleaned occurrence records,
-\code{native_records} for native cleaned occurrence records and \code{native_range} for their occurrence range,
-\code{native_simplified} for simplified \code{native_records} by rounding the longitude and latitude coordinates of them to two decimal places
+A list with duration and 3 data.table: \code{all_records} for all cleaned records,
+\code{native_records} for native records of them and \code{native_simplified} for
+simplified \code{native_records} by rounding the longitude and latitude coordinates of them to two decimal places
 }
 \description{
 Step6 refines coordinates of the voucher and annotate their geographic status.

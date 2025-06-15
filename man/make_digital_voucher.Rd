@@ -21,7 +21,7 @@ make_digital_voucher(
 \item{threads}{your threads requirement, a number >0. Default=4}
 }
 \value{
-A list with timer and  2 data.table:
+A list with duration and  2 data.table:
 "occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
 }
 \description{

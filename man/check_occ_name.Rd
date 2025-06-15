@@ -22,7 +22,7 @@ check_occ_name(
 Remove the authors of combinations, in parentheses.}
 }
 \value{
-A list with timer and two data.table: "summary" with species list and "occ_wcvp_check_name" with WCVP fields
+A list with duration and two data.table: "summary" with species list and "occ_wcvp_check_name" with WCVP fields
 }
 \description{
 Names of species can be checked against WCVP database.

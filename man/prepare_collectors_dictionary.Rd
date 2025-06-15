@@ -28,7 +28,7 @@ prepare_collectors_dictionary(
 \item{min_characters_in_name}{min characters in name}
 }
 \value{
-A list with timer and 2 data.table: "my_dictionary" for your processed
+A list with duration and 2 data.table: "my_dictionary" for your processed
 collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 }
 \description{

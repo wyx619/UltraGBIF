@@ -13,7 +13,7 @@ generate_collection_mark(occ_import = NA, dictionary = NA)
 \item{dictionary}{your processed dictionary from step3}
 }
 \value{
-A list with timer and 3 data.table:
+A list with duration and 3 data.table:
 "occ_collectorsDictionary" for update result fields only, "summary" for summary and
 "CollectorsDictionary_add" for new collectors that can be added to the collector dictionary
 that can be reused in the future.
