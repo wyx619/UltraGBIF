@@ -12,13 +12,13 @@ To address these limitations, we present UltraGBIF – an ultrafast and convenie
 
 3.  **`Data Quality Evaluation`** Assesses record validity and spatial data quality through GBIF standardized issue flagging system.
 
-4.  **`Coordinate Verification & World Geographical Scheme for Recording Plant Distributions (WGSRPD) information extraction`** Performs automated coordinate validation via CoordinateCleaner(Zizka et al. 2019) integration, complemented by World Geographical Scheme for Recording Plant Distributions [WGSRPD](https://www.tdwg.org/standards/wgsrpd/)(Govaerts et al. 2021) annotations for species occurrence status *(native/introduced/extinct/location_doubtful/unknown)*.
+4.  **`Coordinate Verification & World Geographical Scheme for Recording Plant Distributions (WGSRPD) information extraction`** Performs automated coordinate validation via CoordinateCleaner(Zizka et al. 2019) integration, complemented by [World Geographical Scheme for Recording Plant Distributions](http://www.tdwg.org/standards/109)(Govaerts et al. 2021) annotations for species occurrence status *(native/introduced/extinct/location_doubtful/unknown)*.
 
-5.  **`Map and Visualization`** This optional module enables the processed species distribution data (including different [WGSRPD](https://www.tdwg.org/standards/wgsrpd/) attributions) to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research.
+5.  **`Map and Visualization`** This optional module enables the processed species distribution data with WGSRPD information to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research.
 
-This unified pipeline/workflow enables rapid processing of different datasets while maintaining rigorous quality control standards.
+This unified workflow enables rapid processing of enormous records while maintaining rigorous quality control standards.
 
-**Note:** UltraGBIF is currently under **active development**. If you encounter any bugs during use, please feel free to submit an issue. Your feedback is greatly appreciated!
+**Note:** UltraGBIF is currently under **active development**. If you encounter any bugs, please feel free to submit an issue. Your feedback is greatly appreciated!
 
 ## Workflow of UltraGBIF
 
