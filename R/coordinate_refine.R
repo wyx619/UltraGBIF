@@ -10,9 +10,9 @@
 #'
 #' @details Step6 can automatically clean the coordinates of the voucher and annotate their geographic status
 #'
-#' @return A list with timer and 4 data.table: `all_records` for all cleaned occurrence records,
-#' `native_records` for native cleaned occurrence records and `native_range` for their occurrence range,
-#' `native_simplified` for simplified `native_records` by rounding the longitude and latitude coordinates of them to two decimal places
+#' @return A list with duration and 3 data.table: `all_records` for all cleaned records,
+#' `native_records` for native records of them and `native_simplified` for
+#' simplified `native_records` by rounding the longitude and latitude coordinates of them to two decimal places
 #'
 #' @import data.table
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else inner_join

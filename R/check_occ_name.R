@@ -16,7 +16,7 @@
 #' * [World Checklist of Vascular Plants](https://powo.science.kew.org//)
 #' * [rWCVPdata](https://github.com/matildabrown/rWCVPdata/)
 #' @seealso \code{\link[UltraGBIF]{wcvp_check_name}}
-#' @return A list with timer and two data.table: "summary" with species list and "occ_wcvp_check_name" with WCVP fields
+#' @return A list with duration and two data.table: "summary" with species list and "occ_wcvp_check_name" with WCVP fields
 #'
 #' @examples
 #' \donttest{

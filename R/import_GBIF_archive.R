@@ -10,7 +10,7 @@
 #' The Darwin Core Archive (DwC-A) is a compact package (a ZIP file) contains interconnected text files and enables data publishers to share their data using a common terminology.
 #' gbif_occurrence_file could also be a path to "occurrence.txt" which is decompressed from your your Darwin Core standard file.
 #'
-#' @return A list with timer and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
+#' @return A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
 #'
 #'
 #' @import data.table

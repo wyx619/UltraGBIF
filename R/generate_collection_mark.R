@@ -33,7 +33,7 @@
 #' event (i.e., *gathering*) to facilitate duplicate recognition. To achieve this, a string is created by
 #' concatenating the **taxon family**, the **last name of the primary collector**, and the **collection number**.
 #'
-#' @return A list with timer and 3 data.table:
+#' @return A list with duration and 3 data.table:
 #' "occ_collectorsDictionary" for update result fields only, "summary" for summary and
 #' "CollectorsDictionary_add" for new collectors that can be added to the collector dictionary
 #' that can be reused in the future.

@@ -38,7 +38,7 @@
 #' collector. The primary botanical collector of a sample is consistently identified by the
 #' same last name, standardized in capital letters with non-ASCII characters replaced.
 #'
-#' @return A list with timer and 2 data.table: "my_dictionary" for your processed
+#' @return A list with duration and 2 data.table: "my_dictionary" for your processed
 #' collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 #'
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else

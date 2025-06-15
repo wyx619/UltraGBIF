@@ -58,7 +58,7 @@
 #'
 #' `UltraGBIF_non_groupable_duplicates`: TRUE if duplicates cannot be grouped, FALSE otherwise.
 #'
-#' @return A list with timer and  2 data.table:
+#' @return A list with duration and  2 data.table:
 #' "occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
 #'
 #' @import data.table

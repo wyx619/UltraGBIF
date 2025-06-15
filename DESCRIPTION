@@ -1,12 +1,12 @@
 Package: UltraGBIF
-Title: A Ultrafast and Convenient Tool to Parse and Merge Enormous GBIF Records
-Version: 2.5.6
-Date: 2025-06-13
+Title: An Ultrafast and Convenient Tool to Parse and Merge Enormous GBIF Records
+Version: 2.5.8
+Date: 2025-06-15
 Type: Package
 Maintainer: Yuxuan Wang <wyx1743@gmail.com>
 Authors@R: 
     person("Yuxuan", "Wang", , "wyx1743@gmail.com", role = c("aut", "cre"))
-Description: The Global Biodiversity Information Facility (GBIF) is the largest biodiversity data repository around the world, hosting over 3 billion records. However, data integration from heterogeneous databases often introduces redundancy and errors, which can compromise the accuracy of species richness measurements and subsequently affect ecological, biogeographic, and evolutionary studies. Moreover, processing massive occurrence datasets typically involves cumbersome workflows and time-consuming operations, posing significant challenges for researchers. To address these limitations, we present UltraGBIF – an ultrafast and convenient R package designed for efficient processing of GBIF records. Guided by the design principles of accessibility, computational efficiency, and optimal resource utilization, UIltraGBIF implements an integrated workflow comprising some key modules. Taxon Name Resolution-Standardize and resolve the taxon name using the World Checklist of Vascular Plants(Govaerts et al. 2021), or using TNRS(Boyle et al. 2013) which has been integrated(Maitner and Boyle 2024). Reduce Duplication of Records-Collates duplicate records into unique "collection events" while retaining spatial data entries with maximal completeness. Data Quality Evaluation-Assesses record validity and spatial data quality through GBIF standardized issue flagging system. Coordinate Verification & Occurrence Status Annotation-Performs automated coordinate validation via CoordinateCleaner [@zizka2019] integration, complemented by WCVP-WGSRPD-based(Govaerts et al. 2021) annotations for species occurrence status (native/introduced/extinct/location_doubtful/unknown). Map and Visualization-This optional module enables the processed species distribution data (including different WGSRPD attributions) to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research. This unified pipeline/workflow enables rapid processing of different datasets while maintaining rigorous quality control standards. 
+Description: The Global Biodiversity Information Facility (GBIF) is the largest biodiversity data repository around the world, hosting over 3 billion records. However, data integration from heterogeneous databases often introduces redundancy and errors, which can compromise the accuracy of species richness measurements and subsequently affect ecological, biogeographic, and evolutionary studies. Moreover, processing massive occurrence datasets typically involves cumbersome workflows and time-consuming operations, posing significant challenges for researchers. To address these limitations, we present UltraGBIF – an ultrafast and convenient R package designed for efficient processing of GBIF records.
 License: GPL (>= 3) | file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
