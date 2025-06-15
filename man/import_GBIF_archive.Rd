@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_GBIF_archive.R
 \name{import_GBIF_archive}
 \alias{import_GBIF_archive}
-\title{(Step 1) Import the GBIF occurrence Darwin Core Archive data}
+\title{(Step 1) Import GBIF records in DwC-A}
 \usage{
 import_GBIF_archive(gbif_occurrence_file = "", only_PRESERVED_SPECIMEN = F)
 }

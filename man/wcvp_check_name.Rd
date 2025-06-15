@@ -2,7 +2,7 @@
 % Please edit documentation in R/wcvp_check_name.R
 \name{wcvp_check_name}
 \alias{wcvp_check_name}
-\title{(Copilot) Check species names against WCVP database}
+\title{(Copilot) Check taxon names by WCVP database}
 \usage{
 wcvp_check_name(
   searchedName = "Tephrosia lasiochlaena Cowie",

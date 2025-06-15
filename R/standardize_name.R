@@ -1,9 +1,9 @@
-#' @title (Copliot) standardize scientific name
+#' @title (Copliot) Standardize scientific name
 #'
 #' @name standardize_name
 #'
-#' @description standardize scientific name of species
-#' @param searchedName the name of species you want to standardize
+#' @description Standardize scientific name of taxons
+#' @param searchedName the name of taxon you want to standardize
 #'
 #' @details See help(standardize_name)
 #' @seealso \code{\link[UltraGBIF]{wcvp_check_name}}

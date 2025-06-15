@@ -1,4 +1,4 @@
-#' @title (Step 1) Import the GBIF occurrence Darwin Core Archive data
+#' @title (Step 1) Import GBIF records in DwC-A
 #' @name import_GBIF_archive
 #'
 #' @description Returns a list contains processed GBIF occurrence data and GBIF issue data which is useful for downstream analysis.
