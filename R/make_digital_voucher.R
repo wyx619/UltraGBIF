@@ -1,4 +1,4 @@
-#' @title (Step 5) Make the master digital voucher
+#' @title (Step 5) Set master digital voucher
 #' @name make_digital_voucher
 #'
 #' @description ### Grouping Duplicates and Selecting the Digital Voucher

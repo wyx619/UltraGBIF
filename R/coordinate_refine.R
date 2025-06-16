@@ -1,14 +1,14 @@
-#' @title (Step 6) Refine the coordinates of the voucher and annotate their geographic status
+#' @title (Step 6) Refine coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
 #' @name coordinate_refine
 #'
-#' @description Step6 refines coordinates of the voucher and annotate their geographic status.
+#' @description Step6 refines coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions.
 #'
 #' @param voucher your processed voucher from step5
 #' @param threads your threads requirement, a number >0. Default=4
 #' @param save_to_disk_path the local disk path where you want to save the final result
 #' @param tests CoordinateCleaner coordinates checks. Choose one or more from `c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")`
 #'
-#' @details Step6 can automatically clean the coordinates of the voucher and annotate their geographic status
+#' @details Step6 can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
 #'
 #' @return A list with duration and 3 data.table: `all_records` for all cleaned records,
 #' `native_records` for native records of them and `native_simplified` for

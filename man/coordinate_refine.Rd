@@ -2,7 +2,7 @@
 % Please edit documentation in R/coordinate_refine.R
 \name{coordinate_refine}
 \alias{coordinate_refine}
-\title{(Step 6) Refine the coordinates of the voucher and annotate their geographic status}
+\title{(Step 6) Refine coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions}
 \usage{
 coordinate_refine(
   voucher = NA,
@@ -27,10 +27,10 @@ A list with duration and 3 data.table: \code{all_records} for all cleaned record
 simplified \code{native_records} by rounding the longitude and latitude coordinates of them to two decimal places
 }
 \description{
-Step6 refines coordinates of the voucher and annotate their geographic status.
+Step6 refines coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions.
 }
 \details{
-Step6 can automatically clean the coordinates of the voucher and annotate their geographic status
+Step6 can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
 }
 \examples{
 \donttest{

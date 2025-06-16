@@ -1,4 +1,4 @@
-#' @title (Step 3) Prepare the list with the last name of the main collector
+#' @title (Step 3) Prepare a list with surname of the main collector
 #' @name prepare_collectors_dictionary
 #'
 #' @description ### Step3 returns a list with the last name of main collector following the unique key `recordedBy`.

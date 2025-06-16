@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_collectors_dictionary.R
 \name{prepare_collectors_dictionary}
 \alias{prepare_collectors_dictionary}
-\title{(Step 3) Prepare the list with the last name of the main collector}
+\title{(Step 3) Prepare a list with surname of the main collector}
 \usage{
 prepare_collectors_dictionary(
   occ_import = NA,
