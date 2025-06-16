@@ -50,7 +50,7 @@
 #'
 #' ref_dictionary
 #'
-#' @format A data.table with 1157029 rows and 2 columns
+#' @format A data.table with 115702 rows and 2 columns
 #' \describe{
 #'   \item{Ctrl_recordedBy}{original collectors name}
 #'   \item{Ctrl_nameRecordedBy_Standard}{processed collectors name}

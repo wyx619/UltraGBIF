@@ -1,7 +1,7 @@
-#' @title (Copilot) Detect threads and optimize your threads requirement
+#' @title (Copilot) Detect threads and optimize them
 #' @name usecores
 #' @description Input a positive number and return optimized treads requirement.
-#' @param x your threads requirement, a number >0.
+#' @param x Threads requirement, a number >0.
 #'
 #' @details If a positive integer is input,
 #' return a positive integer not exceeding the total number of threads.

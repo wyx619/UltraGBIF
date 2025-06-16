@@ -1,4 +1,4 @@
-#' @title (Step 4) Generating the collection mark
+#' @title (Step 4) Generate unique collection event mark
 #'
 #' @name generate_collection_mark
 #'
@@ -9,7 +9,7 @@
 #'
 #' Include **`recordedByStandardized`** field with verified last name of the primary collector.
 #'
-#' Include **`recordNumber_Standard`** field with only numbers from recordNumber.
+#' Include **`recordNumber_Standard`** field with only numbers from **`recordNumber`**.
 #'
 #' Create the collection event key to group duplicates in the **`key_family_recordedBy_recordNumber`** field
 #' following the fields:

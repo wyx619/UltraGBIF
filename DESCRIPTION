@@ -1,12 +1,12 @@
 Package: UltraGBIF
 Title: An Ultrafast and Convenient Tool to Parse and Merge Enormous GBIF Records
-Version: 2.5.9
-Date: 2025-06-15
+Version: 2.6.2
+Date: 2025-06-16
 Type: Package
 Maintainer: Yuxuan Wang <wyx1743@gmail.com>
 Authors@R: 
     person("Yuxuan", "Wang", , "wyx1743@gmail.com", role = c("aut", "cre"))
-Description: GBIF[Global Biodiversity Information Facility] is the largest biodiversity data repository around the world, hosting over 3 billion records. However, processing massive records typically involves cumbersome workflows and time-consuming operations, posing significant challenges for researchers. To address these limitations, we present UltraGBIF – an ultrafast and convenient R package designed for efficient processing of GBIF records.
+Description: Global Biodiversity Information Facility is the largest biodiversity data repository around the world, hosting over 3 billion records. However, processing massive records typically involves cumbersome workflows and time-consuming operations, posing significant challenges for researchers. To address these limitations, we present UltraGBIF, which is an ultrafast and convenient R package designed for efficient processing of GBIF records.
 License: GPL (>= 3) | file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

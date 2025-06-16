@@ -1,4 +1,4 @@
-#' @title (Copilot) Check taxon names by WCVP database
+#' @title (Copilot) Resolve taxons with WCVP database
 #' @name wcvp_check_name
 #' @description Use the [World Checklist of Vascular Plants](https://powo.science.kew.org//)
 #' [database](https://github.com/matildabrown/rWCVPdata) to check accepted names and update synonyms.

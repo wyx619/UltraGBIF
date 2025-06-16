@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{generate_collection_mark}
 \alias{generate_collection_mark}
-\title{(Step 4) Generating the collection mark}
+\title{(Step 4) Generate unique collection event mark}
 \usage{
 generate_collection_mark(occ_import = NA, dictionary = NA)
 }
@@ -26,7 +26,7 @@ It also identifies new collectors to be added to the collector dictionary and th
 
 Include \strong{\code{recordedByStandardized}} field with verified last name of the primary collector.
 
-Include \strong{\code{recordNumber_Standard}} field with only numbers from recordNumber.
+Include \strong{\code{recordNumber_Standard}} field with only numbers from \strong{\code{recordNumber}}.
 
 Create the collection event key to group duplicates in the \strong{\code{key_family_recordedBy_recordNumber}} field
 following the fields:

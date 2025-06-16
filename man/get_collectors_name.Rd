@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_collectors_name.R
 \name{get_collectors_name}
 \alias{get_collectors_name}
-\title{(Copilot) Get the last name of the main collector}
+\title{(Copilot) Extract last name of the main collector}
 \usage{
 get_collectors_name(
   x = NA,
@@ -29,7 +29,7 @@ for the main collector's last name:
 last name of the main collector
 }
 \description{
-Get the last name of the main collector in recordedBy field
+Extract last name of the main collector in recordedBy field
 }
 \details{
 Returns the last name

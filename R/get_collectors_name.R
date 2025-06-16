@@ -1,7 +1,7 @@
-#' @title (Copilot) Get the last name of the main collector
+#' @title (Copilot) Extract last name of the main collector
 #' @name get_collectors_name
 #'
-#' @description Get the last name of the main collector in recordedBy field
+#' @description Extract last name of the main collector in recordedBy field
 #'
 #' @param x collectors_name in recordedBy field
 #' @param surname_selection_type allows you to select two types of results

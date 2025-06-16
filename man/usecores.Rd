@@ -2,12 +2,12 @@
 % Please edit documentation in R/usecores.R
 \name{usecores}
 \alias{usecores}
-\title{(Copilot) Detect threads and optimize your threads requirement}
+\title{(Copilot) Detect threads and optimize them}
 \usage{
 usecores(x)
 }
 \arguments{
-\item{x}{your threads requirement, a number >0.}
+\item{x}{Threads requirement, a number >0.}
 }
 \value{
 A number of treads
