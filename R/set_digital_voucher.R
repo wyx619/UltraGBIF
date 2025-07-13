@@ -1,5 +1,5 @@
-#' @title (Step 5) Set master digital voucher
-#' @name make_digital_voucher
+#' @title Set master digital voucher
+#' @name set_digital_voucher
 #'
 #' @description ### Grouping Duplicates and Selecting the Digital Voucher
 #'
@@ -40,10 +40,10 @@
 #'
 #' **This structured approach ensures systematic grouping of duplicates and selection of the master digital voucher without altering the original logic or variables.**
 #'
-#' @param occ_import imported GBIF occurrence data from step1
-#' @param names.checked your checked species names from step2
-#' @param collection_key your collection mark from step4
-#' @param threads your threads requirement, a number >0. Default=4
+#' @param occ_import imported GBIF records
+#' @param names.checked your checked taxon names from `check_occ_name`
+#' @param collection_key your collection mark from `generate_collection_mark`
+#' @param threads your threads requirement, a positive real number of treads, default is 4
 #'
 #' @details
 #' `UltraGBIF_duplicates_grouping_status` :
@@ -69,10 +69,10 @@
 #'
 #' @examples
 #' \donttest{
-#' help(make_digital_voucher)
+#' help(set_digital_voucher)
 #'}
 #' @export
-make_digital_voucher <-  function(occ_import = NA,
+set_digital_voucher <-  function(occ_import = NA,
                                   names.checked = NA,
                                   collection_key = NA,
                                   threads = 4)

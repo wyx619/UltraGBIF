@@ -1,7 +1,7 @@
 Package: UltraGBIF
 Title: An Ultrafast and Convenient Tool to Parse and Merge Enormous GBIF Records
-Version: 2.6.2
-Date: 2025-06-16
+Version: 2.6.4
+Date: 2025-07-13
 Type: Package
 Maintainer: Yuxuan Wang <wyx1743@gmail.com>
 Authors@R: 

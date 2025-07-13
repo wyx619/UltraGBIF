@@ -1,4 +1,4 @@
-#' @title (Copliot) Standardize scientific name
+#' @title Standardize scientific name
 #'
 #' @name standardize_name
 #'
@@ -10,15 +10,12 @@
 #' @return A list with species name you input, standardized scientific name of it,
 #' taxon authors of it and the last taxon author of it
 #'
-#' @examples
-#' \donttest{
-#' standardize_name(searchedName = "Lupinus polyphyllus var. pallidipes (A.Heller) C.P.Sm.")
-#' }
+#' @noRd
 #'
 #' @importFrom dplyr %>%
 #' @import stringi
 #'
-#' @export
+#' @keywords internal
 standardize_name <- function (searchedName = "Lupinus polyphyllus var. pallidipes (A.Heller) C.P.Sm.")
 {
   if (is.na(searchedName)) {

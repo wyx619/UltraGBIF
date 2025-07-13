@@ -1,27 +1,24 @@
-#' @title (Step 2) Use local or online taxon resolution service to check accepted taxon names and update synonyms at once
+#' @title Use local or online taxon resolution service to check accepted taxon names and update synonyms at once
 #'
 #' @name check_occ_name
 #'
 #' @description Names of species can be checked against WCVP database.
 #' To verify individual names, the function wcvp_check_name is used.
 #'
-#' @param occ_import imported GBIF occurrence data from step1
-#' @param local_taxon_resolution if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead.
-#' @param threads your threads requirement, a number >0. Default=4
+#' @param occ_import imported GBIF records
+#' @param local_taxon_resolution if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead
+#' @param threads your threads requirement, a positive real number, default is 4
 #' @param if_author_fails_try_without_combinations option for partial verification of the authorship of the species.
-#' Remove the authors of combinations, in parentheses.
+#' Remove the authors of combinations, in parentheses
 #'
-#' @details See help(wcvp_check_name)
+#' @details
 #' * [about WCVP database](http://sftp.kew.org/pub/data-repositories/WCVP/)
 #' * [World Checklist of Vascular Plants](https://powo.science.kew.org//)
 #' * [rWCVPdata](https://github.com/matildabrown/rWCVPdata/)
-#' @seealso \code{\link[UltraGBIF]{wcvp_check_name}}
+#'
 #' @return A list with duration and two data.table: "summary" with species list and "occ_wcvp_check_name" with WCVP fields
 #'
-#' @examples
-#' \donttest{
-#' help(check_occ_name)
-#' }
+#'
 #'
 #' @importFrom dplyr %>% case_when if_else select
 #' @import data.table

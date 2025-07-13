@@ -2,7 +2,7 @@
 % Please edit documentation in R/coordinate_refine.R
 \name{coordinate_refine}
 \alias{coordinate_refine}
-\title{(Step 6) Refine coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions}
+\title{Refine coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions}
 \usage{
 coordinate_refine(
   voucher = NA,
@@ -13,9 +13,9 @@ coordinate_refine(
 )
 }
 \arguments{
-\item{voucher}{your processed voucher from step5}
+\item{voucher}{your processed voucher from \code{set_digital_voucher}}
 
-\item{threads}{your threads requirement, a number >0. Default=4}
+\item{threads}{your threads requirement, a positive real number, default is 4}
 
 \item{save_to_disk_path}{the local disk path where you want to save the final result}
 
@@ -27,10 +27,10 @@ A list with duration and 3 data.table: \code{all_records} for all cleaned record
 simplified \code{native_records} by rounding the longitude and latitude coordinates of them to two decimal places
 }
 \description{
-Step6 refines coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions.
+Refines coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions.
 }
 \details{
-Step6 can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
+It can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
 }
 \examples{
 \donttest{

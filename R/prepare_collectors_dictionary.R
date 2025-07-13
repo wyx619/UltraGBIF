@@ -1,7 +1,7 @@
-#' @title (Step 3) Prepare a list with surname of the main collector
+#' @title Prepare a list with surname of the main collector
 #' @name prepare_collectors_dictionary
 #'
-#' @description ### Step3 returns a list with the last name of main collector following the unique key `recordedBy`.
+#' @description It returns a list with the last name of main collector following the unique key `recordedBy`.
 #'
 #'
 #' Consistent recording of the primary collectors and their last name is thus essential, and a **collector dictionary**
@@ -17,8 +17,8 @@
 #'
 #' Once processed, the dictionary can be checked in the future.
 #'
-#' @param occ_import imported GBIF occurrence data from step1
-#' @param threads your threads requirement, a number >0. Default=4
+#' @param occ_import imported GBIF records
+#' @param threads your threads requirement, a positive real number of treads, default is 4
 #' @param surname_selection_type allows you to select any of two types of the last name:
 #'
 #' **`large_string`** = word with the largest number of characters.

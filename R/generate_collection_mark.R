@@ -1,8 +1,8 @@
-#' @title (Step 4) Generate unique collection event mark
+#' @title Generate unique collection event mark
 #'
 #' @name generate_collection_mark
 #'
-#' @description Step4 creates a key to identify the physical and digital duplicates of a given collection event.
+#' @description It creates a key to identify the physical and digital duplicates of a given collection event.
 #' It combines the last name of primary collector with the collector number and the botanical family (family +
 #' recordByStandardized + recordNumber_Standard) that groups the duplicates of the same unique collection event.
 #' It also identifies new collectors to be added to the collector dictionary and that can be reused in the future.
@@ -16,8 +16,8 @@
 #'
 #' **`family` + `recordedByStandardized` + `recordNumber_Standard`**.
 #'
-#' @param occ_import imported GBIF occurrence data from step1
-#' @param dictionary your processed dictionary from step3
+#' @param occ_import imported GBIF records
+#' @param dictionary your processed dictionary from `prepare_collectors_dictionary`
 #'
 #' @details Fields created for each incident record:
 #'

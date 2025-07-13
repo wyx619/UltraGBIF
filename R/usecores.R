@@ -1,20 +1,17 @@
-#' @title (Copilot) Detect threads and optimize them
+#' @title Detect threads and optimize them
 #' @name usecores
 #' @description Input a positive number and return optimized treads requirement.
-#' @param x Threads requirement, a number >0.
+#' @param x Threads requirement, a positive real number, default is 4
 #'
 #' @details If a positive integer is input,
 #' return a positive integer not exceeding the total number of threads.
 #' If a non-integer positive number is input, automatically calculate and return a reasonable number of threads.
 #'
-#' @return A number of treads
+#' @return A positive real number of treads
 #'
-#' @examples
-#' \donttest{
-#' usecores(4)
-#' usecores(1/3)}
+#' @noRd
 #'
-#' @export
+#' @keywords internal
 usecores<-function(x)
 {
   total=parallel::detectCores()

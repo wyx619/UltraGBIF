@@ -1,4 +1,4 @@
-#' @title (Copilot) Resolve taxons with WCVP database
+#' @title Resolve taxons with WCVP database
 #' @name wcvp_check_name
 #' @description Use the [World Checklist of Vascular Plants](https://powo.science.kew.org//)
 #' [database](https://github.com/matildabrown/rWCVPdata) to check accepted names and update synonyms.
@@ -25,66 +25,13 @@
 #'
 #' @return data.table with WCVP fields
 #'
-#' @examples
-#' \donttest{
-#' require(data.table)
-#' ## It might take a little time
-#' wcvp_names_database = setDT(rWCVPdata::wcvp_names)[,`:=`(TAXON_NAME_U=toupper(taxon_name),
-#' TAXON_AUTHORS_U=toupper(taxon_authors))]
-#'
-#' # 1) Updated
-#' wcvp_check_name(searchedName = 'Hemistylus brasiliensis Wedd.',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # 2) Accepted
-#' wcvp_check_name(searchedName = 'Hemistylus boehmerioides Wedd. ex Warm.',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # 3) Unplaced - taxon_status = Unplaced
-#' wcvp_check_name(searchedName = 'Leucosyke australis Unruh',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # 4) Accepted among homonyms - When author is not informed. In this case, one of
-#' # the homonyms, taxon_status is accepted
-#' wcvp_check_name(searchedName = 'Parietaria cretica',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # When author is informed
-#' wcvp_check_name(searchedName = 'Parietaria cretica L.',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # When author is informed
-#' wcvp_check_name(searchedName = 'Parietaria cretica Moris',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # 5) Homonyms - When author is not informed. In this case, none of the homonyms,
-#' # taxon_status is Accepted
-#' wcvp_check_name(searchedName = 'Laportea peltata',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # When author is informed
-#' wcvp_check_name(searchedName = 'Laportea peltata Gaudich. & Decne.',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#'
-#' # When author is informed
-#' wcvp_check_name(searchedName = 'Laportea peltata (Blume) Gaudich.',
-#'                wcvp_names_database = wcvp_names_database,
-#'                if_author_fails_try_without_combinations = TRUE)
-#' }
+#' @noRd
 #'
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else
 #' @import stringi
 #' @import data.table
 #'
-#' @export
+#' @keywords internal
 wcvp_check_name <- function (searchedName = "Tephrosia lasiochlaena Cowie",
                              wcvp_names_database = NA,
                              if_author_fails_try_without_combinations = TRUE)

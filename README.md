@@ -6,7 +6,7 @@ The goal of UltraGBIF is to parse and merge enormous [Global Biodiversity Inform
 
 To address these limitations, we present UltraGBIF – an ultrafast and convenient R package designed for efficient parsing and merging GBIF records. Inspired by ParseGBIF(De Melo et al. 2024) and guided by the design principles of accessibility, computational efficiency, and optimal resource utilization, UIltraGBIF implements an integrated workflow comprising 5 key modules as below.
 
-1.  **`Taxon Name Resolution`** Standardize and resolve the taxon name using the World Checklist of Vascular Plants(Govaerts et al. 2021), or using TNRS(Boyle et al. 2013) which has been integrated(Maitner and Boyle 2024).
+1.  **`Taxon Name Resolution`** Standardize and resolve the taxon name using the World Checklist of Vascular Plants(Govaerts et al. 2021), or using TNRS(Boyle et al. 2013) which has been built in(Maitner and Boyle 2024).
 
 2.  **`Reduce Duplicate Records`** Collates duplicate records into unique "collection events" while retaining spatial data entries with maximal completeness.
 

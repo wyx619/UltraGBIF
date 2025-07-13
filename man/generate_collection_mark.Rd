@@ -3,14 +3,14 @@
 \encoding{UTF-8}
 \name{generate_collection_mark}
 \alias{generate_collection_mark}
-\title{(Step 4) Generate unique collection event mark}
+\title{Generate unique collection event mark}
 \usage{
 generate_collection_mark(occ_import = NA, dictionary = NA)
 }
 \arguments{
-\item{occ_import}{imported GBIF occurrence data from step1}
+\item{occ_import}{imported GBIF records}
 
-\item{dictionary}{your processed dictionary from step3}
+\item{dictionary}{your processed dictionary from \code{prepare_collectors_dictionary}}
 }
 \value{
 A list with duration and 3 data.table:
@@ -19,7 +19,7 @@ A list with duration and 3 data.table:
 that can be reused in the future.
 }
 \description{
-Step4 creates a key to identify the physical and digital duplicates of a given collection event.
+It creates a key to identify the physical and digital duplicates of a given collection event.
 It combines the last name of primary collector with the collector number and the botanical family (family +
 recordByStandardized + recordNumber_Standard) that groups the duplicates of the same unique collection event.
 It also identifies new collectors to be added to the collector dictionary and that can be reused in the future.

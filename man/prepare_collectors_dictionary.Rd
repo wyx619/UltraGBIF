@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_collectors_dictionary.R
 \name{prepare_collectors_dictionary}
 \alias{prepare_collectors_dictionary}
-\title{(Step 3) Prepare a list with surname of the main collector}
+\title{Prepare a list with surname of the main collector}
 \usage{
 prepare_collectors_dictionary(
   occ_import = NA,
@@ -13,9 +13,9 @@ prepare_collectors_dictionary(
 )
 }
 \arguments{
-\item{occ_import}{imported GBIF occurrence data from step1}
+\item{occ_import}{imported GBIF records}
 
-\item{threads}{your threads requirement, a number >0. Default=4}
+\item{threads}{your threads requirement, a positive real number of treads, default is 4}
 
 \item{surname_selection_type}{allows you to select any of two types of the last name:
 
@@ -32,7 +32,7 @@ A list with duration and 2 data.table: "my_dictionary" for your processed
 collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 }
 \description{
-\subsection{Step3 returns a list with the last name of main collector following the unique key \code{recordedBy}.}{
+It returns a list with the last name of main collector following the unique key \code{recordedBy}.
 
 Consistent recording of the primary collectors and their last name is thus essential, and a \strong{collector dictionary}
 is provided for this purpose. The \code{prepare_collectors_dictionary} function is utilized to extract the last
@@ -46,7 +46,6 @@ an uppercase character and replacing non-ASCII characters, ensuring that the pri
 with a collection event is consistently represented by the same character string.
 
 Once processed, the dictionary can be checked in the future.
-}
 }
 \details{
 If \code{recordedBy} is present in the ref_dictionary, the function returns the last name of
