@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{generate_collection_mark}
 \alias{generate_collection_mark}
-\title{Generate unique collection event mark}
+\title{Generate unique collection event}
 \usage{
 generate_collection_mark(occ_import = NA, dictionary = NA)
 }

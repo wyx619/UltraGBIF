@@ -1,4 +1,4 @@
-#' @title Extract last name of the main collector
+#' @title Extract last name of the main collector (internal)
 #' @name get_collectors_name
 #'
 #' @description Extract last name of the main collector in recordedBy field
@@ -17,13 +17,13 @@
 #'
 #' @return
 #' last name of the main collector
-#' @noRd
+#'
 #'
 #' @import stringi
 #' @importFrom dplyr %>%
 #' @importFrom utils tail head
 #'
-#' @keywords internal
+#' @export
 get_collectors_name<-function (x = NA, surname_selection_type = "largest_string",
                                max_words_name = 6, min_characters_in_name = 2)
 {

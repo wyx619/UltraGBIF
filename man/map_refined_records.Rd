@@ -2,7 +2,7 @@
 % Please edit documentation in R/map_refined_records.R
 \name{map_refined_records}
 \alias{map_refined_records}
-\title{Map simplified records}
+\title{Visualize records on a dynamic interactive map}
 \usage{
 map_refined_records(
   results_refine = NA,

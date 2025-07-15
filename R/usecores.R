@@ -1,4 +1,4 @@
-#' @title Detect threads and optimize them
+#' @title Detect threads and optimize them (internal)
 #' @name usecores
 #' @description Input a positive number and return optimized treads requirement.
 #' @param x Threads requirement, a positive real number, default is 4
@@ -9,9 +9,9 @@
 #'
 #' @return A positive real number of treads
 #'
-#' @noRd
 #'
-#' @keywords internal
+#'
+#' @export
 usecores<-function(x)
 {
   total=parallel::detectCores()

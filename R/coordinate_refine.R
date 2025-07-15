@@ -87,7 +87,7 @@ coordinate_refine<-function(voucher = NA,
 
   results_final_sf_ori <- foreach(data=chunks_list,
                                   .multicombine = T,
-                                  .errorhandling = "stop",
+                                  .errorhandling = "remove",
                                   .packages = c("CoordinateCleaner","rnaturalearthdata"),
                                   .inorder = F) %dopar% {coord(data)}
 

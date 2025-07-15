@@ -1,4 +1,4 @@
-#' @title Generate unique collection event mark
+#' @title Generate unique collection event
 #'
 #' @name generate_collection_mark
 #'

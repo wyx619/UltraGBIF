@@ -1,4 +1,4 @@
-#' @title Map simplified records
+#' @title Visualize records on a dynamic interactive map
 #' @name map_refined_records
 #'
 #' @description This optional step could map your simplified refined GBIF occurrence records on dynamic maps
