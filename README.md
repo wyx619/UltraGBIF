@@ -1,6 +1,3 @@
----
-bibliography: references.bib
----
 
 ## Introduction of **UltraGBIF** <img src="images/logo.png" style="width: 58px;"/>
 
