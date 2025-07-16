@@ -3,7 +3,7 @@
 #'
 #' @description This optional step could map your simplified refined GBIF occurrence records on dynamic maps
 #'
-#' @param results_refine the refined occurrence list from `coordinate_refine`
+#' @param records_refined the refined occurrence list from `coordinate_refine`
 #' @param save_to_disk_path (optional and if you do not need save just ignore it) the local disk
 #'  path where you want to save the filtered GBIF occurrence records by `UltraGBIF_wcvp_family`
 #' @param precision positive integer scalar controlling the density
@@ -33,7 +33,7 @@ map_refined_records <- function(records_refined=NA,
                                 draw=F,
                                 cex=4){
 
-  all_records <- results_refine$all_records[UltraGBIF_useful_for_spatial_analysis==T,
+  all_records <- records_refined$all_records[UltraGBIF_useful_for_spatial_analysis==T,
                                             .(Ctrl_gbifID,
                                               Ctrl_level0Name,
                                               UltraGBIF_wcvp_family,
