@@ -5,7 +5,7 @@
 \title{Visualize records on a dynamic interactive map}
 \usage{
 map_refined_records(
-  results_refine = NA,
+  records_refined = NA,
   save_to_disk_path = NA,
   precision = 4,
   draw = F,
@@ -13,8 +13,6 @@ map_refined_records(
 )
 }
 \arguments{
-\item{results_refine}{the refined occurrence list from \code{coordinate_refine}}
-
 \item{save_to_disk_path}{(optional and if you do not need save just ignore it) the local disk
 path where you want to save the filtered GBIF occurrence records by \code{UltraGBIF_wcvp_family}}
 
@@ -25,6 +23,8 @@ of your refined GBIF occurrence records on dynamic maps. (i.e. 4 for 20 km,
 \item{draw}{if TRUE present the map}
 
 \item{cex}{the point size of your refined GBIF occurrence records rendering on dynamic maps. Default is 4}
+
+\item{results_refine}{the refined occurrence list from \code{coordinate_refine}}
 }
 \value{
 A dynamic interactive map with \code{wcvp_area_status} legend.

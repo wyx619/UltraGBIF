@@ -27,7 +27,7 @@
 #' help(map_refined_records)
 #'}
 #' @export
-map_refined_records <- function(results_refine=NA,
+map_refined_records <- function(records_refined=NA,
                                 save_to_disk_path=NA,
                                 precision=4,
                                 draw=F,
