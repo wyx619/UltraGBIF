@@ -1,4 +1,3 @@
-
 ## Introduction of **UltraGBIF** <img src="images/logo.png" style="width: 58px;"/>
 
 Mapping plant distributions is essential for understanding biodiversity patterns and advancing conservation efforts, as it provides the foundation for assessing its vulnerability, habitat integrity, and ecosystem resilience. Accurate distribution data are critical for identifying biodiversity hotspots, evaluating the impacts of human activities, and predicting how plants may respond to climate change. Such information is indispensable for informed conservation planning and effective management of plant diversity.
@@ -40,15 +39,13 @@ The pipeline described below is specifically designed to enable rapid processing
 You can install UltraGBIF like so:
 
 ``` r
-### Fist install rWCVPdata
-if (!requireNamespace("rWCVPdata",quietly = TRUE)) {
-  install.packages("rWCVPdata", repos=c("https://matildabrown.github.io/drat",getOption("repos")))
-}
-### Then install UltraGBIF
 if (!requireNamespace("remotes",quietly = TRUE)) {
   install.packages("remotes")
-  }
-remotes::install_github("wyx619/UltraGBIF")
+} ##check remotes
+if (!requireNamespace("rWCVPdata",quietly = TRUE)) {
+  remotes::install_github("matildabrown/rWCVPdata")
+} ##install rWCVPdata
+remotes::install_github("wyx619/UltraGBIF")##install UltraGBIF
 ```
 
 ## Reference
