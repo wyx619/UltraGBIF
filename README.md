@@ -36,16 +36,14 @@ The pipeline described below is specifically designed to enable rapid processing
 
 ## Installation
 
-You can install UltraGBIF like so:
+You can install UltraGBIF like this:
 
 ``` r
-if (!requireNamespace("remotes",quietly = TRUE)) {
-  install.packages("remotes")
-} ##check remotes
-if (!requireNamespace("rWCVPdata",quietly = TRUE)) {
-  remotes::install_github("matildabrown/rWCVPdata")
-} ##install rWCVPdata
-remotes::install_github("wyx619/UltraGBIF")##install UltraGBIF
+options(timeout = 300)
+install.packages("UltraGBIF", 
+                 repos=c("https://wyx619.github.io/UltraGBIF619",getOption("repos")),
+                 method = "libcurl",
+                 type = "source")
 ```
 
 ## Reference
