@@ -32,19 +32,27 @@ The pipeline described below is specifically designed to enable rapid processing
 
 5.  **`Map and Visualization`** This optional section enables these processed distribution data with WGSRPD information to be mapped onto a highly customizable dynamic map, thereby providing the most intuitive visualization of their spatial distributions and offering a streamlined interface for biodiversity research.
 
-**Note:** UltraGBIF is still under **development**. If you encounter any bugs, please feel free to submit an issue. Your feedback is greatly appreciated!
+**Note:** UltraGBIF is still under **development**. If you encounter any bugs, please feel free to submit an [issue](https://github.com/wyx619/UltraGBIF/issues/new). Your feedback is greatly appreciated!
 
 ## Installation
 
-You can install UltraGBIF like this:
+UltraGBIF can be conveniently installed directly from its GitHub repository, which ensures access to the latest version and all available features:
 
-``` r
-options(timeout = 300)
-install.packages("UltraGBIF", 
-                 repos=c("https://wyx619.github.io/UltraGBIF619",getOption("repos")),
-                 method = "libcurl",
-                 type = "source")
+```{r}
+## require good internet to Github
+options(timeout = 600) ## Deal with unstable network connections
+install.packages("UltraGBIF", repos=c("https://wyx619.github.io/UltraGBIF619",getOption("repos")))
 ```
+
+UltraGBIF runs with rWCVPdata, which will be installed automatically if you have never installed it. **If you meet any internet error**, just try to download [rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz)(Click on the hyperlink) directly and install it manually:
+
+```{r}
+options(timeout = 600) ## Deal with unstable network connections
+install.packages("rWCVPdata_0.6.0.tar.gz", repos = NULL) ## install rWCVPdata from the local file you have downloaded.
+install.packages("UltraGBIF", repos="https://wyx619.github.io/UltraGBIF619") ## then continue installing UltraGBIF
+```
+
+We recommend rWCVPdata version 0.6.0 which includes WCVP version 14 for UltraGBIF, and please note that the initial installation may take some time; kindly allow it to complete without interruption.
 
 ## Reference
 
