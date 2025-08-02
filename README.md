@@ -28,7 +28,7 @@ The pipeline described below is specifically designed to enable rapid processing
 
 3.  **`Data Quality Evaluation`** This section evaluates the validity and spatial accuracy of each record using the GBIF standardized issue flagging system. This built-in quality control mechanism identifies potential errors or inconsistencies in occurrence data, such as problematic coordinate formatting, spatial mismatches, or taxonomic discrepancies. Records are flagged based on severity, enabling users to apply customized filtering thresholds depending on the requirements of downstream analyses. This step ensures that only high-quality, spatially reliable data are retained for subsequent processing and interpretation. See more details as below.
 
-    ![](images/mermaid.png)
+    ![](images/mermaid.jpeg)
 
 4.  **`Coordinate Verification & WGSRPD information extraction`** This section performs automated coordinate validation by CoordinateCleaner(Zizka et al. 2019) and [WGSRPD](http://www.tdwg.org/standards/109) information extraction of taxons *(native/introduced/extinct/location_doubtful)*.
 
