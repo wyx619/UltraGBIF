@@ -1,7 +1,3 @@
----
-bibliography: references.bib
----
-
 ## Introduction of **UltraGBIF** <img src="images/logo.png" style="width: 58px;"/>
 
 Mapping plant distributions is fundamental to understanding biodiversity patterns and advancing conservation efforts, providing the foundation for assessing species vulnerability, habitat integrity, and ecosystem resilience. Moreover, accurate distribution data are critical for identifying biodiversity hotspots, evaluating anthropogenic impacts, and predicting plant responses to climate change. Such information is necessary for evidence-based conservation planning and effective management of plant diversity.

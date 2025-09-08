@@ -8,11 +8,10 @@
 #' @param save_to_disk_path the local disk path where you want to save the final result
 #' @param tests CoordinateCleaner coordinates checks. Choose one or more from `c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")`
 #'
-#' @details It can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
+#' @details It can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions information
 #'
-#' @return A list with duration and 3 data.table: `all_records` for all cleaned records,
-#' `native_records` for native records of them and `native_simplified` for
-#' simplified `native_records` by rounding the longitude and latitude coordinates of them to two decimal places
+#' @return A list with duration and 2 data.table: `all_records` for all refined records,
+#' `native_records` for native records of them.
 #'
 #' @import data.table
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else inner_join
@@ -151,37 +150,34 @@ coordinate_refine<-function(voucher = NA,
 
   results <- merge(voucher,area_final, by = "Ctrl_gbifID")
   native_records <- results[wcvp_area_status == "native"]
-  native_simplified <- native_records[, .(Ctrl_gbifID,
-                                       Ctrl_recordedBy,
-                                       Ctrl_eventDate,
-                                       Ctrl_scientificName,
-                                       UltraGBIF_wcvp_plant_name_id,
-                                       UltraGBIF_wcvp_taxon_rank,
-                                       UltraGBIF_wcvp_taxon_status,
-                                       UltraGBIF_wcvp_family,
-                                       UltraGBIF_wcvp_taxon_name,
-                                       UltraGBIF_wcvp_taxon_authors,
-                                       UltraGBIF_wcvp_reviewed,
-                                       UltraGBIF_decimalLongitude = round(UltraGBIF_decimalLongitude, 2),
-                                       UltraGBIF_decimalLatitude = round(UltraGBIF_decimalLatitude, 2))] %>%
-    unique(by = c("UltraGBIF_wcvp_plant_name_id",
-                  "UltraGBIF_wcvp_taxon_name",
-                  "UltraGBIF_decimalLongitude",
-                  "UltraGBIF_decimalLatitude"))
+  # native_simplified <- native_records[, .(Ctrl_gbifID,
+  #                                      Ctrl_recordedBy,
+  #                                      Ctrl_eventDate,
+  #                                      Ctrl_scientificName,
+  #                                      UltraGBIF_wcvp_plant_name_id,
+  #                                      UltraGBIF_wcvp_taxon_rank,
+  #                                      UltraGBIF_wcvp_taxon_status,
+  #                                      UltraGBIF_wcvp_family,
+  #                                      UltraGBIF_wcvp_taxon_name,
+  #                                      UltraGBIF_wcvp_taxon_authors,
+  #                                      UltraGBIF_wcvp_reviewed,
+  #                                      UltraGBIF_decimalLongitude = round(UltraGBIF_decimalLongitude, 2),
+  #                                      UltraGBIF_decimalLatitude = round(UltraGBIF_decimalLatitude, 2))] %>%
+  #   unique(by = c("UltraGBIF_wcvp_plant_name_id",
+  #                 "UltraGBIF_wcvp_taxon_name",
+  #                 "UltraGBIF_decimalLongitude",
+  #                 "UltraGBIF_decimalLatitude"))
 
 
   if(!is.na(save_to_disk_path)){
     fwrite(results,
-           file = paste0(save_to_disk_path,'/usable_data_refined_powo_checked.csv'),
+           file = paste0(save_to_disk_path,'/usable_refined_records.csv.gz'),
            encoding = "UTF-8")
     fwrite(native_records,
-           file = paste0(save_to_disk_path,'/native_data_refined_powo_checked.csv'),
+           file = paste0(save_to_disk_path,'/native_refined_records.csv.gz'),
            encoding = "UTF-8")
-    fwrite(native_simplified,
-           file = paste0(save_to_disk_path,'/native_simplified.csv'),
-           encoding = "UTF-8")
-
   }
+
   end=Sys.time()
   print(end-start)
   return(list(all_records=results,

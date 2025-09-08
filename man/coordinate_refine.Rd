@@ -22,15 +22,14 @@ coordinate_refine(
 \item{tests}{CoordinateCleaner coordinates checks. Choose one or more from \code{c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")}}
 }
 \value{
-A list with duration and 3 data.table: \code{all_records} for all cleaned records,
-\code{native_records} for native records of them and \code{native_simplified} for
-simplified \code{native_records} by rounding the longitude and latitude coordinates of them to two decimal places
+A list with duration and 2 data.table: \code{all_records} for all refined records,
+\code{native_records} for native records of them.
 }
 \description{
 Refines coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions.
 }
 \details{
-It can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions
+It can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions information
 }
 \examples{
 \donttest{
