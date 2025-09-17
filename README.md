@@ -14,7 +14,7 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 UltraGBIF comprises a set of functions that constitutes a complete and coherent workflow, which can be categorized into three components and some modules.
 
-1.  The "Preliminary process" component forms the initial stage of the UltraGBIF workflow, ensuring data accuracy and consistency through three core modules: "Import records," which ingests and parses DwC-A files while extracting GBIF issues; "Check taxon name," which standardizes plant taxonomic names using WCVP or TNRS; and "Check collectors dictionary," which harmonizes collector name variants to resolve data fragmentation. Together, these modules automate critical data curation tasks, significantly enhancing the reliability of biodiversity datasets prior to analysis.
+1.  The "Preliminary process" component forms the initial stage of the UltraGBIF workflow, ensuring data accuracy and consistency through three core modules: "Import records," which ingests and parses DwC-A files while extracting GBIF issues; "Check taxon name," which resolves plant taxon using WCVP or TNRS; and "Check collectors dictionary," which harmonizes collector name variants to resolve data fragmentation. Together, these modules automate critical data curation tasks, significantly enhancing the reliability of biodiversity datasets prior to analysis.
 
     -   "Import records" module serves as the primary input point of the UltraGBIF unified workflow, receiving a user-specified DwC-A file from GBIF and automatically extracting GBIF issues. This module is driven by data.table and stringi (both built on C/C++), thereby achieving exceptionally high processing speed.
 
@@ -38,27 +38,27 @@ UltraGBIF comprises a set of functions that constitutes a complete and coherent 
 
 Focused exclusively on GBIF plant occurrence records, UltraGBIF is able to clean one million records within 30 minutes on laptops (8 threads, 32 GB RAM), representing 100x faster improvement and 60% memory reduction compared to conventional approaches. By enabling rapid, efficient, and reproducible access to deal with GBIF plants records, UltraGBIF democratizes large-scale plant biodiversity research across macroecology, conservation biology, and global change studies.
 
-**Note:** UltraGBIF is still under **development**. If you encounter any bugs, please feel free to submit an [issue](https://github.com/wyx619/UltraGBIF/issues/new). Your feedback is greatly appreciated!
+UltraGBIF is under development. If you encounter any bugs, please feel free to submit an [issue](https://github.com/wyx619/UltraGBIF/issues/new). Your feedback is greatly appreciated!
 
 ## Installation
 
-UltraGBIF can be conveniently installed directly from its GitHub repository, which ensures access to the latest version and all available features:
+It\`s easy to install UltraGBIF from GitHub, which ensures access to the latest version and all available features. UltraGBIF is built with rWCVPdata, so it is necessary to install it firstly. We recommend rWCVPdata version 0.6.0 with WCVP version 14 for UltraGBIF, and the initial installation takes some time.
 
 ```{r}
-## require good internet to Github
-options(timeout = 600) ## Deal with unstable network connections
-install.packages("UltraGBIF", repos=c("https://wyx619.github.io/UltraGBIF619",getOption("repos")))
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes", dependencies = TRUE)}
+remotes::install_github("matildabrown/rWCVPdata", upgrade=F) ## install rWCVPdata
+remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
 ```
 
-UltraGBIF runs with rWCVPdata, which will be installed automatically if you have never installed it. **If you meet any internet error**, just try to download [rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz)(Click on the hyperlink) directly and install it manually:
+If you meet any internet error, download [rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz) and install manually. The initial installation also takes some time.
 
 ```{r}
-options(timeout = 600) ## Deal with unstable network connections
-install.packages("rWCVPdata_0.6.0.tar.gz", repos = NULL) ## install rWCVPdata from the local file you have downloaded.
-install.packages("UltraGBIF", repos="https://wyx619.github.io/UltraGBIF619") ## then continue installing UltraGBIF
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes", dependencies = TRUE)}
+remotes::install_local("path/to/your/rWCVPdata_0.6.0.tar.gz", upgrade=F) ## install rWCVPdata manually
+remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
 ```
-
-We recommend rWCVPdata version 0.6.0 with WCVP version 14 for UltraGBIF, and please note that the initial installation may take some time; kindly allow it to complete without interruption.
 
 ## Reference
 
