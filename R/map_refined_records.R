@@ -1,15 +1,12 @@
 #' @title Visualize records on a dynamic interactive map
 #' @name map_refined_records
 #'
-#' @description This optional step could map your simplified refined GBIF occurrence records on dynamic maps
+#' @description This optional module simplifies and renders refined GBIF occurrence records on dynamic maps
 #'
 #' @param records_refined the refined occurrence list from `coordinate_refine`
-#' @param save_to_disk_path (optional and if you do not need save just ignore it) the local disk
-#'  path where you want to save the filtered GBIF occurrence records by `UltraGBIF_wcvp_family`
 #' @param precision positive integer scalar controlling the density
 #'  of your refined GBIF occurrence records on dynamic maps. (i.e. 4 for 20 km,
 #'  3 for 156 km, 2 for 1250 km.) Default is 4
-#' @param draw if TRUE present the map
 #' @param cex the point size of your refined GBIF occurrence records rendering on dynamic maps. Default is 4
 #'
 #'
@@ -28,9 +25,7 @@
 #'}
 #' @export
 map_refined_records <- function(records_refined=NA,
-                                save_to_disk_path=NA,
                                 precision=4,
-                                draw=F,
                                 cex=4){
 
   all_records <- records_refined$all_records[UltraGBIF_useful_for_spatial_analysis==T,
@@ -60,32 +55,21 @@ map_refined_records <- function(records_refined=NA,
 
   dedup <- dedup_by_geohash(all_records, precision)%>%setDT()
 
-  if (!is.na(save_to_disk_path)) {
-    family <- unique(dedup$UltraGBIF_wcvp_family)
-    for (fam in family) {
-      id <- dedup[UltraGBIF_wcvp_family==fam,.(Ctrl_gbifID)]
-      table <- all_records[id]
-      fwrite(table,file = paste0(save_to_disk_path,"/",fam,".csv"))
-    }
-  }
-
-  if (draw){
-    dedup_vect <- terra::vect(dedup,
+  dedup_vect <- terra::vect(dedup,
                             geom = c("UltraGBIF_decimalLongitude","UltraGBIF_decimalLatitude"),
                             crs = "EPSG:4326")
-    map=mapView(
-      x = dedup_vect,
-      zcol = "wcvp_area_status",
-      legend = TRUE,
-      layer.name = "wcvp_area_status",
-      popup = T,
-      cex = cex,
-      alpha.regions = 0.6,
-      map.types = c("OpenStreetMap","Esri.WorldImagery","Stadia.StamenWatercolor"),
-      alpha=0.3
-    )
-    message("Map finished!")
+  map=mapView(
+    x = dedup_vect,
+    zcol = "wcvp_area_status",
+    legend = TRUE,
+    layer.name = "wcvp_area_status",
+    popup = T,
+    cex = cex,
+    alpha.regions = 0.6,
+    map.types = c("OpenStreetMap","Esri.WorldImagery","Stadia.StamenWatercolor"),
+    alpha=0.3
+  )
 
-    return(map)}
-  else{return("ok")}
+  message("Map finished!")
+  return(map)
 }
