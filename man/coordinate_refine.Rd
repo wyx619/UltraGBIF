@@ -7,7 +7,7 @@
 coordinate_refine(
   voucher = NA,
   threads = 4,
-  save_to_disk_path = NA,
+  save_path = NA,
   tests = c("capitals", "centroids", "equal", "gbif", "institutions", "outliers", "seas",
     "zeros")
 )
@@ -17,7 +17,7 @@ coordinate_refine(
 
 \item{threads}{your threads requirement, a positive real number, default is 4}
 
-\item{save_to_disk_path}{the local disk path where you want to save the final result}
+\item{save_path}{the local path where you want to save the final result}
 
 \item{tests}{CoordinateCleaner coordinates checks. Choose one or more from \code{c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")}}
 }

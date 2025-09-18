@@ -5,7 +5,7 @@
 #'
 #' @param voucher your processed voucher from `set_digital_voucher`
 #' @param threads your threads requirement, a positive real number, default is 4
-#' @param save_to_disk_path the local disk path where you want to save the final result
+#' @param save_path the local path where you want to save the final result
 #' @param tests CoordinateCleaner coordinates checks. Choose one or more from `c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")`
 #'
 #' @details It can automatically clean the coordinates in voucher and extract their World Geographical Scheme for Recording Plant Distributions information
@@ -27,7 +27,7 @@
 #' @export
 coordinate_refine<-function(voucher = NA,
                             threads = 4,
-                            save_to_disk_path = NA,
+                            save_path = NA,
                             tests = c("capitals",
                                       "centroids",
                                       "equal",
@@ -169,12 +169,12 @@ coordinate_refine<-function(voucher = NA,
   #                 "UltraGBIF_decimalLatitude"))
 
 
-  if(!is.na(save_to_disk_path)){
+  if(!is.na(save_path)){
     fwrite(results,
-           file = paste0(save_to_disk_path,'/usable_refined_records.csv.gz'),
+           file = paste0(save_path,'/usable_refined_records.csv.gz'),
            encoding = "UTF-8")
     fwrite(native_records,
-           file = paste0(save_to_disk_path,'/native_refined_records.csv.gz'),
+           file = paste0(save_path,'/native_refined_records.csv.gz'),
            encoding = "UTF-8")
   }
 
@@ -182,6 +182,5 @@ coordinate_refine<-function(voucher = NA,
   print(end-start)
   return(list(all_records=results,
               native_records=native_records,
-              native_simplified=native_simplified,
               used_time=end-start))
 }
