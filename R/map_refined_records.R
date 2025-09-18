@@ -46,7 +46,7 @@ map_refined_records <- function(records_refined=NA,
       mutate(
         geohash = gh_encode(UltraGBIF_decimalLatitude, UltraGBIF_decimalLongitude, precision)
       ) %>%
-      group_by(UltraGBIF_wcvp_taxon_name, geohash) %>%
+      group_by(UltraGBIF_wcvp_taxon_name, geohash, wcvp_area_status) %>%
       slice(1) %>%
       ungroup() %>%
       select(-geohash)
