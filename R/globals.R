@@ -36,6 +36,10 @@ utils::globalVariables(
     "plant_locality_id","region","region_code_l2","Accepted_family","Accepted_name","Accepted_name_author",
     "Accepted_name_id","Accepted_name_rank","Author_matched","Name_matched","Name_matched_id
     Name_submitted","Taxonomic_status", "LEVEL3_COD", "Name_matched_id", "Name_submitted",
-    "area_code_l3", "extinct",  "introduced", "location_doubtful" ,"usable"
+    "area_code_l3", "extinct",  "introduced", "location_doubtful" ,"usable","..fields_to_parse",
+    "FAMILY__", "FAMILY__recordNumber", "FAMILY_recordedBy_",
+    "UltraGBIF_merged", "best_lat" ,"best_lon", "best_value", "clean_value",
+    "coord_priority", "grouping_pattern", "i.clean_value", "is_non_groupable",
+    "max_info_score", "num_duplicates", "num_unique_taxa", "selected_taxon", "taxon_id"
   )
 )

@@ -1,7 +1,7 @@
 Package: UltraGBIF
-Title: An Ultrafast and User-friendly R Package to Parse and Merge Enormous GBIF Records
-Version: 2.7.2
-Date: 2025-09-19
+Title: An Ultrafast and User-friendly R Package to Parse and Merge Enormous GBIF Occurrence Records
+Version: 3.0.1
+Date: 2025-10-04
 Type: Package
 Maintainer: Yuxuan Wang <wyx1743@gmail.com>
 Authors@R: 
@@ -15,4 +15,12 @@ LazyData: true
 LazyDataCompression: xz
 Depends: R (>= 4.1)
 Imports: data.table,dplyr,stringi,terra,lubridate,CoordinateCleaner,rWCVP,rWCVPdata,TNRS,geohashTools,mapview,foreach,doParallel,rnaturalearthdata
-Suggests: leaflet,rnaturalearth,sf
+Suggests: 
+    knitr,
+    leaflet,
+    rmarkdown,
+    rnaturalearth,
+    sf
+URL: https://github.com/wyx619/UltraGBIF
+BugReports: https://github.com/wyx619/UltraGBIF/issues
+VignetteBuilder: knitr

@@ -18,7 +18,6 @@
 #' Once processed, the dictionary can be checked in the future.
 #'
 #' @param occ_import imported GBIF records
-#' @param threads your threads requirement, a positive real number of treads, default is 4
 #' @param surname_selection_type allows you to select any of two types of the last name:
 #'
 #' **`large_string`** = word with the largest number of characters.
@@ -53,7 +52,6 @@
 #'}
 #' @export
 prepare_collectors_dictionary <- function(occ_import = NA,
-                                          threads = 4,
                                           surname_selection_type = "largest_string",
                                           max_words_name = 6,
                                           min_characters_in_name = 4)
@@ -71,34 +69,16 @@ prepare_collectors_dictionary <- function(occ_import = NA,
                new = "Ctrl_nameRecordedBy_Standard_x")
     }
 
-  unique_names <- occ[,Ctrl_recordedBy] %>% unique()
+  get_collectors_name_vec <- Vectorize(get_collectors_name, vectorize.args = "x")
+  result_dt <- occ[,.(Ctrl_recordedBy)] %>% unique()
+  result_dt[, Ctrl_nameRecordedBy_Standard := get_collectors_name_vec(
+    x = Ctrl_recordedBy,
+    surname_selection_type = surname_selection_type,
+    max_words_name = max_words_name,
+    min_characters_in_name = min_characters_in_name
+  ) %>% stri_trans_toupper()]
 
-  numCores <- threads%>%as.numeric()%>%usecores()
-  cl <- parallel::makeCluster(numCores)
-  registerDoParallel(cl)
-  process_single_name <- function(name) {
-    result <- get_collectors_name(
-      x = name,
-      surname_selection_type = surname_selection_type,
-      max_words_name = max_words_name,
-      min_characters_in_name = min_characters_in_name
-    )
-
-    data.table(
-      Ctrl_nameRecordedBy_Standard = stri_trans_toupper(result),
-      Ctrl_recordedBy = name
-    )
-  }
-  result_list <- foreach(name= unique_names,
-                         .multicombine = T,
-                         .errorhandling = "remove",
-                         .packages = c("data.table","stringi","dplyr","lubridate"),
-                         .export = c("get_collectors_name"),.inorder = F) %dopar% {process_single_name(name)}
-
-  parallel::stopCluster(cl)
-
-  recordedBy_Standart <- ref_dictionary[
-    rbindlist(result_list, fill = TRUE), on = .(Ctrl_recordedBy)
+  recordedBy_Standart <- ref_dictionary[result_dt, on = .(Ctrl_recordedBy)
   ][, ref_dictionary := fifelse(
     !is.na(Ctrl_nameRecordedBy_Standard_x), "checked", ""
   )][, Ctrl_nameRecordedBy_Standard := fifelse(

@@ -27,7 +27,7 @@
 #' @export
 import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
 {
-  start=Sys.time()
+
 
   ex_path=dirname(GBIF_file)
   col_sel <- c("gbifID", "bibliographicCitation", "language", "institutionCode",
@@ -46,13 +46,15 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
                "level3Name")
 
   if (tools::file_ext(GBIF_file)=="zip"){
+    message("Decompressing")
     utils::unzip(GBIF_file, exdir = ex_path, files = "occurrence.txt",
           list = FALSE, overwrite = TRUE,
           junkpaths = FALSE, unzip = "internal", setTimes = FALSE)
     GBIF_file=paste0(ex_path,"/occurrence.txt")
   }
-
+  start=Sys.time()
   # Read data using fread
+  message("Loading records")
   occ <- fread(GBIF_file,
                sep = '\t',
                encoding = 'UTF-8',
@@ -61,7 +63,7 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
                quote="",
                showProgress = FALSE)[is.na(Ctrl_hasCoordinate), Ctrl_hasCoordinate := FALSE][,Ctrl_gbifID:=as.character(Ctrl_gbifID)]
   unlink(GBIF_file)
-  message("load fine")
+
   if (only_PRESERVED_SPECIMEN) {
     occ <- occ[Ctrl_basisOfRecord=="PRESERVED_SPECIMEN",]
   }
@@ -70,7 +72,7 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
 
   EnumOccurrenceIssue <- EnumOccurrenceIssue
   issue_key = EnumOccurrenceIssue[,constant]
-
+  message("Compiling GBIF issues")
   occ_gbif_issue <- sapply(issue_key, fix)%>%as.data.table()%>%setnames(issue_key)
 
   summary <- occ_gbif_issue[, lapply(.SD, sum)]%>%

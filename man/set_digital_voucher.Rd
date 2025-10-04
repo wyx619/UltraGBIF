@@ -4,12 +4,7 @@
 \alias{set_digital_voucher}
 \title{Set master digital voucher}
 \usage{
-set_digital_voucher(
-  occ_import = NA,
-  names.checked = NA,
-  collection_key = NA,
-  threads = 4
-)
+set_digital_voucher(occ_import = NA, names.checked = NA, collection_key = NA)
 }
 \arguments{
 \item{occ_import}{imported GBIF records}
@@ -17,11 +12,9 @@ set_digital_voucher(
 \item{names.checked}{your checked taxon names from \code{check_occ_name}}
 
 \item{collection_key}{your collection mark from \code{generate_collection_mark}}
-
-\item{threads}{your threads requirement, a positive real number of treads, default is 4}
 }
 \value{
-A list with duration and  2 data.table:
+A list with duration and 2 data.table:
 "occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
 }
 \description{
@@ -81,7 +74,7 @@ A list with duration and  2 data.table:
 }
 }
 
-\strong{This structured approach ensures systematic grouping of duplicates and selection of the master digital voucher without altering the original logic or variables.}
+\strong{This optimized version eliminates O(n²) complexity by using vectorized data.table operations.}
 }
 
 }

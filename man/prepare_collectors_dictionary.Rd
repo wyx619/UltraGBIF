@@ -6,7 +6,6 @@
 \usage{
 prepare_collectors_dictionary(
   occ_import = NA,
-  threads = 4,
   surname_selection_type = "largest_string",
   max_words_name = 6,
   min_characters_in_name = 4
@@ -14,8 +13,6 @@ prepare_collectors_dictionary(
 }
 \arguments{
 \item{occ_import}{imported GBIF records}
-
-\item{threads}{your threads requirement, a positive real number of treads, default is 4}
 
 \item{surname_selection_type}{allows you to select any of two types of the last name:
 
