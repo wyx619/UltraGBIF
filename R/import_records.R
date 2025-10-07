@@ -1,12 +1,12 @@
-#' @title Import GBIF records
+#' @title Import GBIF occurrence records
 #' @name import_records
 #'
 #' @description Returns a list contains processed GBIF records and useful issues for downstream analysis.
 #'
-#' @param GBIF_file GBIF occurrence Darwin Core Archive data. See details for more information
-#' @param only_PRESERVED_SPECIMEN if TRUE, occurrence data will be filtered by `Ctrl_basisOfRecord="PRESERVED_SPECIMEN"`
+#' @param GBIF_file GBIF occurrence Darwin Core Archive. See details for more information
+#' @param only_PRESERVED_SPECIMEN if TRUE, occurrence records are filtered by `basisOfRecord="PRESERVED_SPECIMEN"`
 #'
-#' @details GBIF_file might be a path to your Darwin Core standard file which is downloaded from GBIF.
+#' @details GBIF_file is a path to your Darwin Core standard file which is downloaded from GBIF.
 #' The Darwin Core Archive (DwC-A) is a compact package (a ZIP file) contains interconnected text files and enables data publishers to share their data using a common terminology.
 #' GBIF_file could also be a path to "occurrence.txt" which is decompressed from your your Darwin Core standard file.
 #'
@@ -67,18 +67,23 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
   if (only_PRESERVED_SPECIMEN) {
     occ <- occ[Ctrl_basisOfRecord=="PRESERVED_SPECIMEN",]
   }
+
   # extract_gbif_issue
-  fix=function(.) stri_detect_fixed(occ[,Ctrl_issue], .)
 
   EnumOccurrenceIssue <- EnumOccurrenceIssue
-  issue_key = EnumOccurrenceIssue[,constant]
+  issue_keys = EnumOccurrenceIssue[,constant]
+
   message("Compiling GBIF issues")
-  occ_gbif_issue <- sapply(issue_key, fix)%>%as.data.table()%>%setnames(issue_key)
 
-  summary <- occ_gbif_issue[, lapply(.SD, sum)]%>%
-    transpose()%>%setnames("n_occ")%>%cbind(issue_key)%>%setorder(-n_occ)
+  fix=function(issue) stri_detect_fixed(occ[,Ctrl_issue], issue)
+  occ_gbif_issue <- sapply(issue_keys, fix) %>% as.data.table()
 
-  occ_gbif_issue <- cbind(occ_gbif_issue,occ[,.(Ctrl_gbifID)])
+  summary <- data.table(
+    issue_keys = issue_keys,
+    n_occ = colSums(occ_gbif_issue)
+  )[order(-n_occ)]
+
+  occ_gbif_issue[,Ctrl_gbifID:=occ$Ctrl_gbifID]
 
   end=Sys.time()
   used=end-start

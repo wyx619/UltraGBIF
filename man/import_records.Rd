@@ -2,14 +2,14 @@
 % Please edit documentation in R/import_records.R
 \name{import_records}
 \alias{import_records}
-\title{Import GBIF records}
+\title{Import GBIF occurrence records}
 \usage{
 import_records(GBIF_file = "", only_PRESERVED_SPECIMEN = F)
 }
 \arguments{
-\item{GBIF_file}{GBIF occurrence Darwin Core Archive data. See details for more information}
+\item{GBIF_file}{GBIF occurrence Darwin Core Archive. See details for more information}
 
-\item{only_PRESERVED_SPECIMEN}{if TRUE, occurrence data will be filtered by \code{Ctrl_basisOfRecord="PRESERVED_SPECIMEN"}}
+\item{only_PRESERVED_SPECIMEN}{if TRUE, occurrence records are filtered by \code{basisOfRecord="PRESERVED_SPECIMEN"}}
 }
 \value{
 A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
@@ -18,7 +18,7 @@ A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_
 Returns a list contains processed GBIF records and useful issues for downstream analysis.
 }
 \details{
-GBIF_file might be a path to your Darwin Core standard file which is downloaded from GBIF.
+GBIF_file is a path to your Darwin Core standard file which is downloaded from GBIF.
 The Darwin Core Archive (DwC-A) is a compact package (a ZIP file) contains interconnected text files and enables data publishers to share their data using a common terminology.
 GBIF_file could also be a path to "occurrence.txt" which is decompressed from your your Darwin Core standard file.
 }
