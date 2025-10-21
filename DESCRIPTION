@@ -1,7 +1,7 @@
 Package: UltraGBIF
 Title: An Ultrafast and User-friendly R Package to Parse and Merge Enormous GBIF Occurrence Records
-Version: 3.0.2
-Date: 2025-10-08
+Version: 3.0.3
+Date: 2025-10-20
 Type: Package
 Maintainer: Yuxuan Wang <wyx1743@gmail.com>
 Authors@R: 

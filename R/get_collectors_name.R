@@ -19,7 +19,7 @@
 #' last name of the main collector
 #'
 #'
-#' @import stringi
+#' @import stringi data.table
 #' @importFrom dplyr %>%
 #' @importFrom utils tail head
 #'
@@ -54,7 +54,7 @@ get_collectors_name<-function (x = NA, surname_selection_type = "largest_string"
       x_r <- is.na(x_t_1) | x_t_1 == ""
     }
     if (!x_r) {
-      x_r <- x_t %in% no_name
+      x_r <- x_t %chin% no_name
     }
     return(x_r)
   }
@@ -191,7 +191,7 @@ get_collectors_name<-function (x = NA, surname_selection_type = "largest_string"
     xx <- stri_split_fixed(xx, " ") %>% unlist()
     xx = xx[xx != ""]
     xx <- xx[stri_length(xx)>=min_characters_in_name]
-    xx <- xx[!xx %in% no_name]
+    xx <- xx[!xx %chin% no_name]
     xx <- xx[!stri_detect_regex(xx, "^[0-9]+$") & xx != ""]
     if (length(xx)==0) xx<-""
 
@@ -208,7 +208,7 @@ get_collectors_name<-function (x = NA, surname_selection_type = "largest_string"
   } else {
     xx = strsplit(x, " ") %>% unlist()
     xx <- xx[stri_length(xx)>=min_characters_in_name]
-    xx <- xx[!xx %in% no_name]
+    xx <- xx[!xx %chin% no_name]
     xx <- xx[!stri_detect_regex(xx, "^[0-9]+$") & xx != ""]
     if(length(xx)==0) xx=""
     sobren=surname_check(xx,
@@ -230,7 +230,7 @@ get_collectors_name<-function (x = NA, surname_selection_type = "largest_string"
     if (stri_endswith_fixed(sobren, "-")) sobren <- stri_sub(sobren, 1, -2)
     if (stri_detect_fixed(sobren, "-") & stri_count_fixed(sobren, "-") == 1){
       x_t <- stri_split_fixed(sobren, "-")%>%unlist()
-      ind_name <- !x_t %in% c('JUNIOR', 'JR', 'FILHO', 'NETO', 'SOBRINHO') & stri_length(x_t) > 1
+      ind_name <- !x_t %chin% c('JUNIOR', 'JR', 'FILHO', 'NETO', 'SOBRINHO') & stri_length(x_t) > 1
       if (sum(ind_name) >= 1) sobren <- x_t[ind_name][1]
       if (sum(ind_name) == 0) sobren <- ''
     }

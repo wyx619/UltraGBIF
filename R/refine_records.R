@@ -178,7 +178,7 @@ refine_records<-function(voucher = NA,
 
   local <- rWCVPdata::wcvp_names %>%
     select(plant_name_id,taxon_name) %>%
-    filter(taxon_name%in%results_final_sf_ori$UltraGBIF_wcvp_taxon_name)%>%
+    filter(taxon_name %chin% results_final_sf_ori$UltraGBIF_wcvp_taxon_name)%>%
     inner_join(rWCVPdata::wcvp_distributions,by = "plant_name_id")%>%
     select(-continent_code_l1,-continent,-region_code_l2,-region,-plant_locality_id)%>%setDT()
 
