@@ -1,7 +1,3 @@
----
-bibliography: references.bib
----
-
 ## Introduction of **UltraGBIF** <img src="images/logo.png" style="width: 58px;"/>
 
 Mapping plant distributions is fundamental to understanding biodiversity patterns, accurate distribution data and such information is necessary for researching plant diversity.
