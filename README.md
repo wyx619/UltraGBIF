@@ -1,4 +1,5 @@
-## Introduction of **UltraGBIF** <img src="images/logo.png" style="width: 58px;"/>
+## Introduction of **UltraGBIF** <img src="man/figures/logo.png" alt="UltraGBIF Package Logo" style="width: 58px;"/>
+
 
 Mapping plant distributions is fundamental to understanding biodiversity patterns, accurate distribution data and such information is necessary for researching plant diversity.
 
@@ -10,7 +11,7 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 ## Workflow of UltraGBIF
 
-![](images/Workflow%20of%20UltraGBIF_01.png)
+![Workflow Diagram](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
 
 UltraGBIF comprises a set of functions leading a complete and reproducible workflow, which can be categorized into three main stages and some modules.
 
@@ -42,7 +43,7 @@ UltraGBIF is under development. If you encounter any bugs, please feel free to s
 
 It is easy to install UltraGBIF from GitHub, which ensures access to the latest version and all available features. UltraGBIF is built with rWCVPdata, so it is necessary to install it firstly. We recommend rWCVPdata version 0.6.0 with WCVP version 14 for UltraGBIF, and the initial installation takes some time.
 
-```{r}
+``` r
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes", dependencies = TRUE)}
 remotes::install_github("matildabrown/rWCVPdata", upgrade=F) ## install rWCVPdata
@@ -51,7 +52,7 @@ remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
 
 If you meet any internet error, download [rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz) and install manually. The initial installation also takes some time.
 
-```{r}
+``` r
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes", dependencies = TRUE)}
 remotes::install_local("path/to/your/rWCVPdata_0.6.0.tar.gz", upgrade=F) ## install rWCVPdata manually
