@@ -58,6 +58,10 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 remotes::install_local("path/to/your/rWCVPdata_0.6.0.tar.gz", upgrade=F) ## install rWCVPdata manually
 remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
 ```
+## Tutorial of UltraGBIF
+[Tutorial of UltraGBIF: wiki page](https://github.com/wyx619/UltraGBIF/wiki/Tutorial-of-UltraGBIF)
+
+[Tutorial of UltraGBIF: pkgdown page](https://wyx619.github.io/UltraGBIF/articles/Tutorial_of_UltraGBIF.html)
 
 ## Reference
 
