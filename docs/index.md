@@ -1,0 +1,179 @@
+## Introduction of **UltraGBIF** ![UltraGBIF Package Logo](reference/figures/logo.png)
+
+Mapping plant distributions is fundamental to understanding biodiversity
+patterns, accurate distribution data and such information is necessary
+for researching plant diversity.
+
+Global Biodiversity Information Facility, known as GBIF, is a large
+repository for plant occurrence records worldwide. It has fueled over
+18,200 peer-reviewed journal articles, with ecology (3,769 researches),
+climate change (2,953), conservation (1,915), and invasive species
+management (1,840) as of August 2025, supporting global policy
+frameworks like the Kunming-Montreal Global Biodiversity Framework.
+
+Researches using GBIF occurrence records usually rely on a suite of
+tools. **R**, with packages such as `rgbif`\[@rgbif\], `TNRS`\[@TNRS\] ,
+`sf`\[@sf\], `terra`\[@terra\],
+`CoordinateCleaner`\[@CoordinateCleaner\] and WCVP\[@rWCVPdata\] helps
+to deal with GBIF occurrence records. But for million records datasets,
+current methods incur substantial computational overhead through manual
+chaining of disparate packages, necessitating high-performance
+infrastructure despite advancing computational capabilities. .
+
+To rectify this situation, we introduce UltraGBIF, an efficient R
+package that unifies taxonomic resolution, spatial validation, duplicate
+consolidation, and botanical region annotation within a high-performance
+framework. Its optimized C/C++ backend and intelligent parallelization
+enable compiling one million GBIF occurrence records on a laptop within
+15 minutes. In a word, UltraGBIF resolves challenges in reproducibility,
+scalability, and spatial-taxonomic integrity without increasing adoption
+barriers for biodiversity researchers.
+
+## Workflow of UltraGBIF
+
+![Three main stages and seven modules of UltraGBIF. After all stages,
+generally 35% of the initial occurrence records are
+retained.](reference/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
+
+**Three main stages and seven modules of UltraGBIF.** After all stages,
+generally 35% of the initial occurrence records are retained.
+
+------------------------------------------------------------------------
+
+UltraGBIF provides a reproducible, plant-optimized, and computationally
+efficient framework for transforming raw GBIF occurrence records into
+analysis-ready datasets. The package functions are categorized into
+three main stages and seven distinct modules.
+
+**Stage 1: Data Ingestion**
+
+This stage ensures data accuracy and consistency through three modules:
+
+1.  Import Data: This module receives a user-provided Darwin Core
+    Archive that adheres to GBIF data conventions. The DwC-A is loaded
+    via its ore data file (e.g., occurrences.zip/csv) and any extensions
+    described by meta.xml. GBIF-reported issue flags are automatically
+    extracted for downstream quality assessment.
+
+2.  Check Taxon Name: This module implements taxonomic name
+    standardization to resolve and validate plant names. User may select
+    between the World Checklist of Vascular Plants (WCVP; Govaerts et
+    al., 2021) and the Taxonomic Name Resolution Service (TNRS, Boyle et
+    al. 2013). This step unifies synonyms and corrects misspellings.
+
+3.  Check Collector Name: This module standardizes collector names to
+    reduce inconsistencies (e.g., “Smith, J.” versus “J. Smith”) that
+    can fragment single collection events. By preparing a standardized
+    dictionary of primary collector surnames, this step reduces
+    identification errors by over 80% and improves the accuracy of
+    subsequent duplication checks.
+
+**Stage 2: Deduplication and Reliability Filtering**
+
+This stage improves data reliability by identifying high-quality,
+non-redundant occurrence records.
+
+4.  Generate Unique Collection Mark: This module identifies and
+    consolidates duplicates into unique collection events. A collection
+    event represents a distinct sampling instances (a specific collector
+    at a specific time and place).
+
+5.  Set Digital Voucher: For duplicate entries sharing a collection
+    mark, the record with the highest metadata quality is retained as
+    the “digital voucher.” This approach preserves the most
+    geographically informative data while minimizing redundancy, thereby
+    improving the spatially reliability.
+
+**Stage 3: Refine Records**
+
+The final stage restores key information, enhances geospatial accuracy,
+and enables visualization.
+
+6.  Refine records: This module validates spatial information and
+    restores detailed metadata for usable vouchers. It perfoms automated
+    coordinate validation using CoordinateCleaner (Zizka et al., 2019)
+    to flag spatial errors (e.g., centroids, capitals, institutions). It
+    also extracts information from WCVP to annotate records as ‘native’,
+    ‘introduced’, or ‘doubtful’. The optional occTest package
+    (Serra-Diaz et al., 2024) is also compatible here for advanced
+    quality control checks.
+
+7.  Map records: An optional visualization module that verified records
+    onto customizable, dynamic maps, providing intuitive interface for
+    specting spatial distributions and data density.
+
+Focused exclusively on GBIF plant occurrence records, UltraGBIF is able
+to clean one million records within 15 minutes on a laptop, representing
+60% memory reduction. In a word, UltraGBIF integrates these components
+into a unified, automated workflow that enhances data standardization,
+accuracy, and usability, which enables robust, reproducible, and
+scalable compiling of GBIF occurrence records for advanced biodiversity
+research.
+
+UltraGBIF is under development. If you encounter any bugs, please feel
+free to submit an
+[issue](https://github.com/wyx619/UltraGBIF/issues/new). Your feedback
+is greatly appreciated!
+
+## Installation
+
+You can install UltraGBIF from GitHub. UltraGBIF runs with rWCVPdata, so
+install it firstly (We recommend rWCVPdata version 0.6.0 with WCVP
+version 14), and the initial installation takes some time.
+
+``` r
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes", dependencies = TRUE)}
+remotes::install_github("matildabrown/rWCVPdata", upgrade=F) ## install rWCVPdata
+remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
+```
+
+If you meet any internet error, download
+[rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz)
+and install manually. The initial installation also takes some time.
+
+``` r
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes", dependencies = TRUE)}
+remotes::install_local("path/to/your/rWCVPdata_0.6.0.tar.gz", upgrade=F) ## install rWCVPdata manually
+remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
+```
+
+## Tutorial of UltraGBIF
+
+[Tutorial of UltraGBIF: wiki
+page](https://github.com/wyx619/UltraGBIF/wiki/Tutorial-of-UltraGBIF)
+
+[Tutorial of UltraGBIF: pkgdown
+page](https://wyx619.github.io/UltraGBIF/articles/Tutorial_of_UltraGBIF.html)
+
+## Reference
+
+Boyle, Brad, Nicole Hopkins, Zhenyuan Lu, Juan Antonio Raygoza Garay,
+Dmitry Mozzherin, Tony Rees, Naim Matasci, et al. 2013. “The Taxonomic
+Name Resolution Service: An Online Tool for Automated Standardization of
+Plant Names.” *BMC Bioinformatics* 14 (1): 16.
+<https://doi.org/10.1186/1471-2105-14-16>.
+
+De Melo, Pablo Hendrigo Alves, Nadia Bystriakova, Eve Lucas, and
+Alexandre K. Monro. 2024. “A New R Package to Parse Plant Species
+Occurrence Records into Unique Collection Events Efficiently Reduces
+Data Redundancy.” *Scientific Reports* 14 (1): 5450.
+<https://doi.org/10.1038/s41598-024-56158-3>.
+
+Govaerts, Rafaël, Eimear Nic Lughadha, Nicholas Black, Robert Turner,
+and Alan Paton. 2021. “The World Checklist of Vascular Plants, a
+Continuously Updated Resource for Exploring Global Plant Diversity.”
+*Scientific Data* 8 (1): 215.
+<https://doi.org/10.1038/s41597-021-00997-6>.
+
+Maitner, Brian, and Brad Boyle. 2024. “TNRS: Taxonomic Name Resolution
+Service.”
+[https://CRAN.R-project.org/package=TNRS](https://cran.r-project.org/package=TNRS).
+
+Zizka, Alexander, Daniele Silvestro, Tobias Andermann, Josué Azevedo,
+Camila Duarte Ritter, Daniel Edler, Harith Farooq, et al. 2019.
+“CoordinateCleaner : Standardized Cleaning of Occurrence Records from
+Biological Collection Databases.” Edited by Tiago Quental. *Methods in
+Ecology and Evolution* 10 (5): 744–51.
+<https://doi.org/10.1111/2041-210X.13152>.
