@@ -22,7 +22,7 @@ This Tutorial parses and merges [*Saxifraga*](https://doi.org/10.15468/dl.bythb4
 
 ## Installation
 
-It is easy to install UltraGBIF from GitHub, which ensures access to the latest version and all available features. UltraGBIF is built with rWCVPdata, so it is necessary to install it firstly. We recommend rWCVPdata version 0.6.0 with WCVP version 14 for UltraGBIF, and the initial installation takes some time.
+You can install UltraGBIF from GitHub. UltraGBIF runs with rWCVPdata, so install it firstly (We recommend rWCVPdata version 0.6.0 with WCVP version 14), and the initial installation takes some time.
 
 ```{r Installation, eval=FALSE, include=T}
 if (!requireNamespace("remotes", quietly = TRUE)) {

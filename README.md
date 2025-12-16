@@ -1,9 +1,8 @@
 ## Introduction of **UltraGBIF** <img src="man/figures/logo.png" alt="UltraGBIF Package Logo" style="width: 58px;"/>
 
-
 Mapping plant distributions is fundamental to understanding biodiversity patterns, accurate distribution data and such information is necessary for researching plant diversity.
 
-Global Biodiversity Information Facility, known as GBIF, is a large repository for plant occurrence records worldwide, which has fueled over 18,200 peer-reviewed journal articles, with ecology (3,769 researches), climate change (2,953), conservation (1,915), and invasive species management (1,840) as of August 2025, supporting global policy frameworks like the Kunming-Montreal Global Biodiversity Framework.
+Global Biodiversity Information Facility, known as GBIF, is a large repository for plant occurrence records worldwide. It has fueled over 18,200 peer-reviewed journal articles, with ecology (3,769 researches), climate change (2,953), conservation (1,915), and invasive species management (1,840) as of August 2025, supporting global policy frameworks like the Kunming-Montreal Global Biodiversity Framework.
 
 Researches using GBIF occurrence records usually rely on a suite of tools. **R**, with packages such as `rgbif`[@rgbif], `TNRS`[@TNRS] , `sf`[@sf], `terra`[@terra], `CoordinateCleaner`[@CoordinateCleaner] and WCVP[@rWCVPdata] helps to deal with GBIF occurrence records. But for million records datasets, current methods incur substantial computational overhead through manual chaining of disparate packages, necessitating high-performance infrastructure despite advancing computational capabilities. .
 
@@ -11,29 +10,37 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 ## Workflow of UltraGBIF
 
-![Workflow Diagram](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
+![**Three main stages and seven modules of UltraGBIF.** After all stages, generally 35% of the initial occurrence records are retained.](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
 
-UltraGBIF comprises a set of functions leading a complete and reproducible workflow, which can be categorized into three main stages and some modules.
+------------------------------------------------------------------------
 
-Firstly, the "Preliminary process" stage ensures data accuracy and consistency through three modules.
+UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into three main stages and seven distinct modules.
 
--   The "Import records" module serves as the primary input point of the UltraGBIF unified workflow, receiving a user-specified Darwin Core Archive from GBIF and automatically extracting GBIF issues. This module is driven by data.table and stringi (both built on C/C++), thereby achieving exceptionally high processing speed.
+**Stage 1: Data Ingestion**
 
--   The "Check taxon name" module implements taxonomic standardization to resolve and validate plant taxon. Local WCVP[@rWCVP] or online TNRS[@TNRS] is used to automatically match and correct taxon names against multiple taxonomic databases. This ensures consistent and accurate species identification.
+This stage ensures data accuracy and consistency through three modules:
 
--   The "Check collectors dictionary" module prepares collectors dictionary and verifies the last name of the primary collector. This fixes a common problem in original biodiversity data, messy or inconsistent names (like “Smith, J.” vs. “J. Smith”) that can cause errors and misleading location maps. By automatically checking names, it cuts out manual work and reduces wrong identifications by over 80%, making species locations more accurate for GBIF-based studies.
+1.  Import Data: This module receives a user-provided Darwin Core Archive that adheres to GBIF data conventions. The DwC-A is loaded via its ore data file (e.g., occurrences.zip/csv) and any extensions described by meta.xml. GBIF-reported issue flags are automatically extracted for downstream quality assessment.
 
-Secondly, the "Filter usable records" component enhances data reliability by identifying high-quality, non-redundant occurrence records through two key modules.
+2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names. User may select between the World Checklist of Vascular Plants (WCVP; Govaerts et al., 2021) and the Taxonomic Name Resolution Service (TNRS, Boyle et al. 2013). This step unifies synonyms and corrects misspellings.
 
--   The "Generate unique collection mark" module identifies and consolidates duplicate records into unique collection events marked by `family + recordedBy_Standardized + recordNumber_Standardized`, ensuring that each event represents a distinct sampling or observation instance. Among duplicate entries, the record with the highest quality score is retained. This approach preserves the most geographically informative data while minimizing redundancy, thereby improving the quality and reliability of spatial and ecological analyses.
+3.  Check Collector Name: This module standardizes collector names to reduce inconsistencies (e.g., “Smith, J.” versus “J. Smith”) that can fragment single collection events. By preparing a standardized dictionary of primary collector surnames, this step reduces identification errors by over 80% and improves the accuracy of subsequent duplication checks.
 
--   The "Set digital voucher" module evaluates the validity and spatial accuracy of each unique collection mark using the GBIF standardized issue flagging system. This quality control mechanism identifies potential errors or inconsistencies in occurrence records. It ensures that only high-quality, spatially reliable data are retained for subsequent processing and interpretation.
+**Stage 2: Deduplication and Reliability Filtering**
 
-Last but not least, the "Refine records" component restores key information, enhances geospatial accuracy and enables visualization through two modules.
+This stage improves data reliability by identifying high-quality, non-redundant occurrence records.
 
--   The "Refine records" module restores key information for usable vouchers by consolidating data from duplicate records belonging to identical collection events, performs automated coordinate validation by CoordinateCleaner and extracts WGSRPD geographical information for taxa.
+4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instances (a specific collector at a specific time and place).
 
--   The "Map records" optional module renders records with verified information onto highly-customizable and dynamic maps, providing intuitive visualization of spatial distributions and offering a streamlined interface for biodiversity research.
+5.  Set Digital Voucher: For duplicate entries sharing a collection mark, the record with the highest metadata quality is retained as the “digital voucher.” This approach preserves the most geographically informative data while minimizing redundancy, thereby improving the spatially reliability.
+
+**Stage 3: Refine Records**
+
+The final stage restores key information, enhances geospatial accuracy, and enables visualization.
+
+6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It perfoms automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'. The optional occTest package (Serra-Diaz et al., 2024) is also compatible here for advanced quality control checks.
+
+7.  Map records: An optional visualization module that verified records onto customizable, dynamic maps, providing intuitive interface for specting spatial distributions and data density.
 
 Focused exclusively on GBIF plant occurrence records, UltraGBIF is able to clean one million records within 15 minutes on a laptop, representing 60% memory reduction. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
@@ -41,7 +48,7 @@ UltraGBIF is under development. If you encounter any bugs, please feel free to s
 
 ## Installation
 
-It is easy to install UltraGBIF from GitHub, which ensures access to the latest version and all available features. UltraGBIF is built with rWCVPdata, so it is necessary to install it firstly. We recommend rWCVPdata version 0.6.0 with WCVP version 14 for UltraGBIF, and the initial installation takes some time.
+You can install UltraGBIF from GitHub. UltraGBIF runs with rWCVPdata, so install it firstly (We recommend rWCVPdata version 0.6.0 with WCVP version 14), and the initial installation takes some time.
 
 ``` r
 if (!requireNamespace("remotes", quietly = TRUE)) {
@@ -58,7 +65,9 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 remotes::install_local("path/to/your/rWCVPdata_0.6.0.tar.gz", upgrade=F) ## install rWCVPdata manually
 remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
 ```
+
 ## Tutorial of UltraGBIF
+
 [Tutorial of UltraGBIF: wiki page](https://github.com/wyx619/UltraGBIF/wiki/Tutorial-of-UltraGBIF)
 
 [Tutorial of UltraGBIF: pkgdown page](https://wyx619.github.io/UltraGBIF/articles/Tutorial_of_UltraGBIF.html)
