@@ -1,18 +1,23 @@
-## Introduction of **UltraGBIF** <img src="man/figures/logo.png" alt="UltraGBIF Package Logo" style="width: 58px;"/>
+<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70" /></a>
+# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
 
-Mapping plant distributions is fundamental to understanding biodiversity patterns, accurate distribution data and such information is necessary for researching plant diversity.
+### An ultra-fast and user-friendly R package for compiling plant occurrence records from GBIF
 
-Global Biodiversity Information Facility, known as GBIF, is a large repository for plant occurrence records worldwide. It has fueled over 18,200 peer-reviewed journal articles, with ecology (3,769 researches), climate change (2,953), conservation (1,915), and invasive species management (1,840) as of August 2025, supporting global policy frameworks like the Kunming-Montreal Global Biodiversity Framework.
+## Introduction
 
-Researches using GBIF occurrence records usually rely on a suite of tools. **R**, with packages such as `rgbif`[@rgbif], `TNRS`[@TNRS] , `sf`[@sf], `terra`[@terra], `CoordinateCleaner`[@CoordinateCleaner] and WCVP[@rWCVPdata] helps to deal with GBIF occurrence records. But for million records datasets, current methods incur substantial computational overhead through manual chaining of disparate packages, necessitating high-performance infrastructure despite advancing computational capabilities. .
+Mapping plant distributions is fundamental to understanding biodiversity patterns, accurate distribution data and such information is necessary for researching plant diversity. Global Biodiversity Information Facility, known as [GBIF](https://www.gbif.org/), is a large repository for plant occurrence records worldwide. It has fueled over 18,200 peer-reviewed journal articles, with ecology (3,769 researches), climate change (2,953), conservation (1,915), and invasive species management (1,840) as of August 2025, supporting global policy frameworks like the Kunming-Montreal Global Biodiversity Framework.
+
+Researchers using GBIF occurrence records usually rely on a suite of packages and scrips, consuming lots of runtime, Such as [`rgbif`](https://doi.org/10.32614/CRAN.package.rgbif), [`TNRS`](https://doi.org/10.32614/CRAN.package.TNRS), [`CoordinateCleaner`](https://doi.org/10.32614/CRAN.package.CoordinateCleaner), [`bdc`](https://doi.org/10.32614/CRAN.package.bdc), [`plantR`](https://doi.org/10.1111/2041-210X.13779), [`NSR`](https://doi.org/10.32614/CRAN.package.NSR) and [`GVS`](https://doi.org/10.32614/CRAN.package.GVS) help to deal with GBIF occurrence records. Moreover, for million records datasets, current methods incur substantial computational overhead through manual chaining of disparate packages, necessitating high-performance infrastructure despite advancing computational capabilities.
 
 To rectify this situation, we introduce UltraGBIF, an efficient R package that unifies taxonomic resolution, spatial validation, duplicate consolidation, and botanical region annotation within a high-performance framework. Its optimized C/C++ backend and intelligent parallelization enable compiling one million GBIF occurrence records on a laptop within 15 minutes. In a word, UltraGBIF resolves challenges in reproducibility, scalability, and spatial-taxonomic integrity without increasing adoption barriers for biodiversity researchers.
 
-## Workflow of UltraGBIF
+## Workflow
 
-![**Three main stages and seven modules of UltraGBIF.** After all stages, generally 35% of the initial occurrence records are retained.](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
 
-------------------------------------------------------------------------
+***Three main stages and seven modules of UltraGBIF.** After all stages, generally 35% of the initial occurrence records are retained.*
+![](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
+
+
 
 UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into three main stages and seven distinct modules.
 
@@ -20,31 +25,31 @@ UltraGBIF provides a reproducible, plant-optimized, and computationally efficien
 
 This stage ensures data accuracy and consistency through three modules:
 
-1.  Import Data: This module receives a user-provided Darwin Core Archive that adheres to GBIF data conventions. The DwC-A is loaded via its ore data file (e.g., occurrences.zip/csv) and any extensions described by meta.xml. GBIF-reported issue flags are automatically extracted for downstream quality assessment.
+1.  Import Data: This module receives a user-provided Darwin Core Archive that adheres to GBIF data conventions. The DwC-A is loaded locally (e.g., occurrences.csv/zip) and any extensions described by meta.xml. GBIF-reported issue flags are automatically extracted for downstream quality assessment.
 
 2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names. User may select between the World Checklist of Vascular Plants (WCVP; Govaerts et al., 2021) and the Taxonomic Name Resolution Service (TNRS, Boyle et al. 2013). This step unifies synonyms and corrects misspellings.
 
-3.  Check Collector Name: This module standardizes collector names to reduce inconsistencies (e.g., “Smith, J.” versus “J. Smith”) that can fragment single collection events. By preparing a standardized dictionary of primary collector surnames, this step reduces identification errors by over 80% and improves the accuracy of subsequent duplication checks.
+3.  Check Collector Name: This module standardizes collector names to reduce inconsistencies (e.g., "Smith, J." versus "J. Smith") that can fragment single collection events. By preparing a standardized dictionary of primary collector surnames, this step reduces identification errors by over 80% and improves the accuracy of subsequent duplication checks.
 
 **Stage 2: Deduplication and Reliability Filtering**
 
 This stage improves data reliability by identifying high-quality, non-redundant occurrence records.
 
-4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instances (a specific collector at a specific time and place).
+4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific time and place). 
 
-5.  Set Digital Voucher: For duplicate entries sharing a collection mark, the record with the highest metadata quality is retained as the “digital voucher.” This approach preserves the most geographically informative data while minimizing redundancy, thereby improving the spatially reliability.
+5.  Set Digital Voucher: For duplicate entries sharing a collection mark, the record with the highest metadata quality is retained as the "digital voucher." This approach preserves the most geographically informative data while minimizing redundancy, thereby improving the spatially reliability.
 
 **Stage 3: Refine Records**
 
 The final stage restores key information, enhances geospatial accuracy, and enables visualization.
 
-6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It perfoms automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'. The optional occTest package (Serra-Diaz et al., 2024) is also compatible here for advanced quality control checks.
+6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019)  to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'. The optional [`occTest`](https://github.com/pepbioalerts/occTest/blob/master/url) package (Serra-Diaz et al., 2024) is also compatible here for advanced quality control checks.
 
-7.  Map records: An optional visualization module that verified records onto customizable, dynamic maps, providing intuitive interface for specting spatial distributions and data density.
+7.  Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
 
 Focused exclusively on GBIF plant occurrence records, UltraGBIF is able to clean one million records within 15 minutes on a laptop, representing 60% memory reduction. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
-UltraGBIF is under development. If you encounter any bugs, please feel free to submit an [issue](https://github.com/wyx619/UltraGBIF/issues/new). Your feedback is greatly appreciated!
+> UltraGBIF is under development. If you encounter any bugs, please feel free to submit an [issue](https://github.com/wyx619/UltraGBIF/issues/new). Your feedback is greatly appreciated!
 
 ## Installation
 
@@ -57,7 +62,7 @@ remotes::install_github("matildabrown/rWCVPdata", upgrade=F) ## install rWCVPdat
 remotes::install_github("wyx619/UltraGBIF", upgrade=F) ## install UltraGBIF
 ```
 
-If you meet any internet error, download [rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz) and install manually. The initial installation also takes some time.
+> If you meet any internet error, download [rWCVPdata](https://wyx619.github.io/UltraGBIF619/src/contrib/rWCVPdata_0.6.0.tar.gz) and install manually. The initial installation also takes some time.
 
 ``` r
 if (!requireNamespace("remotes", quietly = TRUE)) {
