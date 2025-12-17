@@ -1,6 +1,8 @@
-<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> \# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
 
-> An ultra-fast and user-friendly R package for compiling plant occurrence records from GBIF
+<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70" /></a>
+# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
+
+### An ultra-fast and user-friendly R package for compiling plant occurrence records from GBIF
 
 ## Introduction
 
