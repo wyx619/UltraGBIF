@@ -1,7 +1,6 @@
-<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70" /></a>
-# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
+<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> \# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
 
-### An ultra-fast and user-friendly R package for compiling plant occurrence records from GBIF
+> An ultra-fast and user-friendly R package for compiling plant occurrence records from GBIF
 
 ## Introduction
 
@@ -13,11 +12,7 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 ## Workflow
 
-
-***Three main stages and seven modules of UltraGBIF.** After all stages, generally 35% of the initial occurrence records are retained.*
-![](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
-
-
+***Three main stages and seven modules of UltraGBIF.** After all stages, generally 35% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow%20of%20UltraGBIF_01.png "UltraGBIF workflow")
 
 UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into three main stages and seven distinct modules.
 
@@ -35,7 +30,7 @@ This stage ensures data accuracy and consistency through three modules:
 
 This stage improves data reliability by identifying high-quality, non-redundant occurrence records.
 
-4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific time and place). 
+4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific time and place).
 
 5.  Set Digital Voucher: For duplicate entries sharing a collection mark, the record with the highest metadata quality is retained as the "digital voucher." This approach preserves the most geographically informative data while minimizing redundancy, thereby improving the spatially reliability.
 
@@ -43,7 +38,7 @@ This stage improves data reliability by identifying high-quality, non-redundant 
 
 The final stage restores key information, enhances geospatial accuracy, and enables visualization.
 
-6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019)  to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'. The optional [`occTest`](https://github.com/pepbioalerts/occTest/blob/master/url) package (Serra-Diaz et al., 2024) is also compatible here for advanced quality control checks.
+6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'. The optional [`occTest`](https://github.com/pepbioalerts/occTest/blob/master/url) package (Serra-Diaz et al., 2024) is also compatible here for advanced quality control checks.
 
 7.  Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
 
