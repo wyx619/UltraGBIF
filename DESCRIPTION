@@ -1,0 +1,26 @@
+Package: UltraGBIF
+Title: An ultra-fast and user-friendly R package for compiling quality filtered plant occurrence records from GBIF
+Version: 3.0.7
+Date: 2025-12-16
+Type: Package
+Maintainer: Yuxuan Wang <wyx1743@gmail.com>
+Authors@R: 
+    person("Yuxuan", "Wang", email = "wyx1743@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7817-748X"))
+Description: GBIF hosts over 3 billion occurrence records. However, dealing with them typically involves lots of workflows and runtime, posing significant challenges for researchers. To address these limitations, we present UltraGBIF, an ultra-fast and user-friendly R package to parse and merge enormous GBIF occurrence records.
+License: GPL (>= 3) | file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+LazyData: true
+LazyDataCompression: xz
+Depends: R (>= 4.1)
+Imports: data.table,dplyr,stringi,terra,lubridate,CoordinateCleaner,rWCVP,rWCVPdata,TNRS,geohashTools,mapview,foreach,doParallel,rnaturalearthdata
+Suggests: 
+    knitr,
+    leaflet,
+    rmarkdown,
+    rnaturalearth,
+    sf
+URL: https://github.com/wyx619/UltraGBIF, https://wyx619.github.io/UltraGBIF/
+BugReports: https://github.com/wyx619/UltraGBIF/issues
+VignetteBuilder: knitr

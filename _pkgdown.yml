@@ -1,0 +1,8 @@
+url: https://wyx619.github.io/UltraGBIF/
+development:
+  mode: release
+template:
+  bootstrap: 5
+  light-switch: true
+  bootswatch: litera
+  theme-dark: gruvbox-dark
