@@ -1,10 +1,9 @@
 ---
 title: "Tutorial of UltraGBIF"
 author:
-- name: Yuxuan Wang
-  affiliation: Sichuan University
-  email: wyx1743@gmail.com
-  ORCID: "0009-0003-7817-748X"
+- name: anonymous
+  affiliation: anonymous University
+  email: anonymous@anonymous.com
 date: "2026-01-09"
 output:
   html_document:
@@ -25,10 +24,10 @@ This Tutorial parses and merges [*Saxifraga*](https://doi.org/10.15468/dl.bythb4
 You can install UltraGBIF from GitHub. UltraGBIF runs with rWCVPdata, so install it firstly (We recommend rWCVPdata version 0.6.0 with WCVP version 14), and the initial installation takes some time.
 
 ```{r Installation, eval=FALSE, include=T}
-options(repos = c(getOption("repos"),"https://wyx619.github.io/Repo"))
+options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
 options(timeout = 600)
-install.packages("rWCVPdata") ## install rWCVPdata [require long time]
-install.packages("UltraGBIF") ## install UltraGBIF
+install.packages("rWCVPdata", type = 'source') ## install rWCVPdata [require long time]
+install.packages("UltraGBIF", type = 'source') ## install UltraGBIF
 ```
 
 ## Import records

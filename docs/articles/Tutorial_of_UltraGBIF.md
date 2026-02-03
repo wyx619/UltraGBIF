@@ -13,10 +13,10 @@ install it firstly (We recommend rWCVPdata version 0.6.0 with WCVP
 version 14), and the initial installation takes some time.
 
 ``` r
-options(repos = c(getOption("repos"),"https://wyx619.github.io/Repo"))
+options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
 options(timeout = 600)
-install.packages("rWCVPdata") ## install rWCVPdata [require long time]
-install.packages("UltraGBIF") ## install UltraGBIF
+install.packages("rWCVPdata", type = 'source') ## install rWCVPdata [require long time]
+install.packages("UltraGBIF", type = 'source') ## install UltraGBIF
 ```
 
 ## Import records
