@@ -4,7 +4,7 @@ author:
 - name: anonymous
   affiliation: anonymous University
   email: anonymous@anonymous.com
-date: "2026-01-09"
+date: "2026-03-05"
 output:
   html_document:
     df_print: paged
@@ -38,7 +38,10 @@ This module also utilizes `EnumOccurrence` Issue values to transform these issue
 
 ```{r import_records, eval=FALSE, include=T}
 library(UltraGBIF)
-gbif_occurrence_file <- "path/to/the/DwC-A file"
+library(downloader)
+gbif_url <- "https://api.gbif.org/v1/occurrence/download/request/0021523-250402121839773.zip"
+gbif_occurrence_file <- paste0(getwd(),'/occ.zip')
+download(url=gbif_url,destfile=gbif_occurrence_file) ## Wait for seconds
 occ_import <- import_records(GBIF_file = gbif_occurrence_file,
                              only_PRESERVED_SPECIMEN = T)
 ```
@@ -52,9 +55,9 @@ UltraGBIF uses WCVP[@govaerts2021] as a high-authority taxonomic backbone, syste
 To optimize computational efficiency, this module supports parallelization through multi-threading by specifying the desired concurrency level via the `threads` parameter.
 
 ```{r check_occ_name, eval=FALSE, include=T}
-names.checked <- check_occ_name(occ_import = occ_import,
+names_checked <- check_occ_name(occ_import = occ_import,
                                 threads = 4,
-                                local_taxon_resolution = TRUE,
+                                local_taxon_resolution = F,
                                 if_author_fails_try_without_combinations = TRUE)
 ```
 

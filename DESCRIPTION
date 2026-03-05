@@ -1,7 +1,7 @@
 Package: UltraGBIF
 Title: An ultra-fast and user-friendly R package for compiling quality filtered plant occurrence records from GBIF
-Version: 3.0.7
-Date: 2026-01-09
+Version: 3.1.0
+Date: 2026-03-04
 Type: Package
 Maintainer: Anonymous <Anonymous@Anonymous.com>
 Authors@R: 
@@ -21,6 +21,4 @@ Suggests:
     rmarkdown,
     rnaturalearth,
     sf
-URL: https://github.com/wyx619/UltraGBIF, https://anonymous.4open.science/w/UltraGBIF-7FD3/
-BugReports: https://github.com/wyx619/UltraGBIF/issues
 VignetteBuilder: knitr

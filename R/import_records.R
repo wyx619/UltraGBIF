@@ -1,14 +1,13 @@
 #' @title Import GBIF occurrence records
 #' @name import_records
 #'
-#' @description Returns a list contains processed GBIF records and useful issues for downstream analysis.
+#' @description Returns a list contains initial GBIF records and useful issues for downstream analysis.
 #'
 #' @param GBIF_file GBIF occurrence Darwin Core Archive. See details for more information
 #' @param only_PRESERVED_SPECIMEN if TRUE, occurrence records are filtered by `basisOfRecord="PRESERVED_SPECIMEN"`
 #'
-#' @details GBIF_file is a path to your Darwin Core standard file which is downloaded from GBIF.
+#' @details GBIF_file is a path to your Darwin Core downloaded from GBIF.
 #' The Darwin Core Archive (DwC-A) is a compact package (a ZIP file) contains interconnected text files and enables data publishers to share their data using a common terminology.
-#' GBIF_file could also be a path to "occurrence.txt" which is decompressed from your your Darwin Core standard file.
 #'
 #' @return A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
 #'
@@ -19,10 +18,12 @@
 #'
 #' @examples
 #' \donttest{
-#'
-#' help(import_records)
-#'
-#'
+#'library(downloader)
+#'gbif_url <- "https://api.gbif.org/v1/occurrence/download/request/0021523-250402121839773.zip"
+#'gbif_occurrence_file <- paste0(getwd(),'/occ.zip')
+#'download(url=gbif_url,destfile=gbif_occurrence_file) ## Wait for seconds
+#'occ_import <- import_records(GBIF_file = gbif_occurrence_file,
+#'                             only_PRESERVED_SPECIMEN = T)
 #'}
 #' @export
 import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
@@ -62,7 +63,7 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
                col.names = paste0('Ctrl_',col_sel),
                quote="",
                showProgress = FALSE)[is.na(Ctrl_hasCoordinate), Ctrl_hasCoordinate := FALSE][,Ctrl_gbifID:=as.character(Ctrl_gbifID)]
-  unlink(GBIF_file)
+
 
   if (only_PRESERVED_SPECIMEN) {
     occ <- occ[Ctrl_basisOfRecord=="PRESERVED_SPECIMEN",]
@@ -87,7 +88,7 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
 
   end=Sys.time()
   used=end-start
-  print(used)
+  message(used)
 
   return(list(occ=occ,
               occ_gbif_issue=occ_gbif_issue,

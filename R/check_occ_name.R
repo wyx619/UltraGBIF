@@ -189,7 +189,7 @@ check_occ_name <- function(occ_import = NA,
 
   end=Sys.time()
   used=end-start
-  print(used)
+  message(used)
 
   return(list(occ_wcvp_check_name = occ_all,
               summary = summary,

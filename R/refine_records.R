@@ -167,7 +167,7 @@ refine_records<-function(voucher = NA,
   results_final_sf_ori <- foreach(data=chunks_list,
                                   .multicombine = T,
                                   .errorhandling = "remove",
-                                  .packages = c("CoordinateCleaner","rnaturalearthdata"),
+                                  .packages = c("CoordinateCleaner","rnaturalearthdata","dplyr"),
                                   .inorder = F) %dopar% {coord(data)}
 
   results_final_sf_ori <- rbindlist(results_final_sf_ori,fill = T)
@@ -264,7 +264,7 @@ refine_records<-function(voucher = NA,
   }
 
   end=Sys.time()
-  print(end-start)
+  message(end-start)
   return(list(all_records=results,
               native_records=native_records,
               used_time=end-start))

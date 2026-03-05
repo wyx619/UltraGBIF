@@ -107,7 +107,7 @@ generate_collection_mark <- function(occ_import = NA,
     setorder(-number_of_Records)
 
   end=Sys.time()
-  print(end-start)
+  message(end-start)
   return(list(occ_collectorsDictionary = occ_collectorsDictionary,
               summary = summary,
               collectorsDictionary_add = collectorDictionary_checked_new,
