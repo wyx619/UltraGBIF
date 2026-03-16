@@ -2,36 +2,32 @@
 % Please edit documentation in R/check_occ_name.R
 \name{check_occ_name}
 \alias{check_occ_name}
-\title{Use local or online taxon resolution service to check accepted taxon names and update synonyms at once}
+\title{Using integrated Taxonomic Name Resolution Service to check taxon names and update synonyms under World Checklist of Vascular Plants}
 \usage{
-check_occ_name(
-  occ_import = NA,
-  local_taxon_resolution = TRUE,
-  threads = 4,
-  if_author_fails_try_without_combinations = TRUE
-)
+check_occ_name(occ_import = NA, accuracy = 0.9)
 }
 \arguments{
 \item{occ_import}{imported GBIF records}
 
-\item{local_taxon_resolution}{if TRUE, resolve taxon names locally. Otherwise automatically use Taxonomic Name Resolution Service(TNRS) instead}
-
-\item{threads}{your threads requirement, a positive real number, default is 4}
-
-\item{if_author_fails_try_without_combinations}{option for partial verification of the authorship of the species.
-Remove the authors of combinations, in parentheses}
+\item{accuracy}{numeric. If specified, only matches with a score greater than or equal to the supplied accuracy level will be returned. If left, the default threshold will be 0.9.}
 }
 \value{
-A list with duration and two data.table: "summary" with species list and "occ_wcvp_check_name" with WCVP fields
+A list with duration and two data.table: "summary" with taxa list and "occ_wcvp_check_name" with WCVP fields
 }
 \description{
-Names of species can be checked against WCVP database.
-To verify individual names, the function wcvp_check_name is used.
+Names of taxa are checked using integrated Taxonomic Name Resolution Service (TNRS)
 }
 \details{
 \itemize{
-\item \href{http://sftp.kew.org/pub/data-repositories/WCVP/}{about WCVP database}
+\item \href{https://tnrs.biendata.org/about/}{About TNRS}
 \item \href{https://powo.science.kew.org//}{World Checklist of Vascular Plants}
-\item \href{https://github.com/matildabrown/rWCVPdata/}{rWCVPdata}
 }
+}
+\examples{
+\dontrun{
+taxa_checked <- check_occ_name(occ_import = occ_import,accuracy = 0.9)
+}
+}
+\seealso{
+\code{\link[TNRS]{TNRS}}
 }

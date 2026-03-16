@@ -1,4 +1,4 @@
-#' @title Extract last name of the main collector (internal)
+#' @title Extract last name of the main collector
 #' @name get_collectors_name
 #'
 #' @description Extract last name of the main collector in recordedBy field
@@ -17,6 +17,21 @@
 #'
 #' @return
 #' last name of the main collector
+#' @examples
+#' \donttest{
+#' # Basic usage
+#' get_collectors_name('Anderberg, Arne & Anderberg, Anna-Lena')
+#' get_collectors_name('Schlegel, Henrik Adolf Leonard & Arnell, Hampus Wilrshelm')
+#'
+#' # Different selection methods
+#' get_collectors_name('Tomitarô-Makino, John', surname_selection_type = 'largest_string')
+#' get_collectors_name('Tomitarô-Makino, John', surname_selection_type = 'last_name')
+#'
+#' # Edge cases
+#' get_collectors_name(NA) # Returns "UNKNOWN"
+#' get_collectors_name('')  # Returns "UNKNOWN"
+#' get_collectors_name('et al.') # Returns "UNKNOWN"
+#' }
 #'
 #'
 #' @import stringi data.table
@@ -159,81 +174,78 @@ get_collectors_name<-function (x = NA, surname_selection_type = "largest_string"
 
     if (surname_selection_type == "largest_string") {
       vll = which(nchar(xx)==max(nchar(xx)))
-      sobren <- ifelse(length(vll) > 1,xx[tail(vll, 1)],tail(xx,1))
-      return(sobren)
-    }
-    if (surname_selection_type != "largest_string") {
-      sobren = ""
+      name <- ifelse(length(vll) > 1,xx[tail(vll, 1)],tail(xx,1))
+      return(name)
+    } else {
+      name = ""
       ind_name =  stri_length(xx) > 1 & stri_detect_regex(xx, "[AEIOUY]") & stri_count_fixed(xx, "-") < 2
       if (sum(stri_detect_regex(xx, "[\\u4E00-\\u9FFF]"))==0 & any(ind_name)) {
         for (i2 in length(xx[ind_name]):1) {
-          if (i2 > max_words_name) {
-            next
-          }
+          if (i2 > max_words_name) next
           if (stri_length(xx[ind_name][i2]) >= min_characters_in_name &
               !check_date_num(xx[ind_name][i2],no_name = no_name)) {
-            sobren = xx[ind_name][i2]
+            name = xx[ind_name][i2]
             break
           }
         }
       } else {
-        sobren=xx[stri_detect_regex(xx, "[\\u4E00-\\u9FFF]")][1]
-        if (is.na(sobren)) {sobren=xx%>%tail(1)}
+        name=xx[stri_detect_regex(xx, "[\\u4E00-\\u9FFF]")][1]
+        if (is.na(name)) name=xx%>%tail(1)
         }
-      return(sobren)
+      return(name)
     }
   }
-  x=clean_text(x)
+  x <- clean_text(x)
 
   if (stri_detect_regex(x, ",| ")) {
 
     xx <- stri_split_fixed(x, ",") %>% unlist()
     xx <- stri_split_fixed(xx, " ") %>% unlist()
-    xx = xx[xx != ""]
+    xx <-  xx[xx != ""]
     xx <- xx[stri_length(xx)>=min_characters_in_name]
     xx <- xx[!xx %chin% no_name]
     xx <- xx[!stri_detect_regex(xx, "^[0-9]+$") & xx != ""]
-    if (length(xx)==0) xx<-""
+    if (length(xx)==0) xx <- ""
 
     if (max(stri_length(xx)) > 2) {
-      sobren=surname_check(xx,
+      name <- surname_check(xx,
                            surname_selection_type=surname_selection_type,
                            max_words_name=max_words_name,
                            min_characters_in_name=min_characters_in_name,
                            no_name=no_name)
     } else {
-      sobren <- xx %>% unlist() %>% stri_trim_both() %>%
+      name <- xx %>% unlist() %>% stri_trim_both() %>%
         {.[tail(which.max(stri_length(.)), 1)]}
     }
   } else {
-    xx = strsplit(x, " ") %>% unlist()
+    xx <- strsplit(x, " ") %>% unlist()
     xx <- xx[stri_length(xx)>=min_characters_in_name]
     xx <- xx[!xx %chin% no_name]
     xx <- xx[!stri_detect_regex(xx, "^[0-9]+$") & xx != ""]
     if(length(xx)==0) xx=""
-    sobren=surname_check(xx,
+    name=surname_check(xx,
                          surname_selection_type=surname_selection_type,
                          max_words_name=max_words_name,
                          min_characters_in_name=min_characters_in_name,
                          no_name=no_name)
   }
 
-  sobren <- sobren %>%
+  name <- name %>%
     stri_trim_both() %>%
     stri_replace_all_fixed("?", "") %>%
     stri_join(sep="-") %>%
     stri_trans_toupper()
 
-  if(!is.na(sobren) & stri_length(sobren) >= min_characters_in_name){
-    sobren <- stri_split_fixed(sobren, "|")%>%unlist()%>%head(1)
-    if (stri_startswith_fixed(sobren, "-")) sobren <- stri_sub(sobren, 2)
-    if (stri_endswith_fixed(sobren, "-")) sobren <- stri_sub(sobren, 1, -2)
-    if (stri_detect_fixed(sobren, "-") & stri_count_fixed(sobren, "-") == 1){
-      x_t <- stri_split_fixed(sobren, "-")%>%unlist()
+  if(!is.na(name) & stri_length(name) >= min_characters_in_name){
+    name <- stri_split_fixed(name, "|")%>%unlist()%>%head(1)
+    if (stri_startswith_fixed(name, "-")) name <- stri_sub(name, 2)
+    if (stri_endswith_fixed(name, "-")) name <- stri_sub(name, 1, -2)
+    if (stri_detect_fixed(name, "-") & stri_count_fixed(name, "-") == 1){
+      x_t <- stri_split_fixed(name, "-")%>%unlist()
       ind_name <- !x_t %chin% c('JUNIOR', 'JR', 'FILHO', 'NETO', 'SOBRINHO') & stri_length(x_t) > 1
-      if (sum(ind_name) >= 1) sobren <- x_t[ind_name][1]
-      if (sum(ind_name) == 0) sobren <- ''
+      if (sum(ind_name) >= 1) name <- x_t[ind_name][1]
+      if (sum(ind_name) == 0) name <- ''
     }
-    return(sobren)
+    return(name)
   }else{return("")}
 }

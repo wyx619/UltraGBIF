@@ -25,7 +25,7 @@ prepare_collectors_dictionary(
 \item{min_characters_in_name}{min characters in name}
 }
 \value{
-A list with duration and 2 data.table: "my_dictionary" for your processed
+A UltraGBIF_collectors_dictionary list with duration and 2 data.table: "my_dictionary" for your processed
 collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 }
 \description{
@@ -55,7 +55,10 @@ collector. The primary botanical collector of a sample is consistently identifie
 same last name, standardized in capital letters with non-ASCII characters replaced.
 }
 \examples{
-\donttest{
-help(collectors_prepare_dictionary)
+\dontrun{
+dictionary <- prepare_collectors_dictionary(occ_import = occ_import,
+surname_selection_type = "largest_string",
+max_words_name = 6,
+min_characters_in_name = 2)
 }
 }

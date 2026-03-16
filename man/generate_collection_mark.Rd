@@ -49,8 +49,9 @@ event (i.e., \emph{gathering}) to facilitate duplicate recognition. To achieve t
 concatenating the \strong{taxon family}, the \strong{last name of the primary collector}, and the \strong{collection number}.
 }
 \examples{
-\donttest{
-help(generate_collection_mark)
+\dontrun{
+collection_key <- generate_collection_mark(occ_import = occ_import,
+dictionary = dictionary)
 }
 
 }

@@ -4,12 +4,12 @@
 \alias{set_digital_voucher}
 \title{Set master digital voucher}
 \usage{
-set_digital_voucher(occ_import = NA, names.checked = NA, collection_key = NA)
+set_digital_voucher(occ_import = NA, taxa_checked = NA, collection_key = NA)
 }
 \arguments{
 \item{occ_import}{imported GBIF records}
 
-\item{names.checked}{your checked taxon names from \code{check_occ_name}}
+\item{taxa_checked}{your checked taxon names from \code{check_occ_name}}
 
 \item{collection_key}{your collection mark from \code{generate_collection_mark}}
 }
@@ -48,19 +48,8 @@ A list with duration and 2 data.table:
 \subsection{Total Score = Record Completeness + Quality of Geospatial Information}{
 \subsection{4. Record Completeness Calculation}{
 \itemize{
-\item Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields:
-\itemize{
-\item Is \code{recordedBy} present?
-\item Is \code{recordNumber} present?
-\item Is \code{year} present?
-\item Is \code{institutionCode} present?
-\item Is \code{catalogNumber} present?
-\item Is \code{locality} present?
-\item Is \code{municipality} present?
-\item Is \code{countryCode} present?
-\item Is \code{stateProvince} present?
-\item Is \code{fieldNotes} present?
-}
+\item Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields presence:
+\code{recordedBy},\code{recordNumber}, \code{year}, \code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality}, \code{countryCode}, \code{stateProvince}, \code{fieldNotes},
 }
 }
 
@@ -95,7 +84,9 @@ A list with duration and 2 data.table:
 \code{UltraGBIF_non_groupable_duplicates}: TRUE if duplicates cannot be grouped, FALSE otherwise.
 }
 \examples{
-\donttest{
-help(set_digital_voucher)
+\dontrun{
+voucher <- set_digital_voucher(occ_import = occ_import,
+taxa_checked = taxa_checked,
+collection_key = collection_key)
 }
 }

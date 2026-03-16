@@ -3,7 +3,7 @@
 \docType{data}
 \name{seas_ref}
 \alias{seas_ref}
-\title{seas_ref}
+\title{A simple features object for land map}
 \format{
 A simple features object
 \describe{
@@ -18,6 +18,6 @@ rnaturalearth::ne_download(scale = 110,type = 'land',category = 'physical',retur
 seas_ref
 }
 \description{
-seas_ref
+An integrated land map
 }
-\keyword{internal}
+\keyword{datasets}

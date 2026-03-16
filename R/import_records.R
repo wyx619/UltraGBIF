@@ -1,15 +1,19 @@
 #' @title Import GBIF occurrence records
 #' @name import_records
 #'
-#' @description Returns a list contains initial GBIF records and useful issues for downstream analysis.
+#' @description Load initial GBIF records and extract issues for downstream analysis.
 #'
-#' @param GBIF_file GBIF occurrence Darwin Core Archive. See details for more information
+#' @param GBIF_file path to the downloaded zip file from GBIF
 #' @param only_PRESERVED_SPECIMEN if TRUE, occurrence records are filtered by `basisOfRecord="PRESERVED_SPECIMEN"`
 #'
-#' @details GBIF_file is a path to your Darwin Core downloaded from GBIF.
-#' The Darwin Core Archive (DwC-A) is a compact package (a ZIP file) contains interconnected text files and enables data publishers to share their data using a common terminology.
+#' @details This step is the beginning of UltraGBIF progress, which makes downloaded file into initial GBIF records.
+#' @seealso
+#'  \itemize{
+#'   \item \code{\link{unzip}} for automatically decompressing
+#'   \item Saxifraga occurrence records: \doi{https://doi.org/10.15468/dl.bythb4}
+#' }
 #'
-#' @return A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
+#' @return UltraGBIF_import list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
 #'
 #'
 #' @import data.table
@@ -17,20 +21,24 @@
 #' @importFrom dplyr %>%
 #'
 #' @examples
-#' \donttest{
-#'library(downloader)
-#'gbif_url <- "https://api.gbif.org/v1/occurrence/download/request/0021523-250402121839773.zip"
-#'gbif_occurrence_file <- paste0(getwd(),'/occ.zip')
-#'download(url=gbif_url,destfile=gbif_occurrence_file) ## Wait for seconds
-#'occ_import <- import_records(GBIF_file = gbif_occurrence_file,
+#' \dontrun{
+#' ## run as example for Saxifraga occurrence records
+#' library(UltraGBIF)
+#' url <- 'https://api.gbif.org/v1/occurrence/download/request/0021523-250402121839773.zip'
+#' gbif_occurrence_file <- paste0(getwd(),'/Saxfriga.zip')
+#' curl::curl_download(url,gbif_occurrence_file,quiet = F) ## cost time and total are 68692523 bytes
+#' occ_import <- import_records(GBIF_file = gbif_occurrence_file,
 #'                             only_PRESERVED_SPECIMEN = T)
+#' head(occ_import$summary,5)
 #'}
 #' @export
 import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
 {
+  start=Sys.time()
 
+  if (!is.character(GBIF_file)) stop('should be path!')
+  if (is.character(GBIF_file)){if (GBIF_file == '') stop('require GBIF_file!')}
 
-  ex_path=dirname(GBIF_file)
   col_sel <- c("gbifID", "bibliographicCitation", "language", "institutionCode",
                "collectionCode", "datasetName", "basisOfRecord", "informationWithheld",
                "dataGeneralizations", "occurrenceID", "catalogNumber", "recordNumber",
@@ -46,28 +54,28 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
                "verbatimScientificName", "level0Name", "level1Name", "level2Name",
                "level3Name")
 
-  if (tools::file_ext(GBIF_file)=="zip"){
+  if(tools::file_ext(GBIF_file)=="zip"){
     message("Decompressing")
+    # Automatically decompressing occurrence.txt
+    ex_path=dirname(GBIF_file)
     utils::unzip(GBIF_file, exdir = ex_path, files = "occurrence.txt",
-          list = FALSE, overwrite = TRUE,
-          junkpaths = FALSE, unzip = "internal", setTimes = FALSE)
+                 list = FALSE, overwrite = TRUE,
+                 junkpaths = FALSE, unzip = "internal", setTimes = FALSE)
     GBIF_file=paste0(ex_path,"/occurrence.txt")
-  }
-  start=Sys.time()
-  # Read data using fread
-  message("Loading records")
-  occ <- fread(GBIF_file,
-               sep = '\t',
-               encoding = 'UTF-8',
-               select = col_sel,
-               col.names = paste0('Ctrl_',col_sel),
-               quote="",
-               showProgress = FALSE)[is.na(Ctrl_hasCoordinate), Ctrl_hasCoordinate := FALSE][,Ctrl_gbifID:=as.character(Ctrl_gbifID)]
+    # Read data using fread
+    message("Loading records")
+    occ <- fread(GBIF_file,
+                 sep = '\t',
+                 encoding = 'UTF-8',
+                 select = col_sel,
+                 col.names = paste0('Ctrl_',col_sel),
+                 quote="",
+                 showProgress = FALSE)
+    occ[is.na(Ctrl_hasCoordinate), Ctrl_hasCoordinate := FALSE]
+    occ[,Ctrl_gbifID:=as.character(Ctrl_gbifID)]
+  } else {stop('should be a DwC zip file!')}
 
-
-  if (only_PRESERVED_SPECIMEN) {
-    occ <- occ[Ctrl_basisOfRecord=="PRESERVED_SPECIMEN",]
-  }
+  if (only_PRESERVED_SPECIMEN==T) occ <- occ[Ctrl_basisOfRecord=="PRESERVED_SPECIMEN",]
 
   # extract_gbif_issue
 
@@ -88,10 +96,13 @@ import_records<-function(GBIF_file = '',only_PRESERVED_SPECIMEN=F)
 
   end=Sys.time()
   used=end-start
-  message(used)
 
-  return(list(occ=occ,
-              occ_gbif_issue=occ_gbif_issue,
-              summary=summary,
-              used_time=used))
+  message(paste('used',used%>%round(1),attributes(used)$units))
+
+  occ_import <- list(occ = occ,
+                     occ_gbif_issue = occ_gbif_issue,
+                     summary = summary,
+                     duration = used)
+  class(occ_import) <- "UltraGBIF_import"
+  return(occ_import)
 }

@@ -20,10 +20,14 @@
 #' @import rnaturalearthdata
 #' @import stringi
 #' @importFrom stats quantile
-#'
+#' @seealso \code{\link[CoordinateCleaner]{clean_coordinates}}
 #' @examples
-#' \donttest{
-#' help(refine_records)
+#' \dontrun{
+#' refine <- refine_records(voucher = voucher,
+#' threads = 4,
+#' save_path = getwd(),
+#' tests = c("capitals", "centroids", "equal", "gbif",
+#' "institutions", "outliers", "seas","zeros"))
 #'}
 #' @export
 refine_records<-function(voucher = NA,
@@ -176,11 +180,8 @@ refine_records<-function(voucher = NA,
   rm(chunks_list)
   species <- results_final_sf_ori[, unique(UltraGBIF_wcvp_taxon_name)]
 
-  local <- rWCVPdata::wcvp_names %>%
-    select(plant_name_id,taxon_name) %>%
-    filter(taxon_name %chin% results_final_sf_ori$UltraGBIF_wcvp_taxon_name)%>%
-    inner_join(rWCVPdata::wcvp_distributions,by = "plant_name_id")%>%
-    select(-continent_code_l1,-continent,-region_code_l2,-region,-plant_locality_id)%>%setDT()
+  local <- ref_wcvp_names[taxon_name %chin% results_final_sf_ori$UltraGBIF_wcvp_taxon_name,]%>%
+    merge(wcvp_distributions,by = "plant_name_id")
 
   local[,wcvp_area_status := fcase(
     location_doubtful == 1,"location_doubtful",
@@ -189,9 +190,9 @@ refine_records<-function(voucher = NA,
     introduced == 0 & extinct == 0 & location_doubtful == 0, "native",
     default = "unknown")][,c("introduced", "extinct", "location_doubtful") := NULL]
 
-  kt <- terra::vect(rWCVP::wgsrpd3)
+  wgsrpd3_map <- terra::vect(wgsrpd3)
 
-  powo_mark <- function(taxon=NA_character_,results_final_sf_ori="") {
+  local_status <- function(taxon=NA_character_,results_final_sf_ori="") {
 
     species_df <- local[taxon_name == taxon,.(area_code_l3, wcvp_area_status)]
 
@@ -207,7 +208,7 @@ refine_records<-function(voucher = NA,
                                               .(Ctrl_gbifID,UltraGBIF_decimalLongitude,UltraGBIF_decimalLatitude)] %>%
       terra::vect(geom = c("UltraGBIF_decimalLongitude", "UltraGBIF_decimalLatitude"), crs = "EPSG:4326")
 
-    distribution <-  terra::merge(kt,species_df,
+    distribution <-  terra::merge(wgsrpd3_map,species_df,
                                   by.x = "LEVEL3_COD",
                                   by.y = "area_code_l3")%>%.[, c("LEVEL3_COD", "wcvp_area_status")]
 
@@ -224,7 +225,7 @@ refine_records<-function(voucher = NA,
   message("Extracting WGSRPD information")
 
   for (i in 1:length(species)) {
-    area_final[[i]] <- powo_mark(taxon = species[i],results_final_sf_ori=results_final_sf_ori)
+    area_final[[i]] <- local_status(taxon = species[i],results_final_sf_ori=results_final_sf_ori)
     if (i%%1000==0|i==length(species)) {
       message(paste("Extracting",i,"/",length(species)))
     }
@@ -252,20 +253,31 @@ refine_records<-function(voucher = NA,
   #                 "UltraGBIF_decimalLongitude",
   #                 "UltraGBIF_decimalLatitude"))
 
-
+  save_path <- tryCatch(
+    dirname(gbif_occurrence_file),
+    error = function(e) NA
+  )
   if(!is.na(save_path)){
-    message("Exporting refined records")
-    fwrite(results,
-           file = paste0(save_path,'/usable_refined_records.csv.gz'),
-           encoding = "UTF-8")
-    fwrite(native_records,
-           file = paste0(save_path,'/native_refined_records.csv.gz'),
-           encoding = "UTF-8")
-  }
+    tryCatch({
+      message("Exporting refined records")
+      fwrite(results,
+             file = paste0(save_path,'/usable_refined_records.csv.gz'),
+             encoding = "UTF-8")
+      fwrite(native_records,
+             file = paste0(save_path,'/native_refined_records.csv.gz'),
+             encoding = "UTF-8")
+    }, error = function(e) {
+      # Print error message but do not stop execution
+      message("File export failed: ", e$message)
+    })
+  } else {message('Check your save_path, remember to save results!')}
 
   end=Sys.time()
-  message(end-start)
-  return(list(all_records=results,
+  used=end-start
+  message(paste('used',used%>%round(1),attributes(used)$units))
+  refine <- list(all_records=results,
               native_records=native_records,
-              used_time=end-start))
+              duration=end-start)
+  class(refine) <- 'UltraGBIF_refine'
+  return(refine)
 }

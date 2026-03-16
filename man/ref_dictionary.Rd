@@ -3,7 +3,7 @@
 \docType{data}
 \name{ref_dictionary}
 \alias{ref_dictionary}
-\title{ref_dictionary}
+\title{Reference dictionary for names of collectors}
 \format{
 A data.table with 115702 rows and 2 columns
 \describe{
@@ -20,6 +20,9 @@ A data.table with 115702 rows and 2 columns
 ref_dictionary
 }
 \description{
-ref_dictionary
+A distilled reference dictionary for names of collectors
 }
-\keyword{internal}
+\references{
+de Melo, P.H.A., Bystriakova, N., Lucas, E. et al. A new R package to parse plant species occurrence records into unique collection events efficiently reduces data redundancy. Sci Rep 14, 5450 (2024). https://doi.org/10.1038/s41598-024-56158-3
+}
+\keyword{datasets}

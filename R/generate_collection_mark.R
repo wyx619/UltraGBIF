@@ -41,8 +41,9 @@
 #' @encoding UTF-8
 #'
 #' @examples
-#' \donttest{
-#' help(generate_collection_mark)
+#' \dontrun{
+#' collection_key <- generate_collection_mark(occ_import = occ_import,
+#' dictionary = dictionary)
 #' }
 #'
 #' @import data.table
@@ -107,10 +108,13 @@ generate_collection_mark <- function(occ_import = NA,
     setorder(-number_of_Records)
 
   end=Sys.time()
-  message(end-start)
-  return(list(occ_collectorsDictionary = occ_collectorsDictionary,
+  used=end-start
+  message(paste('used',used%>%round(1),attributes(used)$units))
+  collection_key <- list(occ_collectorsDictionary = occ_collectorsDictionary,
               summary = summary,
               collectorsDictionary_add = collectorDictionary_checked_new,
-              used_time = end-start))
+              duration = end-start)
+  class(collection_key) <- 'UltraGBIF_collection_key'
+  return(collection_key)
 }
 

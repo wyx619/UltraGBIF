@@ -32,7 +32,14 @@ Restore key usable information for vouchers by consolidating data from duplicate
 It can restore key usable information for vouchers by consolidating data from duplicate records belonging to identical collection events, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions information
 }
 \examples{
-\donttest{
-help(refine_records)
+\dontrun{
+refine <- refine_records(voucher = voucher,
+threads = 4,
+save_path = getwd(),
+tests = c("capitals", "centroids", "equal", "gbif",
+"institutions", "outliers", "seas","zeros"))
 }
+}
+\seealso{
+\code{\link[CoordinateCleaner]{clean_coordinates}}
 }

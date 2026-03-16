@@ -3,8 +3,7 @@
 \docType{data}
 \name{EnumOccurrenceIssue}
 \alias{EnumOccurrenceIssue}
-\title{Enumeration GBIF issue
-An enumeration of validation rules for single occurrence records.}
+\title{Enumeration GBIF issue}
 \format{
 A data.table with 69 rows and 9 columns
 \describe{
@@ -29,6 +28,9 @@ A data.table with 69 rows and 9 columns
 EnumOccurrenceIssue
 }
 \description{
+An enumeration of validation rules for single occurrence records.
+}
+\details{
 There are many things that can go wrong and we continously encounter unexpected data.
 In order to help us and publishers improve the data, we flag records with various issues
 that we have encountered. This is also very useful for data consumers as you can include
@@ -36,4 +38,4 @@ these issues as filters in occurrence searches. Not all issues indicate bad data
 Some are merley flagging the fact that GBIF has altered values during processing.
 On the details page of any occurrence record you will see the list of issues in the notice at the bottom.
 }
-\keyword{internal}
+\keyword{datasets}

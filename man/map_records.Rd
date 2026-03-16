@@ -23,10 +23,10 @@ Note that the map has 3 different layers for you to choose to show.
 This optional module simplifies and renders refined GBIF occurrence records on dynamic maps
 }
 \examples{
-\donttest{
-help(map_refined_records)
+\dontrun{
+map_records(records_refined=refine,precision=4,cex=4)
 }
 }
 \seealso{
-\code{\link[geohashTools]{gh_encode}}
+\code{\link[geohashTools]{gh_encode},\link[mapview]{mapView}}
 }

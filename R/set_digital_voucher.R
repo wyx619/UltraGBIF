@@ -20,17 +20,8 @@
 #' ### Total Score = Record Completeness + Quality of Geospatial Information
 #'
 #' #### 4. Record Completeness Calculation
-#' - Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields:
-#'   - Is `recordedBy` present?
-#'   - Is `recordNumber` present?
-#'   - Is `year` present?
-#'   - Is `institutionCode` present?
-#'   - Is `catalogNumber` present?
-#'   - Is `locality` present?
-#'   - Is `municipality` present?
-#'   - Is `countryCode` present?
-#'   - Is `stateProvince` present?
-#'   - Is `fieldNotes` present?
+#' - Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields presence:
+#' `recordedBy`,`recordNumber`, `year`, `institutionCode`, `catalogNumber`, `locality`, `municipality`, `countryCode`, `stateProvince`, `fieldNotes`,
 #'
 #' #### 5. Geospatial Quality Calculation
 #' - Based on GBIF geospatial issues in `EnumOccurrenceIssue`, classified into three categories:
@@ -41,7 +32,7 @@
 #' **This optimized version eliminates O(n²) complexity by using vectorized data.table operations.**
 #'
 #' @param occ_import imported GBIF records
-#' @param names.checked your checked taxon names from `check_occ_name`
+#' @param taxa_checked your checked taxon names from `check_occ_name`
 #' @param collection_key your collection mark from `generate_collection_mark`
 #'
 #' @details
@@ -65,12 +56,14 @@
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else
 #'
 #' @examples
-#' \donttest{
-#' help(set_digital_voucher)
+#' \dontrun{
+#' voucher <- set_digital_voucher(occ_import = occ_import,
+#' taxa_checked = taxa_checked,
+#' collection_key = collection_key)
 #'}
 #' @export
 set_digital_voucher <- function(occ_import = NA,
-                                 names.checked = NA,
+                                 taxa_checked = NA,
                                  collection_key = NA)
 {
   start <- Sys.time()
@@ -85,7 +78,7 @@ set_digital_voucher <- function(occ_import = NA,
     occ <- occ_import$occ %>% setDT() %>% setorder(Ctrl_gbifID)
     occ_in <- occ %>% setorder(Ctrl_gbifID)
     occ_gbif_issue <- occ_import$occ_gbif_issue %>% setorder(Ctrl_gbifID)
-    occ_wcvp_check_name <- names.checked$occ_wcvp_check_name %>% setorder(Ctrl_gbifID)
+    occ_wcvp_check_name <- taxa_checked$occ_wcvp_check_name %>% setorder(Ctrl_gbifID)
     occ_collectorsDictionary <- collection_key$occ_collectorsDictionary %>% setorder(Ctrl_gbifID)
 
     # Combine all data sources
@@ -287,51 +280,93 @@ set_digital_voucher <- function(occ_import = NA,
     UltraGBIF_num_duplicates = num_duplicates
   )]
 
-  # Step 4: Process taxonomic information for groupable records
+# {  # Step 4: Process taxonomic information for groupable records
+#   message("Process taxonomic information for groupable records...")
+#   # Create combined taxon identifier for accurate counting
+#   occ[, taxon_id := paste0(wcvp_taxon_name, ";", wcvp_plant_name_id)]
+#
+#   # Count accepted taxon names per group
+#   occ[is_non_groupable == FALSE,
+#       num_unique_taxa := uniqueN(taxon_id[wcvp_taxon_status == "Accepted" & !is.na(wcvp_taxon_name)]),
+#       by = Ctrl_key_family_recordedBy_recordNumber]
+#
+#   # Select the most frequent taxon for the sample
+#   occ[is_non_groupable == FALSE,
+#       selected_taxon := {
+#         accepted <- taxon_id[wcvp_taxon_status == "Accepted" & !is.na(wcvp_taxon_name)]
+#         if(length(accepted) > 0) names(which.max(table(accepted))) else NA_character_ },
+#       by = Ctrl_key_family_recordedBy_recordNumber]
+#
+#   # Split the selected taxon back into name and ID
+#   occ[is_non_groupable == FALSE, `:=`(
+#     # Split Name and ID
+#     UltraGBIF_sample_taxon_name = fifelse(
+#       !is.na(selected_taxon),
+#       stri_split_fixed(selected_taxon, ";", simplify = TRUE)[,1],
+#       ""
+#     ),
+#     UltraGBIF_wcvp_plant_name_id = fifelse(
+#       !is.na(selected_taxon),
+#       stri_split_fixed(selected_taxon, ";", simplify = TRUE)[,2],
+#       ""
+#     ),
+#
+#     # Set the number of category names
+#     UltraGBIF_number_taxon_names = fifelse(is.na(num_unique_taxa), 0L, num_unique_taxa),
+#
+#     # Set identification status based on the number of unique names
+#     UltraGBIF_sample_taxon_name_status = fcase(
+#       is.na(selected_taxon), "unidentified",
+#       num_unique_taxa == 1L, "identified",
+#       num_unique_taxa > 1L, "divergent identifications",
+#       default = "unidentified"
+#     ),
+#
+#     # Set unidentified flag
+#     UltraGBIF_unidentified_sample = is.na(selected_taxon)
+#   )]}
+
+  # Step 4: Process taxonomic information for groupable records (Optimized)
   message("Process taxonomic information for groupable records...")
-  # Create combined taxon identifier for accurate counting
-  occ[, taxon_id := paste0(wcvp_taxon_name, ";", wcvp_plant_name_id)]
 
-  # Count accepted taxon names per group
-  occ[is_non_groupable == FALSE,
-      num_unique_taxa := uniqueN(taxon_id[wcvp_taxon_status == "Accepted" & !is.na(wcvp_taxon_name)]),
-      by = Ctrl_key_family_recordedBy_recordNumber]
+  sub_dt <- occ[is_non_groupable == FALSE &
+                  wcvp_taxon_status == "Accepted" &
+                  !is.na(wcvp_taxon_name),
+                .(Ctrl_key_family_recordedBy_recordNumber, wcvp_taxon_name, wcvp_plant_name_id)]
 
-  # Select the most frequent taxon for the sample
-  occ[is_non_groupable == FALSE,
-      selected_taxon := {
-        accepted <- taxon_id[wcvp_taxon_status == "Accepted" & !is.na(wcvp_taxon_name)]
-        if(length(accepted) > 0) names(which.max(table(accepted))) else NA_character_ },
-      by = Ctrl_key_family_recordedBy_recordNumber]
+  if (nrow(sub_dt) > 0) {
 
-  # Split the selected taxon back into name and ID
+    taxon_counts <- sub_dt[, .N, by = .(Ctrl_key_family_recordedBy_recordNumber,
+                                        wcvp_taxon_name, wcvp_plant_name_id)]
+
+    setorder(taxon_counts, Ctrl_key_family_recordedBy_recordNumber, -N, wcvp_taxon_name, wcvp_plant_name_id)
+
+    selected_taxa <- taxon_counts[, .SD[1], by = Ctrl_key_family_recordedBy_recordNumber]
+
+    unique_counts <- taxon_counts[, .(num_unique_taxa = .N), by = Ctrl_key_family_recordedBy_recordNumber]
+
+    occ[selected_taxa, on = "Ctrl_key_family_recordedBy_recordNumber",
+        `:=`(UltraGBIF_sample_taxon_name = i.wcvp_taxon_name,
+             UltraGBIF_wcvp_plant_name_id = i.wcvp_plant_name_id)]
+
+    occ[unique_counts, on = "Ctrl_key_family_recordedBy_recordNumber",
+        num_unique_taxa := i.num_unique_taxa]
+  }
+
   occ[is_non_groupable == FALSE, `:=`(
-    # Split Name and ID
-    UltraGBIF_sample_taxon_name = fifelse(
-      !is.na(selected_taxon),
-      stri_split_fixed(selected_taxon, ";", simplify = TRUE)[,1],
-      ""
-    ),
-    UltraGBIF_wcvp_plant_name_id = fifelse(
-      !is.na(selected_taxon),
-      stri_split_fixed(selected_taxon, ";", simplify = TRUE)[,2],
-      ""
-    ),
-
-    # Set the number of category names
+    UltraGBIF_sample_taxon_name = fifelse(is.na(UltraGBIF_sample_taxon_name), "", UltraGBIF_sample_taxon_name),
+    UltraGBIF_wcvp_plant_name_id = fifelse(is.na(UltraGBIF_wcvp_plant_name_id), "", UltraGBIF_wcvp_plant_name_id),
     UltraGBIF_number_taxon_names = fifelse(is.na(num_unique_taxa), 0L, num_unique_taxa),
-
-    # Set identification status based on the number of unique names
     UltraGBIF_sample_taxon_name_status = fcase(
-      is.na(selected_taxon), "unidentified",
+      is.na(num_unique_taxa) | num_unique_taxa == 0L, "unidentified",
       num_unique_taxa == 1L, "identified",
       num_unique_taxa > 1L, "divergent identifications",
       default = "unidentified"
     ),
-
-    # Set unidentified flag
-    UltraGBIF_unidentified_sample = is.na(selected_taxon)
+    UltraGBIF_unidentified_sample = (is.na(num_unique_taxa) | num_unique_taxa == 0L)
   )]
+
+  rm(sub_dt, taxon_counts, selected_taxa, unique_counts)
 
   # Step 5: Assign coordinates for groupable records
   message("Assign coordinates for groupable records...")
@@ -376,9 +411,9 @@ set_digital_voucher <- function(occ_import = NA,
     is_non_groupable = NULL,
     num_duplicates = NULL,
     max_info_score = NULL,
-    taxon_id = NULL,
+    #taxon_id = NULL,
     num_unique_taxa = NULL,
-    selected_taxon = NULL,
+    #selected_taxon = NULL,
     coord_priority = NULL,
     best_lat = NULL,
     best_lon = NULL
@@ -484,37 +519,15 @@ set_digital_voucher <- function(occ_import = NA,
 
   end <- Sys.time()
 
-  print(end-start)
-
-  return(list(
+  used=end-start
+  message(paste('used',used%>%round(1),attributes(used)$units))
+  voucher <- list(
     occ_digital_voucher = occ_all,
     occ_results = occ_results,
-    used_time = end - start
-  ))
+    duration = end - start
+  )
+  class(voucher) <- 'UltraGBIF_voucher'
+  return(voucher)
 }
-
-# ============================================================================
-# PERFORMANCE NOTES
-# ============================================================================
-#
-# This optimized version eliminates the O(n²) complexity by:
-#
-# 1. Removing the foreach loop that processed each collection event separately
-# 2. Using data.table's grouped operations (.SD, by=) for vectorized processing
-# 3. Pre-calculating all flags and classifications in vectorized operations
-# 4. Using efficient merge operations instead of iterative rbindlist
-#
-# Expected performance improvements:
-# - Time complexity: O(n²) → O(n log n)
-# - Memory usage: Reduced (no intermediate list storage)
-# - Speed: 10-100x faster depending on dataset size
-#
-# Key optimizations:
-# - Section 3: Vectorized identification of non-groupable records
-# - Section 4: Group-wise selection of digital vouchers using which.max
-# - Section 5: Efficient aggregation of taxon names per collection event
-# - Section 6: Vectorized coordinate selection with priority logic
-#
-# ============================================================================
 
 

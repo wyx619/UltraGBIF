@@ -1,6 +1,7 @@
 #'
 #'
 #' Enumeration GBIF issue
+#'
 #' An enumeration of validation rules for single occurrence records.
 #'
 #' There are many things that can go wrong and we continously encounter unexpected data.
@@ -25,13 +26,12 @@
 #' @source
 #' * [GBIF Infrastructure: Data processing](https://www.gbif.org/article/5i3CQEZ6DuWiycgMaaakCo/gbif-infrastructure-data-processing)
 #' * [An enumeration of validation rules for single occurrence records](https://gbif.github.io/gbif-api/apidocs/org/gbif/api/vocabulary/OccurrenceIssue.html)
-#' @keywords internal
 "EnumOccurrenceIssue"
-
-
 #'
 #'
-#' seas_ref
+#' A simple features object for land map
+#'
+#' An integrated land map
 #'
 #'
 #'
@@ -41,14 +41,12 @@
 #'   \item{geometry}{Geometry unit}
 #' }
 #' @source rnaturalearth::ne_download(scale = 110,type = 'land',category = 'physical',returnclass = "sf")
-#' @keywords internal
 "seas_ref"
-
-
-
 #'
 #'
-#' ref_dictionary
+#' Reference dictionary for names of collectors
+#'
+#' A distilled reference dictionary for names of collectors
 #'
 #' @format A data.table with 115702 rows and 2 columns
 #' \describe{
@@ -57,7 +55,59 @@
 #' }
 #' @source
 #' * [collectorDictionary](https://github.com/pablopains/parseGBIF/tree/main/collectorDictionary)
-#' @keywords internal
+#' @references
+#' de Melo, P.H.A., Bystriakova, N., Lucas, E. et al. A new R package to parse plant species occurrence records into unique collection events efficiently reduces data redundancy. Sci Rep 14, 5450 (2024). https://doi.org/10.1038/s41598-024-56158-3
 "ref_dictionary"
 
+#'
+#' Biodiversity Information Standards (TDWG) World Geographical Scheme for Recording Plant Distributions (WGSRPD)
+#'
+#' Spatial data for WGSRPD Level 3
+#'
+#' @format An 'sf' object with 20 rows and 5 variables:
+#' \describe{
+#'   \item{LEVEL3_NAM}{Region name}
+#'   \item{LEVEL3_COD}{Region code}
+#'   \item{LEVEL2_COD}{Level 2 code}
+#'   \item{LEVEL1_COD}{Level 1 code (continent)}
+#'   \item{geometry}{sf geometry}
+#' }
+#' @source
+#' * [level3](https://github.com/tdwg/wgsrpd/tree/master/level3)
+#' @references
+#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Sci Data 8, 215 (2021). https://doi.org/10.1038/s41597-021-00997-6
+"wgsrpd3"
 
+#' The World Checklist of Vascular Plants: distributions
+#'
+#' A processed dataset containing the distribution data from the WCVP, mapped to the
+#' Biodiversity Information Standards (TDWG) World Geographical Scheme for
+#' Recording Plant Distributions (WGSRPD)
+#'
+#' @format A data.table with 1,950,339 rows and 6 variables:
+#' \describe{
+#'   \item{plant_name_id}{World Checklist of Vascular Plants (WCVP) identifier}
+#'   \item{area_code_l3}{WGSRPD Level 3 code}
+#'   \item{area}{WGSRPD name}
+#'   \item{introduced}{0 if native; 1 if introduced}
+#'   \item{extinct}{1 if extinct; 0 if extant}
+#'   \item{location_doubtful}{1 if doubtful; 0 otherwise}
+#' }
+#' @source \url{http://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip}
+#' @references
+#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Sci Data 8, 215 (2021). https://doi.org/10.1038/s41597-021-00997-6
+"wcvp_distributions"
+
+#' The World Checklist of Vascular Plants: names
+#'
+#' A reduced dataset containing the taxa names from the WCVP that have distributions information
+#'
+#' @format A data.table with 443,347 rows and 2 variables:
+#' \describe{
+#'   \item{plant_name_id}{World Checklist of Vascular Plants (WCVP) identifier}
+#'   \item{taxon name}{Concatenation of genus with species and, where applicable, infraspecific epithets to make a binomial or trinomial name.}
+#' }
+#' @source \url{http://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip}
+#' @references
+#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Sci Data 8, 215 (2021). https://doi.org/10.1038/s41597-021-00997-6
+"ref_wcvp_names"

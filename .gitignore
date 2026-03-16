@@ -5,6 +5,9 @@
 .DS_Store
 .quarto
 references.bib
-inst/doc
+/vignettes
 .Rbuildignore
 .Rproj
+.RData
+/doc/
+/Meta/

@@ -2,7 +2,7 @@
 % Please edit documentation in R/usecores.R
 \name{usecores}
 \alias{usecores}
-\title{Detect threads and optimize them (internal)}
+\title{Detect and optimize threads requirement}
 \usage{
 usecores(x)
 }
@@ -19,4 +19,12 @@ Input a positive number and return optimized treads requirement.
 If a positive integer is input,
 return a positive integer not exceeding the total number of threads.
 If a non-integer positive number is input, automatically calculate and return a reasonable number of threads.
+}
+\examples{
+\dontrun{
+usecores(4)
+usecores(60)
+usecores(0.45)
+}
+
 }

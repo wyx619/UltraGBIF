@@ -40,6 +40,8 @@ utils::globalVariables(
     "FAMILY__", "FAMILY__recordNumber", "FAMILY_recordedBy_",
     "UltraGBIF_merged", "best_lat" ,"best_lon", "best_value", "clean_value",
     "coord_priority", "grouping_pattern", "i.clean_value", "is_non_groupable",
-    "max_info_score", "num_duplicates", "num_unique_taxa", "selected_taxon", "taxon_id"
+    "max_info_score", "num_duplicates", "num_unique_taxa", "selected_taxon", "taxon_id",
+    'cell', 'gbif_occurrence_file', 'i.num_unique_taxa', 'i.wcvp_plant_name_id',
+    'i.wcvp_taxon_name', 'ref_wcvp_names', 'taxon', 'wcvp_distributions', 'wgsrpd3'
   )
 )

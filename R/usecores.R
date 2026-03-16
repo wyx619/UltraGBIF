@@ -1,4 +1,4 @@
-#' @title Detect threads and optimize them (internal)
+#' @title Detect and optimize threads requirement
 #' @name usecores
 #' @description Input a positive number and return optimized treads requirement.
 #' @param x Threads requirement, a positive real number, default is 4
@@ -9,7 +9,12 @@
 #'
 #' @return A positive real number of treads
 #'
-#'
+#' @examples
+#' \dontrun{
+#' usecores(4)
+#' usecores(60)
+#' usecores(0.45)
+#'}
 #'
 #' @export
 usecores<-function(x)

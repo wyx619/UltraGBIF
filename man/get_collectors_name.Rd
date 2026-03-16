@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_collectors_name.R
 \name{get_collectors_name}
 \alias{get_collectors_name}
-\title{Extract last name of the main collector (internal)}
+\title{Extract last name of the main collector}
 \usage{
 get_collectors_name(
   x = NA,
@@ -33,4 +33,22 @@ Extract last name of the main collector in recordedBy field
 }
 \details{
 Returns the last name
+}
+\examples{
+\donttest{
+# Basic usage
+get_collectors_name('Anderberg, Arne & Anderberg, Anna-Lena')
+get_collectors_name('Schlegel, Henrik Adolf Leonard & Arnell, Hampus Wilrshelm')
+
+# Different selection methods
+get_collectors_name('Tomitarô-Makino, John', surname_selection_type = 'largest_string')
+get_collectors_name('Tomitarô-Makino, John', surname_selection_type = 'last_name')
+
+# Edge cases
+get_collectors_name(NA) # Returns "UNKNOWN"
+get_collectors_name('')  # Returns "UNKNOWN"
+get_collectors_name('et al.') # Returns "UNKNOWN"
+}
+
+
 }

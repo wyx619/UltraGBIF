@@ -37,7 +37,7 @@
 #' collector. The primary botanical collector of a sample is consistently identified by the
 #' same last name, standardized in capital letters with non-ASCII characters replaced.
 #'
-#' @return A list with duration and 2 data.table: "my_dictionary" for your processed
+#' @return A UltraGBIF_collectors_dictionary list with duration and 2 data.table: "my_dictionary" for your processed
 #' collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 #'
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else
@@ -47,8 +47,11 @@
 #' @import data.table
 #'
 #' @examples
-#' \donttest{
-#' help(collectors_prepare_dictionary)
+#' \dontrun{
+#' dictionary <- prepare_collectors_dictionary(occ_import = occ_import,
+#' surname_selection_type = "largest_string",
+#' max_words_name = 6,
+#' min_characters_in_name = 2)
 #'}
 #' @export
 prepare_collectors_dictionary <- function(occ_import = NA,
@@ -87,8 +90,11 @@ prepare_collectors_dictionary <- function(occ_import = NA,
     setorder(ref_dictionary, Ctrl_nameRecordedBy_Standard, Ctrl_recordedBy)
 
   end=Sys.time()
-  print(end-start)
-  return(list(my_dictionary=recordedBy_Standart,
-              ref_dictionary=ref_dictionary,
-              used_time=end-start))
+  used=end-start
+  message(paste('used',used%>%round(1),attributes(used)$units))
+  Dictionary <- list(my_dictionary=recordedBy_Standart,
+                     ref_dictionary=ref_dictionary,
+                     duration=end-start)
+  class(Dictionary) <- 'UltraGBIF_collectors_dictionary'
+  return(Dictionary)
 }

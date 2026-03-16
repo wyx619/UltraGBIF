@@ -18,10 +18,10 @@
 #' @import mapview
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else slice ungroup group_by
 #'
-#' @seealso \code{\link[geohashTools]{gh_encode}}
+#' @seealso \code{\link[geohashTools]{gh_encode},\link[mapview]{mapView}}
 #' @examples
-#' \donttest{
-#' help(map_refined_records)
+#' \dontrun{
+#' map_records(records_refined=refine,precision=4,cex=4)
 #'}
 #' @export
 map_records <- function(records_refined=NA,

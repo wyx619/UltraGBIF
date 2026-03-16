@@ -7,26 +7,34 @@
 import_records(GBIF_file = "", only_PRESERVED_SPECIMEN = F)
 }
 \arguments{
-\item{GBIF_file}{GBIF occurrence Darwin Core Archive. See details for more information}
+\item{GBIF_file}{path to the downloaded zip file from GBIF}
 
 \item{only_PRESERVED_SPECIMEN}{if TRUE, occurrence records are filtered by \code{basisOfRecord="PRESERVED_SPECIMEN"}}
 }
 \value{
-A list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
+UltraGBIF_import list with duration and 3 data.table: "occ" for processed occurrence data,"occ_gbif_issue" for checked GBIF issues and "summary" for import summary.
 }
 \description{
-Returns a list contains processed GBIF records and useful issues for downstream analysis.
+Load initial GBIF records and extract issues for downstream analysis.
 }
 \details{
-GBIF_file is a path to your Darwin Core standard file which is downloaded from GBIF.
-The Darwin Core Archive (DwC-A) is a compact package (a ZIP file) contains interconnected text files and enables data publishers to share their data using a common terminology.
-GBIF_file could also be a path to "occurrence.txt" which is decompressed from your your Darwin Core standard file.
+This step is the beginning of UltraGBIF progress, which makes downloaded file into initial GBIF records.
 }
 \examples{
-\donttest{
-
-help(import_records)
-
-
+\dontrun{
+## run as example for Saxifraga occurrence records
+library(UltraGBIF)
+url <- 'https://api.gbif.org/v1/occurrence/download/request/0021523-250402121839773.zip'
+gbif_occurrence_file <- paste0(getwd(),'/Saxfriga.zip')
+curl::curl_download(url,gbif_occurrence_file,quiet = F) ## cost time and total are 68692523 bytes
+occ_import <- import_records(GBIF_file = gbif_occurrence_file,
+                            only_PRESERVED_SPECIMEN = T)
+head(occ_import$summary,5)
+}
+}
+\seealso{
+\itemize{
+\item \code{\link{unzip}} for automatically decompressing
+\item Saxifraga occurrence records: \doi{https://doi.org/10.15468/dl.bythb4}
 }
 }
