@@ -5,7 +5,7 @@
 #'
 #'
 #' Consistent recording of the primary collectors and their last name is thus essential, and a **collector dictionary**
-#' is provided for this purpose. The `prepare_collectors_dictionary` function is utilized to extract the last
+#' is provided for this purpose. The `prepare_collectors_dictionary` function is designed to extract the last
 #' name of the primary collector from the `recordedBy` field and to compile a list linking the last name
 #' of the primary collector with the raw data in `recordedBy`
 #'
@@ -15,9 +15,9 @@
 #' an uppercase character and replacing non-ASCII characters, ensuring that the primary collector associated
 #' with a collection event is consistently represented by the same character string.
 #'
-#' Once processed, the dictionary can be checked in the future.
 #'
-#' @param occ_import imported GBIF records
+#'
+#' @param occ_import imported GBIF records from \code{\link{import_records}}
 #' @param surname_selection_type allows you to select any of two types of the last name:
 #'
 #' **`large_string`** = word with the largest number of characters.
@@ -37,7 +37,7 @@
 #' collector. The primary botanical collector of a sample is consistently identified by the
 #' same last name, standardized in capital letters with non-ASCII characters replaced.
 #'
-#' @return A UltraGBIF_collectors_dictionary list with duration and 2 data.table: "my_dictionary" for your processed
+#' @return UltraGBIF_collectors_dictionary list with duration and 2 data.table: "my_dictionary" for your processed
 #' collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 #'
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else

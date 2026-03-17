@@ -2,17 +2,17 @@
 #' @name plot_richness
 #'
 #' @description This optional module plots a richness map of native refined records on grids. It
-#' is based on two functions `lets.presab.points` and `plot.PresenceAbsence` from R package `letsR`
+#' has drawn on `lets.presab.points` and `plot.PresenceAbsence` from R package `letsR`
 #' (see references below for more information), but fully leverages vectorization techniques
 #' to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 #'
-#' @param records_refined the refined occurrence list from `coordinate_refine`
+#' @param records_refined UltraGBIF_refine list from \code{\link{refine_records}}
 #' @param main tittle of the plot
 #' @param xlab label of x axis of the plot
 #' @param ylab label of y axis of the plot
 #'
 #'
-#' @return a list include a presence table and a richness S4 object
+#' @return UltraGBIF_richness list include a presence table and a richness S4 object
 #'
 #' @import data.table
 #' @importFrom dplyr %>%
@@ -20,7 +20,7 @@
 #' @examples
 #' \dontrun{
 #' plot_richness(records_refined = refine, main = 'richness map',
-#'  xlab = "Longitude", ylab = "Latitude")
+#' xlab = "Longitude", ylab = "Latitude")
 #'}
 #' @references
 #' Vilela, B. and Villalobos, F. (2015), letsR: a new R package for data handling and analysis in macroecology. Methods Ecol Evol, 6: 1229-1234. https://doi.org/10.1111/2041-210X.12401

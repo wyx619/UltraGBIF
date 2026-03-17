@@ -7,15 +7,16 @@
 check_occ_name(occ_import = NA, accuracy = 0.9)
 }
 \arguments{
-\item{occ_import}{imported GBIF records}
+\item{occ_import}{imported GBIF records from \code{\link{import_records}}}
 
 \item{accuracy}{numeric. If specified, only matches with a score greater than or equal to the supplied accuracy level will be returned. If left, the default threshold will be 0.9.}
 }
 \value{
-A list with duration and two data.table: "summary" with taxa list and "occ_wcvp_check_name" with WCVP fields
+UltraGBIF_taxa_checked list with duration and two data.table: "summary" with taxa list and "occ_wcvp_check_name" with WCVP fields
 }
 \description{
-Names of taxa are checked using integrated Taxonomic Name Resolution Service (TNRS)
+Names of taxa are checked using integrated Taxonomic Name Resolution Service (TNRS) by
+(sources = "wcvp", classification = "wfo", mode = "resolve" and matches = "best")
 }
 \details{
 \itemize{

@@ -8,50 +8,31 @@
 generate_collection_mark(occ_import = NA, dictionary = NA)
 }
 \arguments{
-\item{occ_import}{imported GBIF records}
+\item{occ_import}{imported GBIF records from \code{\link{import_records}}}
 
-\item{dictionary}{your processed dictionary from \code{prepare_collectors_dictionary}}
+\item{dictionary}{dictionary from \code{\link{prepare_collectors_dictionary}}}
 }
 \value{
-A list with duration and 3 data.table:
-"occ_collectorsDictionary" for update result fields only, "summary" for summary and
-"CollectorsDictionary_add" for new collectors that can be added to the collector dictionary
-that can be reused in the future.
+UltraGBIF_collection_key list with duration and 2 data.table:
+\code{occ_collectorsDictionary} for update result fields only, \code{summary} for its summary.
 }
 \description{
-It creates a key to identify the physical and digital duplicates of a given collection event.
-It combines the last name of primary collector with the collector number and the botanical family (family +
-recordByStandardized + recordNumber_Standard) that groups the duplicates of the same unique collection event.
-It also identifies new collectors to be added to the collector dictionary and that can be reused in the future.
+This function creates a key to identify the physical and digital duplicates of a given collection event.
+It combines the last name of primary collector with the collector number and the botanical family that groups the duplicates of the same unique collection event.
 
-Include \strong{\code{recordedByStandardized}} field with verified last name of the primary collector.
+Include \strong{\code{recordedByStandardized}} field with verified last name of the primary collector and \strong{\code{recordNumber_Standard}} field with only numbers from \strong{\code{recordNumber}}.
 
-Include \strong{\code{recordNumber_Standard}} field with only numbers from \strong{\code{recordNumber}}.
-
-Create the collection event key to group duplicates in the \strong{\code{key_family_recordedBy_recordNumber}} field
-following the fields:
-
-\strong{\code{family} + \code{recordedByStandardized} + \code{recordNumber_Standard}}.
+This function creates the collection event key to group duplicates in the \strong{\code{key_family_recordedBy_recordNumber}} field
+following the fields: \strong{\code{family} + \code{recordedByStandardized} + \code{recordNumber_Standard}}.
 }
 \details{
-Fields created for each incident record:
+Fields created for each incident record: \code{nameRecordedBy_Standard}, \code{recordNumber_Standard}, \code{key_family_recordedBy_recordNumber}, \code{key_year_recordedBy_recordNumber}
 
-\code{nameRecordedBy_Standard}
-
-\code{recordNumber_Standard}
-
-\code{key_family_recordedBy_recordNumber}
-
-\code{key_year_recordedBy_recordNumber}
-
-#' A critical step in parsing duplicate records involves generating a robust key for each unique collecting
-event (i.e., \emph{gathering}) to facilitate duplicate recognition. To achieve this, a string is created by
-concatenating the \strong{taxon family}, the \strong{last name of the primary collector}, and the \strong{collection number}.
+To parse duplicate records involves generating a robust key for each unique collecting
+event (i.e., \emph{gathering}) to facilitate duplicate recognition. By concatenating the \strong{taxon family},
+the \strong{last name of the primary collector}, and the \strong{collection number}.
 }
 \examples{
-\dontrun{
-collection_key <- generate_collection_mark(occ_import = occ_import,
-dictionary = dictionary)
-}
+\dontrun{collection_key <- generate_collection_mark(occ_import = occ_import,dictionary = dictionary)}
 
 }

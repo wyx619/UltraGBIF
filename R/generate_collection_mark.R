@@ -2,49 +2,30 @@
 #'
 #' @name generate_collection_mark
 #'
-#' @description It creates a key to identify the physical and digital duplicates of a given collection event.
-#' It combines the last name of primary collector with the collector number and the botanical family (family +
-#' recordByStandardized + recordNumber_Standard) that groups the duplicates of the same unique collection event.
-#' It also identifies new collectors to be added to the collector dictionary and that can be reused in the future.
+#' @description This function creates a key to identify the physical and digital duplicates of a given collection event.
+#' It combines the last name of primary collector with the collector number and the botanical family that groups the duplicates of the same unique collection event.
 #'
-#' Include **`recordedByStandardized`** field with verified last name of the primary collector.
+#' Include **`recordedByStandardized`** field with verified last name of the primary collector and **`recordNumber_Standard`** field with only numbers from **`recordNumber`**.
 #'
-#' Include **`recordNumber_Standard`** field with only numbers from **`recordNumber`**.
+#' This function creates the collection event key to group duplicates in the **`key_family_recordedBy_recordNumber`** field
+#' following the fields: **`family` + `recordedByStandardized` + `recordNumber_Standard`**.
 #'
-#' Create the collection event key to group duplicates in the **`key_family_recordedBy_recordNumber`** field
-#' following the fields:
+#' @param occ_import imported GBIF records from \code{\link{import_records}}
+#' @param dictionary dictionary from \code{\link{prepare_collectors_dictionary}}
 #'
-#' **`family` + `recordedByStandardized` + `recordNumber_Standard`**.
+#' @details Fields created for each incident record: `nameRecordedBy_Standard`, `recordNumber_Standard`, `key_family_recordedBy_recordNumber`, `key_year_recordedBy_recordNumber`
 #'
-#' @param occ_import imported GBIF records
-#' @param dictionary your processed dictionary from `prepare_collectors_dictionary`
+#' To parse duplicate records involves generating a robust key for each unique collecting
+#' event (i.e., *gathering*) to facilitate duplicate recognition. By concatenating the **taxon family**,
+#' the **last name of the primary collector**, and the **collection number**.
 #'
-#' @details Fields created for each incident record:
-#'
-#' `nameRecordedBy_Standard`
-#'
-#' `recordNumber_Standard`
-#'
-#' `key_family_recordedBy_recordNumber`
-#'
-#' `key_year_recordedBy_recordNumber`
-#'
-#' #' A critical step in parsing duplicate records involves generating a robust key for each unique collecting
-#' event (i.e., *gathering*) to facilitate duplicate recognition. To achieve this, a string is created by
-#' concatenating the **taxon family**, the **last name of the primary collector**, and the **collection number**.
-#'
-#' @return A list with duration and 3 data.table:
-#' "occ_collectorsDictionary" for update result fields only, "summary" for summary and
-#' "CollectorsDictionary_add" for new collectors that can be added to the collector dictionary
-#' that can be reused in the future.
+#' @return UltraGBIF_collection_key list with duration and 2 data.table:
+#' `occ_collectorsDictionary` for update result fields only, `summary` for its summary.
 #'
 #' @encoding UTF-8
 #'
 #' @examples
-#' \dontrun{
-#' collection_key <- generate_collection_mark(occ_import = occ_import,
-#' dictionary = dictionary)
-#' }
+#' \dontrun{collection_key <- generate_collection_mark(occ_import = occ_import,dictionary = dictionary)}
 #'
 #' @import data.table
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else
@@ -70,7 +51,7 @@ generate_collection_mark <- function(occ_import = NA,
   collectorDictionary <- dictionary$ref_dictionary[
     ,.(Ctrl_recordedBy, Ctrl_nameRecordedBy_Standard_CNCFlora = Ctrl_nameRecordedBy_Standard_x)]
 
-  collectorDictionary_checked_new <- collectorDictionary_checked[!collectorDictionary, on = 'Ctrl_recordedBy']
+  #collectorDictionary_checked_new <- collectorDictionary_checked[!collectorDictionary, on = 'Ctrl_recordedBy']
 
   occ <- merge(occ,
                collectorDictionary_checked,
@@ -112,7 +93,7 @@ generate_collection_mark <- function(occ_import = NA,
   message(paste('used',used%>%round(1),attributes(used)$units))
   collection_key <- list(occ_collectorsDictionary = occ_collectorsDictionary,
               summary = summary,
-              collectorsDictionary_add = collectorDictionary_checked_new,
+              #collectorsDictionary_add = collectorDictionary_checked_new,
               duration = end-start)
   class(collection_key) <- 'UltraGBIF_collection_key'
   return(collection_key)

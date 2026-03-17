@@ -2,16 +2,17 @@
 #'
 #' @name check_occ_name
 #'
-#' @description Names of taxa are checked using integrated Taxonomic Name Resolution Service (TNRS)
+#' @description Names of taxa are checked using integrated Taxonomic Name Resolution Service (TNRS) by
+#' (sources = "wcvp", classification = "wfo", mode = "resolve" and matches = "best")
 #'
-#' @param occ_import imported GBIF records
+#' @param occ_import imported GBIF records from \code{\link{import_records}}
 #' @param accuracy numeric. If specified, only matches with a score greater than or equal to the supplied accuracy level will be returned. If left, the default threshold will be 0.9.
 #'
 #' @details
 #' * [About TNRS](https://tnrs.biendata.org/about/)
 #' * [World Checklist of Vascular Plants](https://powo.science.kew.org//)
 #'
-#' @return A list with duration and two data.table: "summary" with taxa list and "occ_wcvp_check_name" with WCVP fields
+#' @return UltraGBIF_taxa_checked list with duration and two data.table: "summary" with taxa list and "occ_wcvp_check_name" with WCVP fields
 #' @examples
 #'\dontrun{
 #' taxa_checked <- check_occ_name(occ_import = occ_import,accuracy = 0.9)

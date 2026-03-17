@@ -12,7 +12,7 @@ plot_richness(
 )
 }
 \arguments{
-\item{records_refined}{the refined occurrence list from \code{coordinate_refine}}
+\item{records_refined}{UltraGBIF_refine list from \code{\link{refine_records}}}
 
 \item{main}{tittle of the plot}
 
@@ -21,18 +21,18 @@ plot_richness(
 \item{ylab}{label of y axis of the plot}
 }
 \value{
-a list include a presence table and a richness S4 object
+UltraGBIF_richness list include a presence table and a richness S4 object
 }
 \description{
 This optional module plots a richness map of native refined records on grids. It
-is based on two functions \code{lets.presab.points} and \code{plot.PresenceAbsence} from R package \code{letsR}
+has drawn on \code{lets.presab.points} and \code{plot.PresenceAbsence} from R package \code{letsR}
 (see references below for more information), but fully leverages vectorization techniques
 to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 }
 \examples{
 \dontrun{
 plot_richness(records_refined = refine, main = 'richness map',
- xlab = "Longitude", ylab = "Latitude")
+xlab = "Longitude", ylab = "Latitude")
 }
 }
 \references{

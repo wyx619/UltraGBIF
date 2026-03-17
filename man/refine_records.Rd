@@ -13,7 +13,7 @@ refine_records(
 )
 }
 \arguments{
-\item{voucher}{voucher from \code{set_digital_voucher}}
+\item{voucher}{UltraGBIF_voucher from \code{\link{set_digital_voucher}}}
 
 \item{threads}{threads requirement, a positive real number, default is 4}
 
@@ -22,14 +22,16 @@ refine_records(
 \item{tests}{CoordinateCleaner checks. Choose one or more from \code{c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")}}
 }
 \value{
-A list with duration and 2 data.table: \code{all_records} for all refined records,
+UltraGBIF_refine list with duration and 2 data.table: \code{all_records} for all refined records,
 \code{native_records} for native records of them.
 }
 \description{
 Restore key usable information for vouchers by consolidating data from duplicate records belonging to identical collection events, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions.
 }
 \details{
-It can restore key usable information for vouchers by consolidating data from duplicate records belonging to identical collection events, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions information
+If set \code{save_path}, \code{usable_refined_records.csv.gz} that includes usable records and
+\code{native_refined_records.csv.gz} that includes usable records will be write to the path.
+They are the main products of UltraGBIF.
 }
 \examples{
 \dontrun{

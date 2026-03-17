@@ -7,19 +7,19 @@
 set_digital_voucher(occ_import = NA, taxa_checked = NA, collection_key = NA)
 }
 \arguments{
-\item{occ_import}{imported GBIF records}
+\item{occ_import}{imported GBIF records from \code{\link{import_records}}}
 
-\item{taxa_checked}{your checked taxon names from \code{check_occ_name}}
+\item{taxa_checked}{UltraGBIF_taxa_checked list from \code{\link{check_occ_name}}}
 
-\item{collection_key}{your collection mark from \code{generate_collection_mark}}
+\item{collection_key}{UltraGBIF_collection_key list from \code{\link{generate_collection_mark}}}
 }
 \value{
-A list with duration and 2 data.table:
+UltraGBIF_voucher list with duration and 2 data.table:
 "occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
 }
 \description{
 \subsection{Grouping Duplicates and Selecting the Digital Voucher}{
-\subsection{1. Handling Complete Collection Event Keys}{
+\subsection{Handling Complete Collection Event Keys}{
 \itemize{
 \item Unique collection events often generate multiple duplicate GBIF records. One duplicate is designated as the master digital voucher, integrating data from other duplicates.
 \item When the collection event key is complete, duplicates are grouped and parsed based on record completeness and geospatial quality:
@@ -31,14 +31,14 @@ A list with duration and 2 data.table:
 }
 }
 
-\subsection{2. Handling Incomplete Collection Event Keys}{
+\subsection{Handling Incomplete Collection Event Keys}{
 \itemize{
 \item When the collection event key is incomplete, duplicates cannot be parsed. Each record is treated as a unique collection event, with no duplicates identified.
 \item Record completeness and geospatial quality are still evaluated as described below to assess data integrity.
 }
 }
 
-\subsection{3. Quality Score Calculation}{
+\subsection{Quality Score Calculation}{
 
 \strong{UltraGBIF_digital_voucher} : The duplicate with the highest total score, calculated as
 }
@@ -46,14 +46,14 @@ A list with duration and 2 data.table:
 }
 
 \subsection{Total Score = Record Completeness + Quality of Geospatial Information}{
-\subsection{4. Record Completeness Calculation}{
+\subsection{Record Completeness Calculation}{
 \itemize{
 \item Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields presence:
 \code{recordedBy},\code{recordNumber}, \code{year}, \code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality}, \code{countryCode}, \code{stateProvince}, \code{fieldNotes},
 }
 }
 
-\subsection{5. Geospatial Quality Calculation}{
+\subsection{Geospatial Quality Calculation}{
 \itemize{
 \item Based on GBIF geospatial issues in \code{EnumOccurrenceIssue}, classified into three categories:
 \itemize{
@@ -63,7 +63,7 @@ A list with duration and 2 data.table:
 }
 }
 
-\strong{This optimized version eliminates O(n²) complexity by using vectorized data.table operations.}
+\strong{It eliminates complexity by using vectorized data.table operations.}
 }
 
 }

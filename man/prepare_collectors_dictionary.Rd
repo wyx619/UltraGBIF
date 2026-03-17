@@ -12,7 +12,7 @@ prepare_collectors_dictionary(
 )
 }
 \arguments{
-\item{occ_import}{imported GBIF records}
+\item{occ_import}{imported GBIF records from \code{\link{import_records}}}
 
 \item{surname_selection_type}{allows you to select any of two types of the last name:
 
@@ -25,14 +25,14 @@ prepare_collectors_dictionary(
 \item{min_characters_in_name}{min characters in name}
 }
 \value{
-A UltraGBIF_collectors_dictionary list with duration and 2 data.table: "my_dictionary" for your processed
+UltraGBIF_collectors_dictionary list with duration and 2 data.table: "my_dictionary" for your processed
 collectors dictionary and "ref_dictionary" for collectors name reference dictionary
 }
 \description{
 It returns a list with the last name of main collector following the unique key \code{recordedBy}.
 
 Consistent recording of the primary collectors and their last name is thus essential, and a \strong{collector dictionary}
-is provided for this purpose. The \code{prepare_collectors_dictionary} function is utilized to extract the last
+is provided for this purpose. The \code{prepare_collectors_dictionary} function is designed to extract the last
 name of the primary collector from the \code{recordedBy} field and to compile a list linking the last name
 of the primary collector with the raw data in \code{recordedBy}
 
@@ -41,8 +41,6 @@ field. The objective is to standardize the last name of the primary collector, w
 derived from the \code{recordedBy} field. This is accomplished by standardizing the text string to begin with
 an uppercase character and replacing non-ASCII characters, ensuring that the primary collector associated
 with a collection event is consistently represented by the same character string.
-
-Once processed, the dictionary can be checked in the future.
 }
 \details{
 If \code{recordedBy} is present in the ref_dictionary, the function returns the last name of

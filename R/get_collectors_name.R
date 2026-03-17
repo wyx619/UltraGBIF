@@ -5,15 +5,11 @@
 #'
 #' @param x collectors_name in recordedBy field
 #' @param surname_selection_type allows you to select two types of results
-#' for the main collector's last name:
-#'
-#' **`large_string`** = word with the largest number of characters.
-#'
-#' **`last_name`** = literally the last name of the main collector, with more than two characters.
+#' for the main collector's last name: **`large_string`** = word with the largest
+#' number of characters and **`last_name`** = literally the last name of the main collector,
+#'  with more than two characters.
 #' @param min_characters_in_name min characters in name
 #' @param max_words_name assist in checking the length of name
-#'
-#' @details Returns the last name
 #'
 #' @return
 #' last name of the main collector

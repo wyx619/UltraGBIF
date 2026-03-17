@@ -1,6 +1,6 @@
 <a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> \# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
 
-### Fast and easy compliation of GBIF plant occurrence records in one R package
+# Fast and easy compliation of GBIF plant occurrence records in one R package
 
 ## Introduction
 
@@ -20,7 +20,7 @@ UltraGBIF provides a reproducible, plant-optimized, and computationally efficien
 
 This stage ensures data accuracy and consistency through three modules:
 
-1.  Import Records: This module receives a user-provided Darwin Core Archive that adheres to GBIF data conventions. The DwC-A is loaded locally (e.g., occurrences.csv/zip) and any extensions described by meta.xml. GBIF-reported issue flags are automatically extracted for downstream quality assessment.
+1.  Import Records: This module receives a path to the zip file downloaded from GBIF. The issue flags are automatically extracted for downstream quality assessment.
 
 2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names by the Taxonomic Name Resolution Service (TNRS, Boyle et al. 2013). This step unifies synonyms and corrects misspellings.
 
@@ -42,25 +42,24 @@ This stage restores key information, enhances geospatial accuracy, and extracts 
 
 **Optional Stage**
 
-Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
+-   Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
 
-Plot richness: This optional module is useful for creating a simple richness map from your processed occurrence records above. It is based on two functions `lets.presab.points` and `plot.PresenceAbsence` from R package `letsR`(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
+-   Plot richness: This optional module is useful for creating a simple richness map from your processed occurrence records above. It is based on two functions `lets.presab.points` and `plot.PresenceAbsence` from R package `letsR`(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 
 Focused exclusively on GBIF plant occurrence records, UltraGBIF is able to clean one million records within 15 minutes on a laptop, representing 60% memory reduction. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
 ## Installation
 
-UltraGBIF will be available on CRAN soon. The initial installation takes time.
+UltraGBIF will be available on CRAN soon. Now please quickly install UltraGBIF via my temporary CRAN-self-hosted repository by 'Drat' R Archive Template.
 
 ``` r
 options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
-options(timeout = 600)
-install.packages("UltraGBIF",type = 'source') ## install UltraGBIF
+install.packages("UltraGBIF",type = 'source') ## install UltraGBIF in one minute
 ```
 
 ## Tutorial of UltraGBIF
 
-A comprehensive tutorial is available at
+A comprehensive tutorial is available after installation at:
 
 ``` r
 library(UltraGBIF)

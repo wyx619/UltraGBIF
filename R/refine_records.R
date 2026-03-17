@@ -3,14 +3,16 @@
 #'
 #' @description Restore key usable information for vouchers by consolidating data from duplicate records belonging to identical collection events, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions.
 #'
-#' @param voucher voucher from `set_digital_voucher`
+#' @param voucher UltraGBIF_voucher from \code{\link{set_digital_voucher}}
 #' @param threads threads requirement, a positive real number, default is 4
 #' @param save_path the local path where you want to save the final result
 #' @param tests CoordinateCleaner checks. Choose one or more from `c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")`
 #'
-#' @details It can restore key usable information for vouchers by consolidating data from duplicate records belonging to identical collection events, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions information
+#' @details If set `save_path`, `usable_refined_records.csv.gz` that includes usable records and
+#' `native_refined_records.csv.gz` that includes usable records will be write to the path.
+#' They are the main products of UltraGBIF.
 #'
-#' @return A list with duration and 2 data.table: `all_records` for all refined records,
+#' @return UltraGBIF_refine list with duration and 2 data.table: `all_records` for all refined records,
 #' `native_records` for native records of them.
 #'
 #' @import data.table

@@ -3,37 +3,37 @@
 #'
 #' @description ### Grouping Duplicates and Selecting the Digital Voucher
 #'
-#' #### 1. Handling Complete Collection Event Keys
+#' #### Handling Complete Collection Event Keys
 #' - Unique collection events often generate multiple duplicate GBIF records. One duplicate is designated as the master digital voucher, integrating data from other duplicates.
 #' - When the collection event key is complete, duplicates are grouped and parsed based on record completeness and geospatial quality:
 #'   - *Record Completeness* : Assessed using data-quality scores for fields: `recordedBy`, `recordNumber`, `year`, `institutionCode`, `catalogNumber`, `locality`, `municipality`, `countryCode`, `stateProvince`, and `fieldNotes`.
 #'   - *Geospatial Quality* : Ranked via a score derived from geospatial issues in `EnumOccurrenceIssue` (GBIF table).
 #' - The duplicate with the highest total score (sum of record completeness + geospatial quality) is assigned as the master voucher. Missing data from other duplicates are merged into this voucher.
 #'
-#' #### 2. Handling Incomplete Collection Event Keys
+#' #### Handling Incomplete Collection Event Keys
 #' - When the collection event key is incomplete, duplicates cannot be parsed. Each record is treated as a unique collection event, with no duplicates identified.
 #' - Record completeness and geospatial quality are still evaluated as described below to assess data integrity.
 #'
-#' #### 3. Quality Score Calculation
+#' #### Quality Score Calculation
 #' **UltraGBIF_digital_voucher** : The duplicate with the highest total score, calculated as
 #'
 #' ### Total Score = Record Completeness + Quality of Geospatial Information
 #'
-#' #### 4. Record Completeness Calculation
+#' #### Record Completeness Calculation
 #' - Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields presence:
 #' `recordedBy`,`recordNumber`, `year`, `institutionCode`, `catalogNumber`, `locality`, `municipality`, `countryCode`, `stateProvince`, `fieldNotes`,
 #'
-#' #### 5. Geospatial Quality Calculation
+#' #### Geospatial Quality Calculation
 #' - Based on GBIF geospatial issues in `EnumOccurrenceIssue`, classified into three categories:
 #'   - *No Impact* : Issues not affecting coordinate accuracy (`selection_score = -1`).
 #'   - *Potential Impact* : Issues that may affect coordinate accuracy (`selection_score = -3`).
 #'   - *Exclusion* : Records with severe issues (`selection_score = -9`) are excluded.
 #'
-#' **This optimized version eliminates O(n²) complexity by using vectorized data.table operations.**
+#' **It eliminates complexity by using vectorized data.table operations.**
 #'
-#' @param occ_import imported GBIF records
-#' @param taxa_checked your checked taxon names from `check_occ_name`
-#' @param collection_key your collection mark from `generate_collection_mark`
+#' @param occ_import imported GBIF records from \code{\link{import_records}}
+#' @param taxa_checked UltraGBIF_taxa_checked list from \code{\link{check_occ_name}}
+#' @param collection_key UltraGBIF_collection_key list from \code{\link{generate_collection_mark}}
 #'
 #' @details
 #' `UltraGBIF_duplicates_grouping_status` :
@@ -48,7 +48,7 @@
 #'
 #' `UltraGBIF_non_groupable_duplicates`: TRUE if duplicates cannot be grouped, FALSE otherwise.
 #'
-#' @return A list with duration and 2 data.table:
+#' @return UltraGBIF_voucher list with duration and 2 data.table:
 #' "occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
 #'
 #' @import data.table

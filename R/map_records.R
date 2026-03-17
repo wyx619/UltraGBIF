@@ -3,15 +3,15 @@
 #'
 #' @description This optional module simplifies and renders refined GBIF occurrence records on dynamic maps
 #'
-#' @param records_refined the refined occurrence list from `coordinate_refine`
+#' @param records_refined UltraGBIF_refine list from from \code{\link{coordinate_refine}}
 #' @param precision positive integer scalar controlling the density
 #'  of your refined GBIF occurrence records on dynamic maps. (i.e. 4 for 20 km,
-#'  3 for 156 km, 2 for 1250 km.) Default is 4
+#'  3 for 156 km, 2 for 1250 km). Default is 4
 #' @param cex the point size of your refined GBIF occurrence records rendering on dynamic maps. Default is 4
 #'
 #'
 #' @return A dynamic interactive map with `wcvp_area_status` legend.
-#' Note that the map has 3 different layers for you to choose to show.
+#' Note that the map has 3 different layers to show.
 #'
 #' @import data.table
 #' @import geohashTools
