@@ -1,6 +1,6 @@
-<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> \# [**`UltraGBIF`**](https://github.com/wyx619/UltraGBIF/)
+<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> 
 
-# Fast and easy compliation of GBIF plant occurrence records in one R package
+# Fast and Easy Compliation of GBIF Plant Occurrence Records in One R package
 
 ## Introduction
 
@@ -12,9 +12,9 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 ## Workflow
 
-***Three main stages and seven modules of UltraGBIF.** After all stages, generally 35% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
+***3 core stages and 8 modules of UltraGBIF.** After core stages, generally 35% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
 
-UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into three main stages and seven distinct modules.
+UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into 3 core stages and 8 distinct modules.
 
 **Stage 1: Data Acquisition**
 
@@ -22,7 +22,7 @@ This stage ensures data accuracy and consistency through three modules:
 
 1.  Import Records: This module receives a path to the zip file downloaded from GBIF. The issue flags are automatically extracted for downstream quality assessment.
 
-2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names by the Taxonomic Name Resolution Service (TNRS, Boyle et al. 2013). This step unifies synonyms and corrects misspellings.
+2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names by the [Taxonomic Name Resolution Service](https://doi.org/10.32614/CRAN.package.TNRS) (TNRS, Boyle et al. 2013). This step unifies synonyms and corrects misspellings.
 
 3.  Check Collector Name: This module standardizes collector names to reduce inconsistencies (e.g., "Smith, J." versus "J. Smith") that can fragment single collection events. By preparing a standardized dictionary of primary collector surnames, this step reduces identification errors by over 80% and improves the accuracy of subsequent duplication checks.
 
@@ -40,17 +40,17 @@ This stage restores key information, enhances geospatial accuracy, and extracts 
 
 6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'.
 
-**Optional Stage**
+**Optional Stages**
 
 -   Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
 
--   Plot richness: This optional module is useful for creating a simple richness map from your processed occurrence records above. It is based on two functions `lets.presab.points` and `plot.PresenceAbsence` from R package `letsR`(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
+-   Plot richness: This optional module is useful for creating a simple richness map from UltraGBIF-processed occurrence records above. It has drawn on `lets.presab.points` and `plot.PresenceAbsence` from R package [`letsR`](https://github.com/macroecology/letsR)(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 
 Focused exclusively on GBIF plant occurrence records, UltraGBIF is able to clean one million records within 15 minutes on a laptop, representing 60% memory reduction. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
 ## Installation
 
-UltraGBIF will be available on CRAN soon. Now please quickly install UltraGBIF via my temporary CRAN-self-hosted repository by 'Drat' R Archive Template.
+UltraGBIF will be available on CRAN soon. Now please quickly install UltraGBIF via my temporary CRAN-self-hosted repository by [Drat](https://doi.org/10.32614/CRAN.package.drat) R Archive Template.
 
 ``` r
 options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
