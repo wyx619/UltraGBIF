@@ -1,6 +1,6 @@
 <a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> 
 
-# Fast and Easy Compliation of GBIF Plant Occurrence Records in One R package
+# UltraGBIF: Fast and Easy Compliation of GBIF Plant Occurrence Records in One R package
 
 ## Introduction
 
