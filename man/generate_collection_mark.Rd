@@ -33,6 +33,9 @@ event (i.e., \emph{gathering}) to facilitate duplicate recognition. By concatena
 the \strong{last name of the primary collector}, and the \strong{collection number}.
 }
 \examples{
-\dontrun{collection_key <- generate_collection_mark(occ_import = occ_import,dictionary = dictionary)}
+\dontrun{
+collection_key <- generate_collection_mark(occ_import = occ_import,
+dictionary = dictionary)
+}
 
 }

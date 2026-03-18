@@ -25,7 +25,10 @@
 #' @encoding UTF-8
 #'
 #' @examples
-#' \dontrun{collection_key <- generate_collection_mark(occ_import = occ_import,dictionary = dictionary)}
+#' \dontrun{
+#' collection_key <- generate_collection_mark(occ_import = occ_import,
+#' dictionary = dictionary)
+#' }
 #'
 #' @import data.table
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else
