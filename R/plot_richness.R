@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' plot_richness(records_refined = refine, main = 'richness map',
+#' richness <- plot_richness(records_refined = refine, main = 'richness map',
 #' xlab = "Longitude", ylab = "Latitude")
 #'}
 #' @references

@@ -31,7 +31,7 @@ to avoid looping when filling large matrices, thus achieving nearly a hundredfol
 }
 \examples{
 \dontrun{
-plot_richness(records_refined = refine, main = 'richness map',
+richness <- plot_richness(records_refined = refine, main = 'richness map',
 xlab = "Longitude", ylab = "Latitude")
 }
 }
