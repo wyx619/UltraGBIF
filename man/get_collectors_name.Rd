@@ -2,47 +2,33 @@
 % Please edit documentation in R/get_collectors_name.R
 \name{get_collectors_name}
 \alias{get_collectors_name}
-\title{Extract last name of the main collector}
+\title{Simplify and extract the name of collectors}
 \usage{
-get_collectors_name(
-  x = NA,
-  surname_selection_type = "largest_string",
-  max_words_name = 6,
-  min_characters_in_name = 2
-)
+get_collectors_name(x = "", min_char = 2)
 }
 \arguments{
-\item{x}{collectors_name in recordedBy field}
+\item{x}{name of the collectors}
 
-\item{surname_selection_type}{allows you to select two types of results
-for the main collector's last name: \strong{\code{large_string}} = word with the largest
-number of characters and \strong{\code{last_name}} = literally the last name of the main collector,
-with more than two characters.}
-
-\item{max_words_name}{assist in checking the length of name}
-
-\item{min_characters_in_name}{min characters in name}
+\item{min_char}{min characters in name}
 }
 \value{
-last name of the main collector
+Standard name of the main collector
 }
 \description{
-Extract last name of the main collector in recordedBy field
+This function simplifies and extracts the name of one collector
 }
 \examples{
 \donttest{
-# Basic usage
+# Normal conditions
 get_collectors_name('Anderberg, Arne & Anderberg, Anna-Lena')
 get_collectors_name('Schlegel, Henrik Adolf Leonard & Arnell, Hampus Wilrshelm')
-
-# Different selection methods
-get_collectors_name('Tomitarô-Makino, John', surname_selection_type = 'largest_string')
-get_collectors_name('Tomitarô-Makino, John', surname_selection_type = 'last_name')
+get_collectors_name('Tomitarô-Makino, John')
 
 # Edge cases
-get_collectors_name(NA) # Returns "UNKNOWN"
-get_collectors_name('')  # Returns "UNKNOWN"
-get_collectors_name('et al.') # Returns "UNKNOWN"
+get_collectors_name(NA)
+get_collectors_name('')
+get_collectors_name('et al.')
+
 }
 
 

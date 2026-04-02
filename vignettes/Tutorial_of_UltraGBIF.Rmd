@@ -15,13 +15,13 @@ bibliography: references.bib
 
 ## Description
 
-This Tutorial parses and merges *Saxifraga* (<https://doi.org/10.15468/dl.bythb4>) occurrence records from GBIF.
+This Tutorial demonstrates the usage of UltraGBIF parsing and merging Saxifraga (<https://doi.org/10.15468/dl.bythb4>) occurrence records from GBIF as an example.
 
-## import records
+## Import records in UltraGBIF
 
-This tutorial uses *Saxifraga* occurrence records download from GBIF that has been integrated in the package.
+This tutorial uses *Saxifraga* occurrence records downloaded from GBIF.
 
-This module also utilizes `EnumOccurrence` Issue values to transform these issues into a structured format, enabling systematic quality assessment through individualized issue tracking and standardized classification. See more [details](https://gbif.github.io/gbif-api/apidocs/org/gbif/api/vocabulary/OccurrenceIssue.html) here.
+This module also utilizes [`EnumOccurrence`](https://gbif.github.io/gbif-api/apidocs/org/gbif/api/vocabulary/OccurrenceIssue.html) Issue values to transform these issues into a structured format, enabling systematic quality assessment through individualized issue tracking and standardized classification.
 
 ```{r import_records, eval=FALSE, include=T}
 library(UltraGBIF)
@@ -31,32 +31,30 @@ gbif_occurrence_file <- paste0(getwd(),'/Saxfriga.zip')
 curl_download(url,gbif_occurrence_file,quiet = F) ## cost time and total are 68692523 bytes
 occ_import <- import_records(GBIF_file = gbif_occurrence_file,
                              only_PRESERVED_SPECIMEN = T)
+help(EnumOccurrenceIssue)
 ```
 
-`occ_import` includes `occ` for initial occurrence records, `occ_gbif_issue` for GBIF issues and its `summary`, and duration.
+`occ_import` includes `occ` for initial occurrence records, `occ_gbif_issue` for GBIF issues and its `summary`, and runtime.
 
-## Check taxon name
+## Check taxon names
 
 UltraGBIF uses TNRS[@boyle2013] to check and resolve taxon names in occurrence records. The Taxonomic Name Resolution Service (TNRS) is a tool for the computer-assisted standardization of plant scientific names. The TNRS corrects spelling errors and alternative spellings to a standard list of names, and converts out of date names (synonyms) to the current accepted name. The TNRS can process many names at once, saving hours of tedious and error-prone manual name correction.
 
 ```{r check_occ_name, eval=FALSE, include=T}
-taxa_checked <- check_occ_name(occ_import = occ_import,accuracy = 0.9)
+taxa_checked <- check_occ_taxon(occ_import = occ_import,accuracy = 0.9)
 ```
 
-`taxa_checked` includes `occ_wcvp_check_name` for records with resolved taxa and its `summary`, and duration.
+`taxa_checked` includes `occ_wcvp_check_name` for records with resolved taxa and its `summary`, and runtime.
 
 ## Check collectors dictionary
 
-This module extracts the primary collector's surname from the `recordedBy` field in occurrence records and generates an association list linking standardized surnames to corresponding records. It assists to resolve collector identity ambiguities and enforce nomenclatural consistency. Referred `CollectorDictionary` in this module comes from ParseGBIF[@demelo2024].
+This module extracts the primary collector's surname from the `recordedBy` field in occurrence records and generates an association list linking standardized surnames to corresponding records. It assists to resolve collector identity ambiguities and enforce nomenclatural consistency. Referred `CollectorDictionary` in this module comes from ParseGBIF[@demelo2024].[@tokenizers]
 
 ```{r prepare_collectors_dictionary, eval=FALSE, include=T}
-dictionary <- prepare_collectors_dictionary(occ_import = occ_import,
-                                            surname_selection_type = "largest_string",
-                                            max_words_name = 6,
-                                            min_characters_in_name = 2)
+collectors_dictionary <- check_collectors(occ_import = occ_import,min_char = 2)
 ```
 
-`dictionary` includes `my_dictionary` for checked collectors name and `ref_dictionary` for referred dictionary, and duration.
+`dictionary` includes `my_dictionary` for checked collectors name and `ref_dictionary` for referred dictionary, and runtime.
 
 ## Generate unique collection mark
 
@@ -80,10 +78,10 @@ This module addresses two key challenges:
 
 ```{r generate_collection_mark, eval=FALSE, include=T}
 collection_key <- generate_collection_mark(occ_import = occ_import,
-                                            dictionary = dictionary)
+                                           collectors_dictionary = collectors_dictionary)
 ```
 
-`collection_key` includes `occ_collectorsDictionary` for input records updated with standardized fields and generated keys and `CollectorsDictionary_add` for newly encountered collectors for dictionary expansion and duration.
+`collection_key` includes `occ_collectorsDictionary` for input records updated with standardized fields and generated keys and `CollectorsDictionary_add` for newly encountered collectors for dictionary expansion and runtime.
 
 ## Set digital voucher
 
@@ -131,7 +129,7 @@ voucher <- set_digital_voucher(occ_import = occ_import,
                                collection_key = collection_key)
 ```
 
-`voucher` includes the full flagged digital voucher of occurrence records which names `occ_digital_voucher` and its `summary`, and duration.
+`voucher` includes the full flagged digital voucher of occurrence records which names `occ_digital_voucher` and its `summary`, and runtime.
 
 ## Refine records
 
@@ -141,10 +139,8 @@ For finally complete usable vouchers, their associated occurrence records are au
 
 Then each validated record is matched to its corresponding WGSRPD level-3 Botanical Country classifications with different status (native/introduced/extinct/location_doubtful), which minimizes mis-classification risks in cross-regional analyses.
 
-To optimize computational efficiency, this module supports parallelization through multi-threading by specifying the desired concurrency level via the `threads` parameter.
-
 ```{r refine_records, eval=FALSE, include=T}
-refine <- refine_records(voucher = voucher,
+refined_records <- refine_records(voucher = voucher,
                             threads = 3,
                             save_path = dirname (gbif_occurrence_file),
                             tests = c("capitals", "centroids", "equal", "gbif", "institutions", "outliers", "seas","zeros"))
@@ -156,11 +152,11 @@ refine <- refine_records(voucher = voucher,
 
 This module is implemented optionally, rendering the output from `coordinate_refine`, employing `geohashTools`[@geohashTools] to perform spatial clustering of geo-coordinates. The `precision` parameter determines grid resolution (e.g. 4 for 20 km×20 km grids, 3 for 156 km×156 km grids). It groups records by `UltraGBIF_wcvp_taxon_name`, WGSRPD information and `geohash grid` and follows deduplication.
 
-After simplification, dynamic maps with different layers are rendered by mapview[@mapview] with WGSRPD information legend. Symbol size is controlled by the `cex` parameter. Moreover, they supports zoom functionality for spatial resolution adjustment and enables interactive selection of individual coordinates to display their full attributes.
+After simplification, dynamic maps with different layers are rendered by mapview[@mapview] with WGSRPD information legend. Symbol size is controlled by the `cex` parameter. Moreover, they support zoom functionality for spatial resolution adjustment and enables interactive selection of individual coordinates to display their full attributes.
 
 ```{r map_records, eval=FALSE, include=T}
-map_records(records_refined = refine,
-                     precision = 4, 
+map_records(refined_records = refined_records,
+                     precision = 2, 
                      cex = 4)
 ```
 
@@ -169,9 +165,9 @@ map_records(records_refined = refine,
 This optional module is useful for creating a simple richness map from your processed occurrence records above. It is based on two functions `lets.presab.points` and `plot.PresenceAbsence` from R package `letsR`[@vilela2015], but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 
 ```{r plot_richness, eval=FALSE, include=T}
-richness <- plot_richness(records_refined = refine,main = 'Saxifraga Richness')
+richness <- plot_richness(refined_records = refined_records,main = 'Saxifraga Richness')
 ```
 
 A richness plot will be shown after running this module, and additionally, `richness` includes `presence` for the taxa\~grid presence table and `ras_richness` for a richness S4 object.
 
-## Reference
+## References

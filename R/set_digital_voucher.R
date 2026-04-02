@@ -1,59 +1,109 @@
-#' @title Set master digital voucher
+#' @title Select master digital voucher through multi-dimensional quality scoring
 #' @name set_digital_voucher
 #'
-#' @description ### Grouping Duplicates and Selecting the Digital Voucher
+#' @description This function identifies and selects the master digital voucher from groups of
+#' duplicate GBIF records by applying a multi-dimensional quality scoring system. Records possessing
+#' a "full collection mark" (defined as the combination of standardized \code{Family + RecordBy +
+#' RecordNumber/EventDate}) are grouped, and those within each group are scored across multiple
+#' dimensions. The record exhibiting the highest metadata quality is retained as the digital voucher.
+#' Conversely, records lacking any component of this definition are treated as unique entities; each
+#' serves as its own grouping unit and proceeds directly to the multi-dimensional scoring phase
+#' without aggregation. This strategy preserves the most geographically informative data while
+#' minimizing redundancy, thereby enhancing spatial reliability.
 #'
-#' #### Handling Complete Collection Event Keys
-#' - Unique collection events often generate multiple duplicate GBIF records. One duplicate is designated as the master digital voucher, integrating data from other duplicates.
-#' - When the collection event key is complete, duplicates are grouped and parsed based on record completeness and geospatial quality:
-#'   - *Record Completeness* : Assessed using data-quality scores for fields: `recordedBy`, `recordNumber`, `year`, `institutionCode`, `catalogNumber`, `locality`, `municipality`, `countryCode`, `stateProvince`, and `fieldNotes`.
-#'   - *Geospatial Quality* : Ranked via a score derived from geospatial issues in `EnumOccurrenceIssue` (GBIF table).
-#' - The duplicate with the highest total score (sum of record completeness + geospatial quality) is assigned as the master voucher. Missing data from other duplicates are merged into this voucher.
-#'
-#' #### Handling Incomplete Collection Event Keys
-#' - When the collection event key is incomplete, duplicates cannot be parsed. Each record is treated as a unique collection event, with no duplicates identified.
-#' - Record completeness and geospatial quality are still evaluated as described below to assess data integrity.
-#'
-#' #### Quality Score Calculation
-#' **UltraGBIF_digital_voucher** : The duplicate with the highest total score, calculated as
-#'
-#' ### Total Score = Record Completeness + Quality of Geospatial Information
-#'
-#' #### Record Completeness Calculation
-#' - Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields presence:
-#' `recordedBy`,`recordNumber`, `year`, `institutionCode`, `catalogNumber`, `locality`, `municipality`, `countryCode`, `stateProvince`, `fieldNotes`,
-#'
-#' #### Geospatial Quality Calculation
-#' - Based on GBIF geospatial issues in `EnumOccurrenceIssue`, classified into three categories:
-#'   - *No Impact* : Issues not affecting coordinate accuracy (`selection_score = -1`).
-#'   - *Potential Impact* : Issues that may affect coordinate accuracy (`selection_score = -3`).
-#'   - *Exclusion* : Records with severe issues (`selection_score = -9`) are excluded.
-#'
-#' **It eliminates complexity by using vectorized data.table operations.**
+#' The function implements the following workflow:
+#' \itemize{
+#'   \item \strong{Record grouping}: Groups records by their collection event key
+#'   (\code{Ctrl_key}). Records with complete keys are aggregated
+#'   as duplicates; records with incomplete keys are treated as independent samples
+#'   \item \strong{Quality scoring}: Evaluates each record on two dimensions:
+#'   \itemize{
+#'     \item \emph{Record Completeness}: Binary presence/absence scoring across ten metadata fields
+#'     \item \emph{Geospatial Quality}: Penalty-based scoring derived from GBIF geospatial issue flags
+#'   }
+#'   \item \strong{Voucher selection}: Within each group, the record with the highest total score
+#'   (Record Completeness + Geospatial Quality) is designated as the master digital voucher
+#'   \item \strong{Coordinate assignment}: For grouped records, coordinates from the highest-priority
+#'   record (voucher with validated coordinates) are assigned to all members of the group
+#'   \item \strong{Taxonomic resolution}: For each group, the most frequently occurring accepted
+#'   taxon name is selected as the representative taxonomic identity
+#' }
 #'
 #' @param occ_import imported GBIF records from \code{\link{import_records}}
-#' @param taxa_checked UltraGBIF_taxa_checked list from \code{\link{check_occ_name}}
-#' @param collection_key UltraGBIF_collection_key list from \code{\link{generate_collection_mark}}
+#' @param taxa_checked UltraGBIF_taxa_checked list from \code{\link{check_occ_taxon}}
+#' @param collection_key UltraGBIF_collection_key list from \code{\link{set_collection_mark}}
 #'
 #' @details
-#' `UltraGBIF_duplicates_grouping_status` :
-#' * `groupable`: Complete key, duplicates parsed.
-#' * `not groupable: no recordedBy and no recordNumber`: Missing both fields.
-#' * `not groupable: no recordNumber`: Missing recordNumber.
-#' * `not groupable: no recordedBy`: Missing recordedBy.
+#' \strong{Core Output Table:}
 #'
-#' `UltraGBIF_num_duplicates`: Integer count of duplicate records.
+#' The \code{occ_digital_voucher} data.table is the core output of \code{\link{set_digital_voucher}}.
+#' It contains all processed fields, including original occurrence data, quality scores, grouping
+#' information, taxonomic assignments, and final dataset classifications.
 #'
-#' `UltraGBIF_duplicates`: TRUE if duplicates exist, FALSE otherwise.
+#' \strong{Multi-Dimensional Quality Scoring System:}
 #'
-#' `UltraGBIF_non_groupable_duplicates`: TRUE if duplicates cannot be grouped, FALSE otherwise.
+#' The quality scoring system evaluates each record across two dimensions:
 #'
-#' @return UltraGBIF_voucher list with duration and 2 data.table:
-#' "occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
+#' \itemize{
+#'   \item \emph{Record Completeness}: Calculated as the sum of binary flags (1 = present, 0 = absent)
+#'   for the following 10 fields: \code{recordedBy}, \code{recordNumber}, \code{year},
+#'   \code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality},
+#'   \code{countryCode}, \code{stateProvince}, and \code{fieldNotes}. Higher scores indicate
+#'   more complete metadata.
+#'
+#'   \item \emph{Geospatial Quality}: Derived from GBIF geospatial issue flags in
+#'   \code{EnumOccurrenceIssue}, classified into three severity levels:
+#'   \itemize{
+#'     \item \emph{No Impact} (\code{selection_score = -1}): Issues not affecting coordinate accuracy
+#'     \item \emph{Potential Impact} (\code{selection_score = -3}): Issues that may affect coordinate accuracy
+#'     \item \emph{Exclusion} (\code{selection_score = -9}): Records with severe geospatial issues
+#'   }
+#' }
+#'
+#' The final quality score combines these two dimensions, with the record exhibiting the highest
+#' score within each group selected as the digital voucher.
+#'
+#' \strong{Grouping Status Classification:}
+#'
+#' The \code{UltraGBIF_duplicates_grouping_status} field indicates the grouping outcome for each record:
+#' \itemize{
+#'   \item \code{groupable}: Complete collection key; duplicates identified and grouped
+#'   \item \code{not groupable: no recordedBy and no recordNumber}: Both collector name and
+#'   collection number are missing
+#'   \item \code{not groupable: no recordNumber}: Collection number is missing
+#'   \item \code{not groupable: no recordedBy}: Collector name is missing
+#' }
+#'
+#' \strong{Key Output Fields:}
+#'
+#' The \code{occ_digital_voucher} table includes the following key fields:
+#' \itemize{
+#'   \item \code{UltraGBIF_digital_voucher}: Logical; \code{TRUE} if the record is selected as the
+#'   master voucher for its group
+#'   \item \code{UltraGBIF_duplicates}: Logical; \code{TRUE} if the record belongs to a group with
+#'   multiple members
+#'   \item \code{UltraGBIF_num_duplicates}: Integer; count of records within the same group
+#'   \item \code{UltraGBIF_non_groupable_duplicates}: Logical; \code{TRUE} if the record cannot be
+#'   grouped due to incomplete collection key components
+#'   \item \code{UltraGBIF_duplicates_grouping_status}: Character; grouping outcome classification
+#'   (see Grouping Status Classification above)
+#'   \item \code{UltraGBIF_dataset_result}: Final classification; one of "usable", "duplicate",
+#'   or "unusable"
+#' }
+#'
+#' @return UltraGBIF_voucher list containing:
+#'   \itemize{
+#'     \item \code{occ_digital_voucher}: A data.table containing all processed fields, including
+#'     original occurrence data, quality scores, grouping information, taxonomic assignments,
+#'     and final dataset classifications
+#'     \item \code{occ_results}: A data.table containing only the quality assessment and result
+#'     fields (e.g., quality scores, voucher status, coordinate validation)
+#'     \item \code{runtime}: Execution time of the function
+#'   }
 #'
 #' @import data.table
 #' @import stringi
-#' @importFrom dplyr %>% filter mutate select distinct case_when if_else
+#' @importFrom dplyr %>% select
 #'
 #' @examples
 #' \dontrun{
@@ -63,8 +113,8 @@
 #'}
 #' @export
 set_digital_voucher <- function(occ_import = NA,
-                                 taxa_checked = NA,
-                                 collection_key = NA)
+                                taxa_checked = NA,
+                                collection_key = NA)
 {
   start <- Sys.time()
 
@@ -79,7 +129,7 @@ set_digital_voucher <- function(occ_import = NA,
     occ_in <- occ %>% setorder(Ctrl_gbifID)
     occ_gbif_issue <- occ_import$occ_gbif_issue %>% setorder(Ctrl_gbifID)
     occ_wcvp_check_name <- taxa_checked$occ_wcvp_check_name %>% setorder(Ctrl_gbifID)
-    occ_collectorsDictionary <- collection_key$occ_collectorsDictionary %>% setorder(Ctrl_gbifID)
+    occ_collectorsDictionary <- collection_key$collection_key %>% setorder(Ctrl_gbifID)
 
     # Combine all data sources
     occ <- cbind(occ_gbif_issue %>% select(-Ctrl_gbifID),
@@ -88,7 +138,7 @@ set_digital_voucher <- function(occ_import = NA,
     setDT(occ)
     occ[is.na(wcvp_taxon_rank), wcvp_taxon_rank := '']
     occ[is.na(wcvp_taxon_status), wcvp_taxon_status := '']
-    occ[,Ctrl_gbifID]
+
     # Identify geospatial issue categories from EnumOccurrenceIssue
     index_tmp1 <- EnumOccurrenceIssue$score == 1 & EnumOccurrenceIssue$type == 'geospatial' %>%
       ifelse(is.na(.), FALSE, .)
@@ -99,16 +149,16 @@ set_digital_voucher <- function(occ_import = NA,
 
     # Calculate record completeness flags
     occ[, `:=`(
-      temAnoColeta = !is.na(Ctrl_year) & (Ctrl_year == "" | Ctrl_year == 0 | Ctrl_year <= 10),
-      temCodigoInstituicao = !is.na(Ctrl_institutionCode) & Ctrl_institutionCode != "",
-      temNumeroCatalogo = !is.na(Ctrl_catalogNumber) & Ctrl_catalogNumber != "",
-      temColetor = !is.na(Ctrl_recordedBy) & Ctrl_recordedBy != "",
-      temNumeroColeta = !is.na(Ctrl_recordNumber) & Ctrl_recordNumber != "",
-      temPais = !COUNTRY_INVALID,
-      temUF = !is.na(Ctrl_stateProvince) & Ctrl_stateProvince != "",
-      temMunicipio = !is.na(Ctrl_municipality) & Ctrl_municipality != "",
-      temLocalidade = !is.na(Ctrl_locality) & Ctrl_locality != "",
-      temNotas = !is.na(Ctrl_fieldNotes) & Ctrl_fieldNotes != ""
+      tem_year = !is.na(Ctrl_year) & (Ctrl_year == "" | Ctrl_year == 0 | Ctrl_year <= 10),
+      tem_institutionCode = !is.na(Ctrl_institutionCode) & Ctrl_institutionCode != "",
+      tem_catalogNumber = !is.na(Ctrl_catalogNumber) & Ctrl_catalogNumber != "",
+      tem_recordedBy = !is.na(Ctrl_recordedBy) & Ctrl_recordedBy != "",
+      tem_recordNumber = !is.na(Ctrl_recordNumber) & Ctrl_recordNumber != "",
+      tem_COUNTRY = !COUNTRY_INVALID,
+      tem_stateProvince = !is.na(Ctrl_stateProvince) & Ctrl_stateProvince != "",
+      tem_municipality = !is.na(Ctrl_municipality) & Ctrl_municipality != "",
+      tem_locality = !is.na(Ctrl_locality) & Ctrl_locality != "",
+      tem_fieldNotes = !is.na(Ctrl_fieldNotes) & Ctrl_fieldNotes != ""
     )]
   }
 
@@ -165,17 +215,13 @@ set_digital_voucher <- function(occ_import = NA,
     occ[Ctrl_hasCoordinate == FALSE, Ctrl_geospatial_quality := -9]
 
     # Calculate verbatim quality score (record completeness)
-    occ[, Ctrl_verbatim_quality := temColetor + temNumeroColeta + temAnoColeta +
-          temCodigoInstituicao + temNumeroCatalogo + temLocalidade +
-          temMunicipio + temUF + temPais + temNotas]
+    occ[, Ctrl_verbatim_quality := tem_recordedBy + tem_recordNumber + tem_year +
+          tem_institutionCode + tem_catalogNumber + tem_locality +
+          tem_municipality + tem_stateProvince + tem_COUNTRY + tem_fieldNotes]
 
     # Calculate total quality score
     occ[, Ctrl_moreInformativeRecord := Ctrl_geospatial_quality + Ctrl_verbatim_quality]
 
-    # Clean up collection key format
-    occ[stri_endswith_fixed(Ctrl_key_family_recordedBy_recordNumber, "_NA"),
-        Ctrl_key_family_recordedBy_recordNumber := stri_replace_last_regex(
-          Ctrl_key_family_recordedBy_recordNumber, "_NA$", "_")]
   }
 
 
@@ -183,24 +229,16 @@ set_digital_voucher <- function(occ_import = NA,
   # This identifies records that cannot be grouped due to missing information
   message("Pre-compute grouping key patterns...")
   occ[, grouping_pattern := fcase(
-    # Condition 1: FAMILY__ (ends with __, with neither recordedBy nor recordNumber)
-    stri_detect_fixed(Ctrl_key_family_recordedBy_recordNumber, "__") &
-      stri_locate_last_fixed(Ctrl_key_family_recordedBy_recordNumber, "__")[,2] ==
-      stri_length(Ctrl_key_family_recordedBy_recordNumber),
-    "FAMILY__",
+    # Condition 1: FAMILY_UNKNOWN_ (with neither recordedBy nor recordNumber)
+    stri_endswith_fixed(Ctrl_key,'_UNKNOWN_'),"FAMILY__",
 
-    # Condition 2: FAMILY_recordedBy_ (contains "__" but not at the end, or contains UNKNOWN-COLLECTOR)
-    (stri_detect_fixed(Ctrl_key_family_recordedBy_recordNumber, "__") &
-       stri_locate_last_fixed(Ctrl_key_family_recordedBy_recordNumber, "__")[,2] !=
-       stri_length(Ctrl_key_family_recordedBy_recordNumber)) |
-      stri_detect_fixed(Ctrl_key_family_recordedBy_recordNumber, "UNKNOWN-COLLECTOR")|
-      stri_detect_fixed(Ctrl_key_family_recordedBy_recordNumber, "UNKNOWN"),
-    "FAMILY_recordedBy_",
+    # Condition 2: FAMILY_recordedBy_ (only without recordedBy)
+    stri_detect_fixed(Ctrl_key, "_UNKNOWN_") &
+      !stri_endswith_fixed(Ctrl_key, "_"),"FAMILY_recordedBy_",
 
-    # Condition 3: FAMILY__recordNumber (ends with a single _, not __)
-    stri_sub(Ctrl_key_family_recordedBy_recordNumber, -1) == "_" &
-      stri_sub(Ctrl_key_family_recordedBy_recordNumber, -2, -2) != "_",
-    "FAMILY__recordNumber",
+    # Condition 3: FAMILY__recordNumber (only without recordNumber)
+    !stri_detect_fixed(Ctrl_key, "_UNKNOWN_") &
+      stri_endswith_fixed(Ctrl_key, "_"),"FAMILY__recordNumber",
 
     # Default: Groupable
     default = "groupable"
@@ -257,21 +295,21 @@ set_digital_voucher <- function(occ_import = NA,
   # Step 3: Process groupable records
   message("Process groupable records...")
   # Set key for efficient grouping operations
-  setkey(occ, Ctrl_key_family_recordedBy_recordNumber)
+  setkey(occ, Ctrl_key)
 
   # Calculate group statistics and identify digital vouchers
   occ[is_non_groupable == FALSE,
       num_duplicates := .N,
-      by = Ctrl_key_family_recordedBy_recordNumber]
+      by = Ctrl_key]
 
   occ[is_non_groupable == FALSE,
       max_info_score := max(Ctrl_moreInformativeRecord),
-      by = Ctrl_key_family_recordedBy_recordNumber]
+      by = Ctrl_key]
 
   occ[is_non_groupable == FALSE,
       UltraGBIF_digital_voucher := Ctrl_moreInformativeRecord == max_info_score &
         .I == .I[which.max(Ctrl_moreInformativeRecord)],
-      by = Ctrl_key_family_recordedBy_recordNumber]
+      by = Ctrl_key]
 
   # Set basic grouping information
   occ[is_non_groupable == FALSE, `:=`(
@@ -280,51 +318,6 @@ set_digital_voucher <- function(occ_import = NA,
     UltraGBIF_num_duplicates = num_duplicates
   )]
 
-# {  # Step 4: Process taxonomic information for groupable records
-#   message("Process taxonomic information for groupable records...")
-#   # Create combined taxon identifier for accurate counting
-#   occ[, taxon_id := paste0(wcvp_taxon_name, ";", wcvp_plant_name_id)]
-#
-#   # Count accepted taxon names per group
-#   occ[is_non_groupable == FALSE,
-#       num_unique_taxa := uniqueN(taxon_id[wcvp_taxon_status == "Accepted" & !is.na(wcvp_taxon_name)]),
-#       by = Ctrl_key_family_recordedBy_recordNumber]
-#
-#   # Select the most frequent taxon for the sample
-#   occ[is_non_groupable == FALSE,
-#       selected_taxon := {
-#         accepted <- taxon_id[wcvp_taxon_status == "Accepted" & !is.na(wcvp_taxon_name)]
-#         if(length(accepted) > 0) names(which.max(table(accepted))) else NA_character_ },
-#       by = Ctrl_key_family_recordedBy_recordNumber]
-#
-#   # Split the selected taxon back into name and ID
-#   occ[is_non_groupable == FALSE, `:=`(
-#     # Split Name and ID
-#     UltraGBIF_sample_taxon_name = fifelse(
-#       !is.na(selected_taxon),
-#       stri_split_fixed(selected_taxon, ";", simplify = TRUE)[,1],
-#       ""
-#     ),
-#     UltraGBIF_wcvp_plant_name_id = fifelse(
-#       !is.na(selected_taxon),
-#       stri_split_fixed(selected_taxon, ";", simplify = TRUE)[,2],
-#       ""
-#     ),
-#
-#     # Set the number of category names
-#     UltraGBIF_number_taxon_names = fifelse(is.na(num_unique_taxa), 0L, num_unique_taxa),
-#
-#     # Set identification status based on the number of unique names
-#     UltraGBIF_sample_taxon_name_status = fcase(
-#       is.na(selected_taxon), "unidentified",
-#       num_unique_taxa == 1L, "identified",
-#       num_unique_taxa > 1L, "divergent identifications",
-#       default = "unidentified"
-#     ),
-#
-#     # Set unidentified flag
-#     UltraGBIF_unidentified_sample = is.na(selected_taxon)
-#   )]}
 
   # Step 4: Process taxonomic information for groupable records (Optimized)
   message("Process taxonomic information for groupable records...")
@@ -332,24 +325,24 @@ set_digital_voucher <- function(occ_import = NA,
   sub_dt <- occ[is_non_groupable == FALSE &
                   wcvp_taxon_status == "Accepted" &
                   !is.na(wcvp_taxon_name),
-                .(Ctrl_key_family_recordedBy_recordNumber, wcvp_taxon_name, wcvp_plant_name_id)]
+                .(Ctrl_key, wcvp_taxon_name, wcvp_plant_name_id)]
 
   if (nrow(sub_dt) > 0) {
 
-    taxon_counts <- sub_dt[, .N, by = .(Ctrl_key_family_recordedBy_recordNumber,
+    taxon_counts <- sub_dt[, .N, by = .(Ctrl_key,
                                         wcvp_taxon_name, wcvp_plant_name_id)]
 
-    setorder(taxon_counts, Ctrl_key_family_recordedBy_recordNumber, -N, wcvp_taxon_name, wcvp_plant_name_id)
+    setorder(taxon_counts, Ctrl_key, -N, wcvp_taxon_name, wcvp_plant_name_id)
 
-    selected_taxa <- taxon_counts[, .SD[1], by = Ctrl_key_family_recordedBy_recordNumber]
+    selected_taxa <- taxon_counts[, .SD[1], by = Ctrl_key]
 
-    unique_counts <- taxon_counts[, .(num_unique_taxa = .N), by = Ctrl_key_family_recordedBy_recordNumber]
+    unique_counts <- taxon_counts[, .(num_unique_taxa = .N), by = Ctrl_key]
 
-    occ[selected_taxa, on = "Ctrl_key_family_recordedBy_recordNumber",
+    occ[selected_taxa, on = "Ctrl_key",
         `:=`(UltraGBIF_sample_taxon_name = i.wcvp_taxon_name,
              UltraGBIF_wcvp_plant_name_id = i.wcvp_plant_name_id)]
 
-    occ[unique_counts, on = "Ctrl_key_family_recordedBy_recordNumber",
+    occ[unique_counts, on = "Ctrl_key",
         num_unique_taxa := i.num_unique_taxa]
   }
 
@@ -392,7 +385,7 @@ set_digital_voucher <- function(occ_import = NA,
           NA_real_
         )
       ),
-      by = Ctrl_key_family_recordedBy_recordNumber]
+      by = Ctrl_key]
 
   # Assign the selected coordinates to all records in the group
   occ[is_non_groupable == FALSE, `:=`(
@@ -494,7 +487,7 @@ set_digital_voucher <- function(occ_import = NA,
                       "Ctrl_decimalLatitude", "Ctrl_decimalLongitude", "Ctrl_identificationQualifier",
                       "Ctrl_typeStatus", "Ctrl_family", "Ctrl_taxonRank", "Ctrl_issue",
                       "Ctrl_nameRecordedBy_Standard", "Ctrl_recordNumber_Standard",
-                      "Ctrl_key_family_recordedBy_recordNumber", "Ctrl_geospatial_quality",
+                      "Ctrl_key", "Ctrl_geospatial_quality",
                       "Ctrl_verbatim_quality", "Ctrl_moreInformativeRecord",
                       "Ctrl_coordinates_validated_by_gbif_issue", "wcvp_plant_name_id",
                       "wcvp_taxon_rank", "wcvp_taxon_status", "wcvp_family",
@@ -524,7 +517,7 @@ set_digital_voucher <- function(occ_import = NA,
   voucher <- list(
     occ_digital_voucher = occ_all,
     occ_results = occ_results,
-    duration = end - start
+    runtime = end - start
   )
   class(voucher) <- 'UltraGBIF_voucher'
   return(voucher)

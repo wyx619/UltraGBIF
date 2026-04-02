@@ -1,5 +1,3 @@
-#'
-#'
 #' Enumeration GBIF issue
 #'
 #' An enumeration of validation rules for single occurrence records.
@@ -29,7 +27,7 @@
 "EnumOccurrenceIssue"
 #'
 #'
-#' A simple features object for land map
+#' A simple features object of the world land map
 #'
 #' An integrated land map
 #'
@@ -40,25 +38,8 @@
 #'   \item{featurecla}{Land area}
 #'   \item{geometry}{Geometry unit}
 #' }
-#' @source rnaturalearth::ne_download(scale = 110,type = 'land',category = 'physical',returnclass = "sf")
+#' @source \code{rnaturalearth::ne_download(scale = 110,type = 'land',category = 'physical',returnclass = "sf")}
 "seas_ref"
-#'
-#'
-#' Reference dictionary for names of collectors
-#'
-#' A distilled reference dictionary for names of collectors
-#'
-#' @format A data.table with 115702 rows and 2 columns
-#' \describe{
-#'   \item{Ctrl_recordedBy}{original collectors name}
-#'   \item{Ctrl_nameRecordedBy_Standard}{processed collectors name}
-#' }
-#' @source
-#' * [collectorDictionary](https://github.com/pablopains/parseGBIF/tree/main/collectorDictionary)
-#' @references
-#' de Melo, P.H.A., Bystriakova, N., Lucas, E. et al. A new R package to parse plant species occurrence records into unique collection events efficiently reduces data redundancy. Sci Rep 14, 5450 (2024). https://doi.org/10.1038/s41598-024-56158-3
-"ref_dictionary"
-
 #'
 #' Biodiversity Information Standards (TDWG) World Geographical Scheme for Recording Plant Distributions (WGSRPD)
 #'
@@ -75,8 +56,10 @@
 #' @source
 #' * [level3](https://github.com/tdwg/wgsrpd/tree/master/level3)
 #' @references
-#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Sci Data 8, 215 (2021). https://doi.org/10.1038/s41597-021-00997-6
+#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. \emph{Sci Data} 8, 215 (2021). \url{https://doi.org/10.1038/s41597-021-00997-6}
 "wgsrpd3"
+
+
 
 #' The World Checklist of Vascular Plants: distributions
 #'
@@ -95,7 +78,7 @@
 #' }
 #' @source \url{http://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip}
 #' @references
-#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Sci Data 8, 215 (2021). https://doi.org/10.1038/s41597-021-00997-6
+#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. \emph{Sci Data} 8, 215 (2021). \url{https://doi.org/10.1038/s41597-021-00997-6}
 "wcvp_distributions"
 
 #' The World Checklist of Vascular Plants: names
@@ -109,5 +92,5 @@
 #' }
 #' @source \url{http://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip}
 #' @references
-#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Sci Data 8, 215 (2021). https://doi.org/10.1038/s41597-021-00997-6
+#' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. \emph{Sci Data}, 8, 215 (2021). \url{https://doi.org/10.1038/s41597-021-00997-6}
 "ref_wcvp_names"

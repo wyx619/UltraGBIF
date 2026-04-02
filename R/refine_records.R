@@ -1,31 +1,115 @@
-#' @title Restore duplicate records from voucher, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions
+#' @title Validate coordinates, restore metadata, and extract geographic distribution status
 #' @name refine_records
 #'
-#' @description Restore key usable information for vouchers by consolidating data from duplicate records belonging to identical collection events, validate coordinates and extract their World Geographical Scheme for Recording Plant Distributions.
+#' @description This module validates spatial information and restores detailed metadata for usable
+#' vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019)
+#' to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts native status
+#' information based on the World Geographical Scheme for Recording Plant Distributions (WGSRPD) to
+#' classify records as native or non-native.
 #'
-#' @param voucher UltraGBIF_voucher from \code{\link{set_digital_voucher}}
-#' @param threads threads requirement, a positive real number, default is 4
-#' @param save_path the local path where you want to save the final result
-#' @param tests CoordinateCleaner checks. Choose one or more from `c("capitals","centroids","equal","gbif","institutions","outliers","seas","zeros")`
+#' The function implements the following workflow:
+#' \itemize{
+#'   \item \strong{Metadata restoration}: For each digital voucher identified in the previous step,
+#'   consolidates missing or incomplete metadata fields from its associated duplicate records.
+#'   Fields such as locality descriptions, habitat information, and collection dates are merged
+#'   to produce the most complete record possible
+#'   \item \strong{Coordinate validation}: Applies CoordinateCleaner's automated spatial validation
+#'   suite to detect and flag common geospatial errors, including records located at country centroids,
+#'   capital cities, biodiversity institutions, maritime coordinates, and other known error patterns
+#'   \item \strong{Geographic distribution extraction}: Matches each record's coordinates against
+#'   WGSRPD Level 3 areas and cross-references with WCVP (World Checklist of Vascular Plants)
+#'   distribution data to determine whether the occurrence falls within the species' native range
+#'   \item \strong{Native status classification}: Classifies records as "native", "introduced",
+#'   "extinct", "location_doubtful", or "unknown" based on the intersection of observed coordinates
+#'   with documented distribution areas
+#'   \item \strong{Parallel processing}: Distributes coordinate validation across multiple threads
+#'   to accelerate processing of large datasets
+#' }
 #'
-#' @details If set `save_path`, `usable_refined_records.csv.gz` that includes usable records and
-#' `native_refined_records.csv.gz` that includes usable records will be write to the path.
-#' They are the main products of UltraGBIF.
+#' @param voucher UltraGBIF_voucher object from \code{\link{set_digital_voucher}}
+#' @param threads number of threads for parallel coordinate validation. Can be specified as:
+#'   \itemize{
+#'     \item An integer >= 1: absolute number of threads to use
+#'     \item A value between 0 and 1: proportion of available cores to use (e.g., 0.5 = 50%)
+#'   }
+#'   Default is 4.
+#' @param save_path local directory path where refined records will be exported as compressed CSV files.
+#'   If not provided, results are returned in memory only.
+#' @param tests character vector specifying which CoordinateCleaner validation tests to apply.
+#'   Choose one or more from: \code{"capitals"}, \code{"centroids"}, \code{"equal"}, \code{"gbif"},
+#'   \code{"institutions"}, \code{"outliers"}, \code{"seas"}, \code{"zeros"}.
+#'   Default is all tests.
 #'
-#' @return UltraGBIF_refine list with duration and 2 data.table: `all_records` for all refined records,
-#' `native_records` for native records of them.
+#' @details
+#' \strong{Metadata Restoration Strategy:}
+#'
+#' For each voucher record marked as "usable", the function identifies duplicate records sharing
+#' the same collection event key. It then iterates through a predefined set of metadata fields
+#' (e.g., \code{Ctrl_fieldNotes}, \code{Ctrl_locality}, \code{Ctrl_habitat}) and fills in missing
+#' values from the first available duplicate. Fields exceeding 10,000 characters are excluded to
+#' prevent memory issues.
+#'
+#' \strong{Coordinate Validation Tests:}
+#'
+#' The following spatial validation tests are available via CoordinateCleaner:
+#' \itemize{
+#'   \item \code{capitals}: Flags records located at country capital coordinates
+#'   \item \code{centroids}: Flags records at country or province centroids
+#'   \item \code{equal}: Flags records with identical latitude and longitude values
+#'   \item \code{gbif}: Flags records matching known GBIF geospatial issues
+#'   \item \code{institutions}: Flags records at known herbarium or museum coordinates
+#'   \item \code{outliers}: Flags records that are geographic outliers within their species' range
+#'   \item \code{seas}: Flags records located in marine areas for terrestrial species
+#'   \item \code{zeros}: Flags records at coordinates (0, 0)
+#' }
+#'
+#' \strong{WGSRPD Area Classification:}
+#'
+#' The native status classification is determined by intersecting validated coordinates with
+#' WGSRPD Level 3 administrative areas and cross-referencing with WCVP distribution data:
+#' \itemize{
+#'   \item \code{native}: Record falls within the species' documented native range
+#'   \item \code{introduced}: Record falls within an area where the species is known to be introduced
+#'   \item \code{extinct}: Record falls within an area where the species is documented as extinct
+#'   \item \code{location_doubtful}: WCVP flags the distribution record as uncertain
+#'   \item \code{unknown}: No matching distribution data or area assignment available
+#' }
+#'
+#' \strong{Output Files:}
+#'
+#' When \code{save_path} is specified, two compressed CSV files are generated:
+#' \itemize{
+#'   \item \code{usable_refined_records.csv.gz}: All refined records with validated coordinates
+#'   and restored metadata
+#'   \item \code{native_refined_records.csv.gz}: Subset of refined records classified as native
+#'   occurrences
+#' }
+#'
+#' @return UltraGBIF_refine list containing:
+#'   \itemize{
+#'     \item \code{native_records}: A data.table of records classified as native occurrences,
+#'     including validated coordinates, restored metadata, and WGSRPD area codes
+#'     \item \code{other_records}: A data.table of records classified as non-native (introduced,
+#'     extinct, location_doubtful, or unknown)
+#'     \item \code{runtime}: Execution time of the function
+#'   }
+#'
+#' @references
+#' Zizka, A., Silvestro, D., Andermann, T., Azevedo, J., Duarte Ritter, C., Edler, D., Farooq, H.,
+#' Herdean, A., Ariza, M., Scharn, R., Svantesson, S., Wengstrom, N., Vitecek, S., & Antonelli, A.
+#' (2019). CoordinateCleaner: Standardized cleaning of occurrence records from biological collection
+#' databases. \emph{Methods in Ecology and Evolution}, 10(5), 744-751. \url{https://doi.org/10.1111/2041-210X.13152}
 #'
 #' @import data.table
-#' @importFrom dplyr %>% filter mutate select distinct case_when if_else inner_join
+#' @importFrom dplyr %>%
 #' @import foreach
 #' @import doParallel
 #' @import rnaturalearthdata
 #' @import stringi
-#' @importFrom stats quantile
 #' @seealso \code{\link[CoordinateCleaner]{clean_coordinates}}
 #' @examples
 #' \dontrun{
-#' refine <- refine_records(voucher = voucher,
+#' refined_records <- refine_records(voucher = voucher,
 #' threads = 4,
 #' save_path = getwd(),
 #' tests = c("capitals", "centroids", "equal", "gbif",
@@ -67,7 +151,7 @@ refine_records<-function(voucher = NA,
       'Ctrl_dateIdentified', 'Ctrl_scientificName', 'Ctrl_taxonRank',
       'Ctrl_decimalLatitude', 'Ctrl_decimalLongitude',
       'Ctrl_nameRecordedBy_Standard', 'Ctrl_recordNumber_Standard',
-      'Ctrl_key_family_recordedBy_recordNumber', 'Ctrl_geospatial_quality',
+      'Ctrl_key', 'Ctrl_geospatial_quality',
       'Ctrl_verbatim_quality', 'Ctrl_moreInformativeRecord',
       'Ctrl_coordinates_validated_by_gbif_issue',
       "wcvp_plant_name_id", "wcvp_taxon_rank", "wcvp_taxon_status",
@@ -88,27 +172,27 @@ refine_records<-function(voucher = NA,
     occ_tmp <- occ_digital_voucher[, ..fields_to_parse][, UltraGBIF_merged := FALSE]
     occ_in <- occ_tmp[UltraGBIF_dataset_result == "usable"]
     occ_dup <- occ_tmp[UltraGBIF_dataset_result == "duplicate"]
-    merge_keys <- occ_in[UltraGBIF_duplicates == TRUE, unique(Ctrl_key_family_recordedBy_recordNumber)]
+    merge_keys <- occ_in[UltraGBIF_duplicates == TRUE, unique(Ctrl_key)]
     rm(occ_tmp)
-    setkeyv(occ_dup, "Ctrl_key_family_recordedBy_recordNumber")
-    setkeyv(occ_in, "Ctrl_key_family_recordedBy_recordNumber")
+    setkeyv(occ_dup, "Ctrl_key")
+    setkeyv(occ_in, "Ctrl_key")
     all_relevant_dups <- occ_dup[.(merge_keys)]
     for (field in fields_to_merge) {
       empty_keys <- occ_in[
         (is.na(get(field)) | get(field) == "" | get(field) == "NA") &
           UltraGBIF_duplicates == TRUE,
-        unique(Ctrl_key_family_recordedBy_recordNumber)
+        unique(Ctrl_key)
       ]
       if (length(empty_keys) == 0) next
 
       candidates <- all_relevant_dups[
-        .(empty_keys), on = "Ctrl_key_family_recordedBy_recordNumber"][
+        .(empty_keys), on = "Ctrl_key"][
           !is.na(get(field)) &
             get(field) != "" &
             get(field) != "NA" &
             stringi::stri_length(get(field)) <= MAX_FIELD_LENGTH &
             stringi::stri_length(get(field)) > 0
-        ][, .(best_value = head(get(field), 1)), by = Ctrl_key_family_recordedBy_recordNumber]
+        ][, .(best_value = head(get(field), 1)), by = Ctrl_key]
 
       if (nrow(candidates) == 0) next
 
@@ -126,7 +210,7 @@ refine_records<-function(voucher = NA,
 
       occ_in[candidates,
              c(field, "UltraGBIF_merged") := .(i.clean_value, TRUE),
-             on = "Ctrl_key_family_recordedBy_recordNumber"]
+             on = "Ctrl_key"]
       message(paste("Restoring",stri_replace_all_fixed(field,"Ctrl_","")))
     }
     return(occ_in)
@@ -143,14 +227,35 @@ refine_records<-function(voucher = NA,
 
   voucher[,Ctrl_gbifID:=as.character(Ctrl_gbifID)]
   message("Validating coordinates")
-  numCores <- threads%>%as.numeric()%>%usecores()
+
+  use_multi_threads<-function(x) {
+    total=parallel::detectCores()
+    if (!is.numeric(x))
+    {stop("input must be numeric")}
+
+    if (x > total)
+    {stop("more than all available threads!")}
+
+    if (x >= 1)
+    {message(paste0(round(x),"/",total," ","threads used"))
+      return(round(x))}
+
+    if (x <= 0)
+    {stop("illegal !!!")}
+
+    if (0 < x && x < 1)
+    {message(paste0(round(total*x)),"/",total," ","threads used")
+      return(round(total*x))}
+  }
+
+  threads <- threads%>%as.numeric()%>%use_multi_threads()
   chunks_list <- voucher[,.(Ctrl_gbifID,
                             UltraGBIF_decimalLongitude,
                             UltraGBIF_decimalLatitude,
                             UltraGBIF_wcvp_plant_name_id,
                             Ctrl_countryCode,
                             UltraGBIF_wcvp_taxon_name)]%>%
-    split(.,ceiling(seq_len(nrow(.)) / (nrow(.)/numCores)))
+    split(.,ceiling(seq_len(nrow(.)) / (nrow(.)/threads)))
 
   seas_ref=seas_ref
 
@@ -165,7 +270,7 @@ refine_records<-function(voucher = NA,
                                          verbose = FALSE))
   }
 
-  cl <- parallel::makeCluster(numCores)
+  cl <- parallel::makeCluster(threads)
 
   registerDoParallel(cl)
 
@@ -236,24 +341,15 @@ refine_records<-function(voucher = NA,
   area_final <- area_final%>%rbindlist(fill = T)%>%unique()
 
   results <- merge(voucher,area_final, by = "Ctrl_gbifID")
-  native_records <- results[wcvp_area_status == "native"]
-  # native_simplified <- native_records[, .(Ctrl_gbifID,
-  #                                      Ctrl_recordedBy,
-  #                                      Ctrl_eventDate,
-  #                                      Ctrl_scientificName,
-  #                                      UltraGBIF_wcvp_plant_name_id,
-  #                                      UltraGBIF_wcvp_taxon_rank,
-  #                                      UltraGBIF_wcvp_taxon_status,
-  #                                      UltraGBIF_wcvp_family,
-  #                                      UltraGBIF_wcvp_taxon_name,
-  #                                      UltraGBIF_wcvp_taxon_authors,
-  #                                      UltraGBIF_wcvp_reviewed,
-  #                                      UltraGBIF_decimalLongitude = round(UltraGBIF_decimalLongitude, 2),
-  #                                      UltraGBIF_decimalLatitude = round(UltraGBIF_decimalLatitude, 2))] %>%
-  #   unique(by = c("UltraGBIF_wcvp_plant_name_id",
-  #                 "UltraGBIF_wcvp_taxon_name",
-  #                 "UltraGBIF_decimalLongitude",
-  #                 "UltraGBIF_decimalLatitude"))
+  final_col <- c("Ctrl_gbifID", "Ctrl_basisOfRecord", "Ctrl_catalogNumber",
+                 "Ctrl_recordNumber", "Ctrl_recordedBy", "Ctrl_occurrenceStatus",
+                 "Ctrl_eventDate", "Ctrl_key", "UltraGBIF_decimalLatitude", "UltraGBIF_decimalLongitude",
+                 "UltraGBIF_wcvp_family", "UltraGBIF_wcvp_plant_name_id", "UltraGBIF_wcvp_taxon_status",
+                 "UltraGBIF_wcvp_taxon_name", "UltraGBIF_wcvp_taxon_authors","UltraGBIF_merged",
+                 "LEVEL3_COD", "wcvp_area_status","UltraGBIF_useful_for_spatial_analysis")
+  native_records <- results[wcvp_area_status == "native", ..final_col]
+
+  other_records <- results[wcvp_area_status != "native",..final_col]
 
   save_path <- tryCatch(
     dirname(gbif_occurrence_file),
@@ -277,9 +373,9 @@ refine_records<-function(voucher = NA,
   end=Sys.time()
   used=end-start
   message(paste('used',used%>%round(1),attributes(used)$units))
-  refine <- list(all_records=results,
-              native_records=native_records,
-              duration=end-start)
-  class(refine) <- 'UltraGBIF_refine'
-  return(refine)
+  refined_records <- list(native_records=native_records,
+                          other_records=other_records,
+                          runtime=end-start)
+  class(refined_records) <- 'UltraGBIF_refine'
+  return(refined_records)
 }

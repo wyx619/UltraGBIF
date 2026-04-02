@@ -3,7 +3,7 @@
 \docType{data}
 \name{seas_ref}
 \alias{seas_ref}
-\title{A simple features object for land map}
+\title{A simple features object of the world land map}
 \format{
 A simple features object
 \describe{
@@ -12,7 +12,7 @@ A simple features object
 }
 }
 \source{
-rnaturalearth::ne_download(scale = 110,type = 'land',category = 'physical',returnclass = "sf")
+\code{rnaturalearth::ne_download(scale = 110,type = 'land',category = 'physical',returnclass = "sf")}
 }
 \usage{
 seas_ref

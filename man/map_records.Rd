@@ -4,29 +4,85 @@
 \alias{map_records}
 \title{Visualize refined records on a dynamic interactive map}
 \usage{
-map_records(records_refined = NA, precision = 4, cex = 4)
+map_records(refined_records = NA, precision = 4, cex = 4)
 }
 \arguments{
-\item{records_refined}{UltraGBIF_refine list from from \code{\link{coordinate_refine}}}
+\item{refined_records}{UltraGBIF_refine object from \code{\link{refine_records}}}
 
-\item{precision}{positive integer scalar controlling the density
-of your refined GBIF occurrence records on dynamic maps. (i.e. 4 for 20 km,
-3 for 156 km, 2 for 1250 km). Default is 4}
+\item{precision}{positive integer controlling the spatial resolution of geohash-based
+deduplication. Higher values produce finer-grained deduplication:
+\itemize{
+\item \code{4}: approximately 20 km resolution
+\item \code{3}: approximately 156 km resolution
+\item \code{2}: approximately 1250 km resolution
+}
+Default is 4.}
 
-\item{cex}{the point size of your refined GBIF occurrence records rendering on dynamic maps. Default is 4}
+\item{cex}{numeric value controlling the point size of occurrence records on the map.
+Default is 4.}
 }
 \value{
-A dynamic interactive map with \code{wcvp_area_status} legend.
-Note that the map has 3 different layers to show.
+A \code{mapview} interactive map object displaying refined occurrence records color-coded
+by \code{wcvp_area_status}. The map includes:
+\itemize{
+\item A legend showing the native status classification scheme
+\item Three switchable basemap layers (OpenStreetMap, Esri World Imagery, Stadia Stamen Watercolor)
+\item Clickable popups with record metadata
+}
 }
 \description{
-This optional module simplifies and renders refined GBIF occurrence records on dynamic maps
+This optional module renders refined GBIF occurrence records on a dynamic interactive
+map, facilitating spatial exploration and quality assessment of the processed dataset. It employs
+geohash-based deduplication to reduce visual clutter at various zoom levels, and displays records
+color-coded by their native status classification.
+
+The function implements the following workflow:
+\itemize{
+\item \strong{Record aggregation}: Combines native and non-native refined records that have
+passed spatial validation (\code{UltraGBIF_useful_for_spatial_analysis = TRUE})
+\item \strong{Geohash deduplication}: Applies geohash encoding at a user-specified precision
+level to collapse nearby points into single representatives, reducing overplotting and
+improving map rendering performance
+\item \strong{Interactive visualization}: Generates a multi-layer interactive map using
+\code{mapview}, with records color-coded by \code{wcvp_area_status} (native, introduced,
+extinct, location_doubtful)
+\item \strong{Multi-basemap support}: Provides three basemap options (OpenStreetMap,
+Esri World Imagery, Stadia Stamen Watercolor) for different visualization contexts
+}
+}
+\details{
+\strong{Geohash Deduplication Strategy:}
+
+Geohash encoding converts latitude-longitude pairs into alphanumeric strings representing
+grid cells of varying sizes. By grouping records by species name, geohash cell, and native
+status, then selecting the first record from each group, the function effectively reduces
+visual overplotting while preserving the spatial distribution pattern. This is particularly
+useful for densely sampled regions where thousands of records may cluster within small areas.
+
+\strong{Map Layers and Interactivity:}
+
+The generated map includes:
+\itemize{
+\item A color-coded legend based on \code{wcvp_area_status} categories
+\item Popups displaying record attributes (GBIF ID, collection key, taxon name, etc.)
+\item Toggleable basemap layers for different visualization contexts
+\item Adjustable point transparency (\code{alpha.regions = 0.6}) for better density perception
+}
+
+\strong{Record Selection Criteria:}
+
+Only records meeting the following criteria are included in the map:
+\itemize{
+\item \code{UltraGBIF_useful_for_spatial_analysis = TRUE}: Coordinates passed GBIF validation
+\item For non-native records: \code{wcvp_area_status != "unknown"}: Must have a defined
+geographic classification
+}
 }
 \examples{
 \dontrun{
-map_records(records_refined=refine,precision=4,cex=4)
+map_records(refined_records=refined_records,precision=4,cex=4)
 }
 }
 \seealso{
-\code{\link[geohashTools]{gh_encode},\link[mapview]{mapView}}
+\code{\link[geohashTools]{gh_encode}}, \code{\link[mapview]{mapView}}
 }

@@ -2,86 +2,97 @@
 % Please edit documentation in R/set_digital_voucher.R
 \name{set_digital_voucher}
 \alias{set_digital_voucher}
-\title{Set master digital voucher}
+\title{Select master digital voucher through multi-dimensional quality scoring}
 \usage{
 set_digital_voucher(occ_import = NA, taxa_checked = NA, collection_key = NA)
 }
 \arguments{
 \item{occ_import}{imported GBIF records from \code{\link{import_records}}}
 
-\item{taxa_checked}{UltraGBIF_taxa_checked list from \code{\link{check_occ_name}}}
+\item{taxa_checked}{UltraGBIF_taxa_checked list from \code{\link{check_occ_taxon}}}
 
-\item{collection_key}{UltraGBIF_collection_key list from \code{\link{generate_collection_mark}}}
+\item{collection_key}{UltraGBIF_collection_key list from \code{\link{set_collection_mark}}}
 }
 \value{
-UltraGBIF_voucher list with duration and 2 data.table:
-"occ_digital_voucher" for all data processing fields and "occ_results" for only result fields.
+UltraGBIF_voucher list containing:
+\itemize{
+\item \code{occ_digital_voucher}: A data.table containing all processed fields, including
+original occurrence data, quality scores, grouping information, taxonomic assignments,
+and final dataset classifications
+\item \code{occ_results}: A data.table containing only the quality assessment and result
+fields (e.g., quality scores, voucher status, coordinate validation)
+\item \code{runtime}: Execution time of the function
+}
 }
 \description{
-\subsection{Grouping Duplicates and Selecting the Digital Voucher}{
-\subsection{Handling Complete Collection Event Keys}{
+This function identifies and selects the master digital voucher from groups of
+duplicate GBIF records by applying a multi-dimensional quality scoring system. Records possessing
+a "full collection mark" (defined as the combination of standardized \code{Family + RecordBy +
+RecordNumber/EventDate}) are grouped, and those within each group are scored across multiple
+dimensions. The record exhibiting the highest metadata quality is retained as the digital voucher.
+Conversely, records lacking any component of this definition are treated as unique entities; each
+serves as its own grouping unit and proceeds directly to the multi-dimensional scoring phase
+without aggregation. This strategy preserves the most geographically informative data while
+minimizing redundancy, thereby enhancing spatial reliability.
+
+The function implements the following workflow:
 \itemize{
-\item Unique collection events often generate multiple duplicate GBIF records. One duplicate is designated as the master digital voucher, integrating data from other duplicates.
-\item When the collection event key is complete, duplicates are grouped and parsed based on record completeness and geospatial quality:
+\item \strong{Record grouping}: Groups records by their collection event key
+(\code{Ctrl_key_family_recordedBy_recordNumber}). Records with complete keys are aggregated
+as duplicates; records with incomplete keys are treated as independent samples
+\item \strong{Quality scoring}: Evaluates each record on two dimensions:
 \itemize{
-\item \emph{Record Completeness} : Assessed using data-quality scores for fields: \code{recordedBy}, \code{recordNumber}, \code{year}, \code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality}, \code{countryCode}, \code{stateProvince}, and \code{fieldNotes}.
-\item \emph{Geospatial Quality} : Ranked via a score derived from geospatial issues in \code{EnumOccurrenceIssue} (GBIF table).
+\item \emph{Record Completeness}: Binary presence/absence scoring across ten metadata fields
+\item \emph{Geospatial Quality}: Penalty-based scoring derived from GBIF geospatial issue flags
 }
-\item The duplicate with the highest total score (sum of record completeness + geospatial quality) is assigned as the master voucher. Missing data from other duplicates are merged into this voucher.
-}
-}
-
-\subsection{Handling Incomplete Collection Event Keys}{
-\itemize{
-\item When the collection event key is incomplete, duplicates cannot be parsed. Each record is treated as a unique collection event, with no duplicates identified.
-\item Record completeness and geospatial quality are still evaluated as described below to assess data integrity.
-}
-}
-
-\subsection{Quality Score Calculation}{
-
-\strong{UltraGBIF_digital_voucher} : The duplicate with the highest total score, calculated as
-}
-
-}
-
-\subsection{Total Score = Record Completeness + Quality of Geospatial Information}{
-\subsection{Record Completeness Calculation}{
-\itemize{
-\item Measured as the sum of binary flags (TRUE = 1, FALSE = 0) for the following fields presence:
-\code{recordedBy},\code{recordNumber}, \code{year}, \code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality}, \code{countryCode}, \code{stateProvince}, \code{fieldNotes},
-}
-}
-
-\subsection{Geospatial Quality Calculation}{
-\itemize{
-\item Based on GBIF geospatial issues in \code{EnumOccurrenceIssue}, classified into three categories:
-\itemize{
-\item \emph{No Impact} : Issues not affecting coordinate accuracy (\code{selection_score = -1}).
-\item \emph{Potential Impact} : Issues that may affect coordinate accuracy (\code{selection_score = -3}).
-\item \emph{Exclusion} : Records with severe issues (\code{selection_score = -9}) are excluded.
-}
-}
-
-\strong{It eliminates complexity by using vectorized data.table operations.}
-}
-
+\item \strong{Voucher selection}: Within each group, the record with the highest total score
+(Record Completeness + Geospatial Quality) is designated as the master digital voucher
+\item \strong{Coordinate assignment}: For grouped records, coordinates from the highest-priority
+record (voucher with validated coordinates) are assigned to all members of the group
+\item \strong{Taxonomic resolution}: For each group, the most frequently occurring accepted
+taxon name is selected as the representative taxonomic identity
 }
 }
 \details{
-\code{UltraGBIF_duplicates_grouping_status} :
+\strong{Grouping Status Classification:}
+
+The \code{UltraGBIF_duplicates_grouping_status} field indicates the grouping outcome for each record:
 \itemize{
-\item \code{groupable}: Complete key, duplicates parsed.
-\item \verb{not groupable: no recordedBy and no recordNumber}: Missing both fields.
-\item \verb{not groupable: no recordNumber}: Missing recordNumber.
-\item \verb{not groupable: no recordedBy}: Missing recordedBy.
+\item \code{groupable}: Complete collection key; duplicates identified and grouped
+\item \code{not groupable: no recordedBy and no recordNumber}: Both collector name and
+collection number are missing
+\item \code{not groupable: no recordNumber}: Collection number is missing
+\item \code{not groupable: no recordedBy}: Collector name is missing
 }
 
-\code{UltraGBIF_num_duplicates}: Integer count of duplicate records.
+\strong{Quality Score Components:}
 
-\code{UltraGBIF_duplicates}: TRUE if duplicates exist, FALSE otherwise.
+\emph{Record Completeness} is calculated as the sum of binary flags (1 = present, 0 = absent)
+for the following fields: \code{recordedBy}, \code{recordNumber}, \code{year},
+\code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality},
+\code{countryCode}, \code{stateProvince}, and \code{fieldNotes}.
 
-\code{UltraGBIF_non_groupable_duplicates}: TRUE if duplicates cannot be grouped, FALSE otherwise.
+\emph{Geospatial Quality} is derived from GBIF geospatial issue flags in \code{EnumOccurrenceIssue},
+classified into three severity levels:
+\itemize{
+\item \emph{No Impact} (\code{selection_score = -1}): Issues not affecting coordinate accuracy
+\item \emph{Potential Impact} (\code{selection_score = -3}): Issues that may affect coordinate accuracy
+\item \emph{Exclusion} (\code{selection_score = -9}): Records with severe geospatial issues
+}
+
+\strong{Output Fields:}
+
+\itemize{
+\item \code{UltraGBIF_digital_voucher}: Logical; \code{TRUE} if the record is selected as the
+master voucher for its group
+\item \code{UltraGBIF_duplicates}: Logical; \code{TRUE} if the record belongs to a group with
+multiple members
+\item \code{UltraGBIF_num_duplicates}: Integer; count of records within the same group
+\item \code{UltraGBIF_non_groupable_duplicates}: Logical; \code{TRUE} if the record cannot be
+grouped due to incomplete collection key components
+\item \code{UltraGBIF_dataset_result}: Final classification; one of "usable", "duplicate",
+or "unusable"
+}
 }
 \examples{
 \dontrun{

@@ -1,4 +1,4 @@
-<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a> 
+<a href="https://github.com/wyx619/UltraGBIF/"><img src="man/figures/logo.png" align="right" height="70" width="70"/></a>
 
 # UltraGBIF: Fast and Easy Compilation of GBIF Plant Occurrence Records in One R package
 
@@ -12,7 +12,7 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 ## Workflow
 
-***3 core stages and 8 modules of UltraGBIF.** After core stages, generally 35% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
+***4 stages and 8 modules of UltraGBIF.** After core stages (module 1\~6), generally 35% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
 
 UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into 3 core stages and 8 distinct modules.
 
@@ -20,25 +20,25 @@ UltraGBIF provides a reproducible, plant-optimized, and computationally efficien
 
 This stage ensures data accuracy and consistency through three modules:
 
-1.  Import Records: This module receives a path to the zip file downloaded from GBIF. The issue flags are automatically extracted for downstream quality assessment.
+1.  Import Records: This module receives a path to the zip file downloaded from GBIF. After loading all initial occurrence records, their issue flags are automatically extracted for downstream quality assessment.
 
-2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names by the [Taxonomic Name Resolution Service](https://doi.org/10.32614/CRAN.package.TNRS) (TNRS, Boyle et al. 2013). This step unifies synonyms and corrects misspellings.
+2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names by the [Taxonomic Name Resolution Service](https://doi.org/10.32614/CRAN.package.TNRS) (TNRS, Boyle et al. 2013), which unifies synonyms and corrects misspellings.
 
-3.  Check Collector Name: This module standardizes collector names to reduce inconsistencies (e.g., "Smith, J." versus "J. Smith") that can fragment single collection events. By preparing a standardized dictionary of primary collector surnames, this step reduces identification errors by over 80% and improves the accuracy of subsequent duplication checks.
+3.  Check Collector Name: This module simplifies and extracts the name of the primary one among all collectors, then builds a dictionary to reduce inconsistencies that can fragment single collection events. This module reduces identification errors and improves the accuracy of subsequent duplication checks.
 
 **Stage 2: Duplicate Removal and Reliability Filtering**
 
 This stage improves data reliability by identifying high-quality, non-redundant occurrence records.
 
-4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific time and place).
+4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific date or with a record number). Specifically, the collection event key/mark includes standardized `Family + RecordBy + RecordNumber/EventDate`.
 
-5.  Set Digital Voucher: For duplicate entries sharing a collection mark, the record with the highest metadata quality is retained as the "digital voucher." This approach preserves the most geographically informative data while minimizing redundancy, thereby improving the spatially reliability.
+5.  Set Digital Voucher: Records possessing a 'full collection mark' (defined as the combination of standardized `Family + RecordBy + RecordNumber/EventDate`) are grouped, and those within each group are scored across multiple dimensions. The record exhibiting the highest metadata quality is retained as the 'digital voucher.' Conversely, records lacking any component of this definition are treated as unique entities; each serves as its own grouping unit and proceeds directly to the multi-dimensional scoring phase without aggregation. This strategy preserves the most geographically informative data while minimizing redundancy, thereby enhancing spatial reliability.
 
 **Stage 3: Refine Records**
 
-This stage restores key information, enhances geospatial accuracy, and extracts the native status information of occurrence records.
+This stage restores key information for usable records from their duplicates with the same collection mark, enhances geospatial accuracy, and extracts the native status information of occurrence records.
 
-6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts information from WCVP to annotate records as 'native', 'introduced', or 'doubtful'.
+6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts native status information to set records as native or others.
 
 **Optional Stages**
 
@@ -46,15 +46,15 @@ This stage restores key information, enhances geospatial accuracy, and extracts 
 
 -   Plot richness: This optional module is useful for creating a simple richness map from UltraGBIF-processed occurrence records above. It has drawn on `lets.presab.points` and `plot.PresenceAbsence` from R package [`letsR`](https://github.com/macroecology/letsR)(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 
-Focused exclusively on GBIF plant occurrence records, UltraGBIF is able to clean one million records within 15 minutes on a laptop, representing 60% memory reduction. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
+Focused exclusively on GBIF plant occurrence records, UltraGBIF can compilie one million records within 15 minutes on a laptop without high memory usage. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
 ## Installation
 
-UltraGBIF will be available on CRAN soon. Now please quickly install UltraGBIF via my temporary CRAN-self-hosted repository by [Drat](https://doi.org/10.32614/CRAN.package.drat) R Archive Template.
+UltraGBIF will be available on CRAN soon. In the meantime you can quickly install UltraGBIF via my temporary CRAN-self-hosted repository by [Drat](https://doi.org/10.32614/CRAN.package.drat){.uri} R Archive Template using the two commands below.
 
 ``` r
 options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
-install.packages("UltraGBIF",type = 'source') ## install UltraGBIF in one minute
+install.packages("UltraGBIF") ## install UltraGBIF in one minute
 ```
 
 ## Tutorial of UltraGBIF
@@ -63,7 +63,7 @@ A comprehensive tutorial is available after installation at:
 
 ``` r
 library(UltraGBIF)
-vignette("UltraGBIF")
+vignette('Tutorial_of_UltraGBIF',package = 'UltraGBIF')
 ```
 
 ## Reference
@@ -79,3 +79,5 @@ De Melo, Pablo Hendrigo Alves, Nadia Bystriakova, Eve Lucas, and Alexandre K. Mo
 Vilela, Bruno, and Fabricio Villalobos. 2015. “letsR: A New R Package for Data Handling and Analysis in Macroecology.” Edited by Timothée Poisot. *Methods in Ecology and Evolution* 6 (10): 1229–34. <https://doi.org/10.1111/2041-210x.12401>.
 
 Zizka, Alexander, Daniele Silvestro, Tobias Andermann, Josué Azevedo, Camila Duarte Ritter, Daniel Edler, Harith Farooq, et al. 2019. “CoordinateCleaner : Standardized Cleaning of Occurrence Records from Biological Collection Databases.” Edited by Tiago Quental. *Methods in Ecology and Evolution* 10 (5): 744–51. <https://doi.org/10.1111/2041-210X.13152>.
+
+Mullen, Lincoln A., Kenneth Benoit, Os Keyes, Dmitry Selivanov, andJeffrey Arnold. 2018. “Fast, Consistent Tokenization of NaturalLanguage Text” 3: 655. <https://doi.org/10.21105/joss.00655>.

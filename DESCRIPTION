@@ -1,7 +1,7 @@
 Package: UltraGBIF
 Title: Fast and Easy Compilation of GBIF Plant Occurrence Records in One R Package 
-Version: 3.1.7
-Date: 2026-03-17
+Version: 3.2.6
+Date: 2026-03-31
 Type: Package
 Maintainer: Anonymous <Anonymous@Anonymous.com>
 Authors@R: 
@@ -14,11 +14,13 @@ RoxygenNote: 7.3.3
 LazyData: true
 LazyDataCompression: FALSE
 Depends: R (>= 4.1)
-Imports: data.table,dplyr,stringi,terra,lubridate,CoordinateCleaner,TNRS,geohashTools,mapview,foreach,doParallel,rnaturalearthdata
+Imports: data.table,dplyr,stringi,terra,tokenizers,CoordinateCleaner,TNRS,geohashTools,mapview,foreach,doParallel,rnaturalearthdata
 Suggests: 
     knitr,
     leaflet,
     rmarkdown,
     rnaturalearth,
-    sf
+    sf,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
