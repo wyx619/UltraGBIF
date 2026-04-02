@@ -111,6 +111,8 @@ get_collectors_name <- function (x = '', min_char = 2)
 
   x <- clean_text(x)%>%max_foo()
 
-  if (x %chin% no_name | stri_length(x) < min_char) 'UNKNOWN' else x
+  if (length(x) == 0 || stri_length(x) == 0)  {return('UNKNOWN')}
+
+  if (x %chin% no_name | stri_length(x) < min_char) {return('UNKNOWN')} else {return(x)}
 
 }

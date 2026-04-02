@@ -98,13 +98,14 @@
 #' Zizka, A., Silvestro, D., Andermann, T., Azevedo, J., Duarte Ritter, C., Edler, D., Farooq, H.,
 #' Herdean, A., Ariza, M., Scharn, R., Svantesson, S., Wengstrom, N., Vitecek, S., & Antonelli, A.
 #' (2019). CoordinateCleaner: Standardized cleaning of occurrence records from biological collection
-#' databases. \emph{Methods in Ecology and Evolution}, 10(5), 744-751. \url{https://doi.org/10.1111/2041-210X.13152}
+#' databases. \emph{Methods in Ecology and Evolution}, 10(5), 744-751. \doi{10.1111/2041-210X.13152}
 #'
 #' @import data.table
 #' @importFrom dplyr %>%
 #' @import foreach
 #' @import doParallel
 #' @import rnaturalearthdata
+#' @importFrom utils head
 #' @import stringi
 #' @seealso \code{\link[CoordinateCleaner]{clean_coordinates}}
 #' @examples

@@ -104,7 +104,7 @@
 #' \itemize{
 #'   \item Boyle, B. et al. (2013). The taxonomic name resolution service: an online tool for
 #'   automated standardization of plant names. \emph{BMC Bioinformatics}, 14, 16.
-#'   \url{https://doi.org/10.1186/1471-2105-14-16}
+#'   \doi{10.1186/1471-2105-14-16}
 #'   \item Govaerts, R. et al. (2023). World Checklist of Vascular Plants. \emph{Royal Botanic Gardens, Kew}.
 #'   \url{https://powo.science.kew.org/}
 #' }

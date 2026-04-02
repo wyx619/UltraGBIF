@@ -201,7 +201,7 @@
 #'   \item Boyle, Brad, Nicole Hopkins, Zhenyuan Lu, Juan Antonio Raygoza Garay, Dmitry Mozzherin,
 #'   Tony Rees, Naim Matasci, et al. 2013. "The Taxonomic Name Resolution Service: An Online
 #'   Tool for Automated Standardization of Plant Names." \emph{BMC Bioinformatics} 14 (1): 16.
-#'   \url{https://doi.org/10.1186/1471-2105-14-16}.
+#'   \doi{10.1186/1471-2105-14-16}.
 #'
 #'   \item Chirico, Michael. 2023. "geohashTools: Tools for Working with Geohashes."
 #'   \url{https://CRAN.R-project.org/package=geohashTools}.
@@ -209,18 +209,18 @@
 #'   \item De Melo, Pablo Hendrigo Alves, Nadia Bystriakova, Eve Lucas, and Alexandre K. Monro. 2024.
 #'   "A New R Package to Parse Plant Species Occurrence Records into Unique Collection Events
 #'   Efficiently Reduces Data Redundancy." \emph{Scientific Reports} 14 (1): 5450.
-#'   \url{https://doi.org/10.1038/s41598-024-56158-3}.
+#'   \doi{10.1038/s41598-024-56158-3}.
 #'
 #'   \item Vilela, Bruno, and Fabricio Villalobos. 2015. "letsR: A New R Package for Data Handling
 #'   and Analysis in Macroecology." Edited by Timothée Poisot. \emph{Methods in Ecology and
 #'   Evolution} 6 (10): 1229-34.
-#'   \url{https://doi.org/10.1111/2041-210x.12401}.
+#'   \doi{10.1111/2041-210x.12401}.
 #'
 #'   \item Zizka, Alexander, Daniele Silvestro, Tobias Andermann, Josue Azevedo, Camila Duarte Ritter,
 #'   Daniel Edler, Harith Farooq, et al. 2019. "CoordinateCleaner: Standardized Cleaning of
 #'   Occurrence Records from Biological Collection Databases." Edited by Tiago Quental.
 #'   \emph{Methods in Ecology and Evolution} 10 (5): 744-51.
-#'   \url{https://doi.org/10.1111/2041-210X.13152}.
+#'   \doi{10.1111/2041-210X.13152}.
 #' }
 #'
 "_PACKAGE"

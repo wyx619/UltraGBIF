@@ -93,5 +93,5 @@ xlab = "Longitude", ylab = "Latitude")
 \references{
 Vilela, B. and Villalobos, F. (2015). letsR: a new R package for data handling and analysis
 in macroecology. \emph{Methods in Ecology and Evolution}, 6(10), 1229-1234.
-\url{https://doi.org/10.1111/2041-210X.12401}
+\doi{10.1111/2041-210X.12401}
 }

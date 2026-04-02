@@ -49,7 +49,7 @@ sorted by occurrence count
 \details{
 \strong{Column Selection:}
 
-The function loads 60 core fields from the GBIF occurrence dataset, including:
+The function loads core fields from the GBIF occurrence dataset, including:
 \itemize{
 \item \strong{Identifiers}: \code{gbifID}, \code{occurrenceID}, \code{catalogNumber},
 \code{recordNumber}
@@ -60,6 +60,7 @@ The function loads 60 core fields from the GBIF occurrence dataset, including:
 \item \strong{Collection metadata}: \code{recordedBy}, \code{eventDate}, \code{year},
 \code{month}, \code{day}, \code{institutionCode}, \code{collectionCode}
 \item \strong{Quality flags}: \code{issue}, \code{hasCoordinate}, \code{hasGeospatialIssues}
+\item \strong{Others}: other useful fields.
 }
 
 All column names are prefixed with \code{Ctrl_} to avoid naming conflicts with R reserved
@@ -107,6 +108,6 @@ head(occ_import$summary, 5)
 \seealso{
 \itemize{
 \item \code{\link{unzip}} for automatic decompression of GBIF downloads
-\item Saxifraga occurrence records example: \url{https://doi.org/10.15468/dl.bythb4}
+\item Saxifraga occurrence records example: \doi{10.15468/dl.bythb4}
 }
 }

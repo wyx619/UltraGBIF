@@ -65,7 +65,7 @@ manual name correction. For comprehensive documentation, see
 
 \strong{Taxonomic Source - World Checklist of Vascular Plants (WCVP):}
 
-This function queries WCVP (\url{https://powo.science.kew.org/}), an expert-curated taxonomic
+WCVP (\url{https://powo.science.kew.org/}) is an expert-curated taxonomic
 database maintained by the Royal Botanic Gardens, Kew. WCVP provides authoritative taxonomic
 opinions on vascular plant nomenclature, including synonymy relationships and accepted name
 designations. The TNRS does not provide its own taxonomic opinions; it accelerates the process
@@ -117,7 +117,7 @@ taxa_checked <- check_occ_taxon(occ_import = occ_import,accuracy = 0.9)
 \itemize{
 \item Boyle, B. et al. (2013). The taxonomic name resolution service: an online tool for
 automated standardization of plant names. \emph{BMC Bioinformatics}, 14, 16.
-\url{https://doi.org/10.1186/1471-2105-14-16}
+\doi{10.1186/1471-2105-14-16}
 \item Govaerts, R. et al. (2023). World Checklist of Vascular Plants. \emph{Royal Botanic Gardens, Kew}.
 \url{https://powo.science.kew.org/}
 }

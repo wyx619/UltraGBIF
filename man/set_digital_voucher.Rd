@@ -38,7 +38,7 @@ minimizing redundancy, thereby enhancing spatial reliability.
 The function implements the following workflow:
 \itemize{
 \item \strong{Record grouping}: Groups records by their collection event key
-(\code{Ctrl_key_family_recordedBy_recordNumber}). Records with complete keys are aggregated
+(\code{Ctrl_key}). Records with complete keys are aggregated
 as duplicates; records with incomplete keys are treated as independent samples
 \item \strong{Quality scoring}: Evaluates each record on two dimensions:
 \itemize{
@@ -54,6 +54,35 @@ taxon name is selected as the representative taxonomic identity
 }
 }
 \details{
+\strong{Core Output Table:}
+
+The \code{occ_digital_voucher} data.table is the core output of \code{\link{set_digital_voucher}}.
+It contains all processed fields, including original occurrence data, quality scores, grouping
+information, taxonomic assignments, and final dataset classifications.
+
+\strong{Multi-Dimensional Quality Scoring System:}
+
+The quality scoring system evaluates each record across two dimensions:
+
+\itemize{
+\item \emph{Record Completeness}: Calculated as the sum of binary flags (1 = present, 0 = absent)
+for the following 10 fields: \code{recordedBy}, \code{recordNumber}, \code{year},
+\code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality},
+\code{countryCode}, \code{stateProvince}, and \code{fieldNotes}. Higher scores indicate
+more complete metadata.
+
+\item \emph{Geospatial Quality}: Derived from GBIF geospatial issue flags in
+\code{EnumOccurrenceIssue}, classified into three severity levels:
+\itemize{
+\item \emph{No Impact} (\code{selection_score = -1}): Issues not affecting coordinate accuracy
+\item \emph{Potential Impact} (\code{selection_score = -3}): Issues that may affect coordinate accuracy
+\item \emph{Exclusion} (\code{selection_score = -9}): Records with severe geospatial issues
+}
+}
+
+The final quality score combines these two dimensions, with the record exhibiting the highest
+score within each group selected as the digital voucher.
+
 \strong{Grouping Status Classification:}
 
 The \code{UltraGBIF_duplicates_grouping_status} field indicates the grouping outcome for each record:
@@ -65,23 +94,9 @@ collection number are missing
 \item \code{not groupable: no recordedBy}: Collector name is missing
 }
 
-\strong{Quality Score Components:}
+\strong{Key Output Fields:}
 
-\emph{Record Completeness} is calculated as the sum of binary flags (1 = present, 0 = absent)
-for the following fields: \code{recordedBy}, \code{recordNumber}, \code{year},
-\code{institutionCode}, \code{catalogNumber}, \code{locality}, \code{municipality},
-\code{countryCode}, \code{stateProvince}, and \code{fieldNotes}.
-
-\emph{Geospatial Quality} is derived from GBIF geospatial issue flags in \code{EnumOccurrenceIssue},
-classified into three severity levels:
-\itemize{
-\item \emph{No Impact} (\code{selection_score = -1}): Issues not affecting coordinate accuracy
-\item \emph{Potential Impact} (\code{selection_score = -3}): Issues that may affect coordinate accuracy
-\item \emph{Exclusion} (\code{selection_score = -9}): Records with severe geospatial issues
-}
-
-\strong{Output Fields:}
-
+The \code{occ_digital_voucher} table includes the following key fields:
 \itemize{
 \item \code{UltraGBIF_digital_voucher}: Logical; \code{TRUE} if the record is selected as the
 master voucher for its group
@@ -90,6 +105,8 @@ multiple members
 \item \code{UltraGBIF_num_duplicates}: Integer; count of records within the same group
 \item \code{UltraGBIF_non_groupable_duplicates}: Logical; \code{TRUE} if the record cannot be
 grouped due to incomplete collection key components
+\item \code{UltraGBIF_duplicates_grouping_status}: Character; grouping outcome classification
+(see Grouping Status Classification above)
 \item \code{UltraGBIF_dataset_result}: Final classification; one of "usable", "duplicate",
 or "unusable"
 }

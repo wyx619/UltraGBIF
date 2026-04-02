@@ -83,12 +83,13 @@
 #' @seealso
 #' \itemize{
 #'   \item \code{\link{unzip}} for automatic decompression of GBIF downloads
-#'   \item Saxifraga occurrence records example: \url{https://doi.org/10.15468/dl.bythb4}
+#'   \item Saxifraga occurrence records example: \doi{10.15468/dl.bythb4}
 #' }
 #'
 #' @import data.table
 #' @import stringi
 #' @importFrom dplyr %>%
+#' @importFrom utils head
 #'
 #' @examples
 #' \dontrun{

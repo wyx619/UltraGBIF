@@ -13,8 +13,7 @@ utils::globalVariables(
     "Ctrl_recordedBy", "Ctrl_recordNumber", "Ctrl_year", "Ctrl_nameRecordedBy_Standard",
     "Ctrl_institutionCode", "Ctrl_catalogNumber", "Ctrl_stateProvince", "Ctrl_municipality",
     "Ctrl_locality", "Ctrl_fieldNotes", "Ctrl_geospatial_quality", "Ctrl_verbatim_quality",
-    "temColetor", "temNumeroColeta", "temAnoColeta", "temCodigoInstituicao", "temNumeroCatalogo",
-    "temLocalidade", "temMunicipio", "temUF", "temPais", "temNotas", "Ctrl_taxonRank",
+    "temColetor", "temNumeroColeta", "temAnoColeta", "temCodigoInstituicao", "Ctrl_taxonRank",
     "UltraGBIF_digital_voucher", "UltraGBIF_duplicates", "UltraGBIF_num_duplicates",
     "UltraGBIF_non_groupable_duplicates", "UltraGBIF_duplicates_grouping_status",
     "UltraGBIF_unidentified_sample", "UltraGBIF_wcvp_plant_name_id", "UltraGBIF_sample_taxon_name",
@@ -42,6 +41,10 @@ utils::globalVariables(
     "coord_priority", "grouping_pattern", "i.clean_value", "is_non_groupable",
     "max_info_score", "num_duplicates", "num_unique_taxa", "selected_taxon", "taxon_id",
     'cell', 'gbif_occurrence_file', 'i.num_unique_taxa', 'i.wcvp_plant_name_id',
-    'i.wcvp_taxon_name', 'ref_wcvp_names', 'taxon', 'wcvp_distributions', 'wgsrpd3'
+    'i.wcvp_taxon_name', 'ref_wcvp_names', 'taxon', 'wcvp_distributions', 'wgsrpd3',
+    '..final_col', 'Ctrl_key', 'Ctrl_month', 'Key', 'Records', 'tem_COUNTRY',
+    'tem_catalogNumber', 'tem_fieldNotes', 'tem_institutionCode', 'tem_locality',
+    'tem_municipality', 'tem_recordNumber', 'tem_recordedBy', 'tem_stateProvince',
+    'tem_year'
   )
 )
