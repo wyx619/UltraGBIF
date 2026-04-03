@@ -148,13 +148,13 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
 
   check_initial <- data.frame(ID = 1:length(name_search_wcvp),
                               taxon = name_search_wcvp)
-  check_result <- NULL
+  check_result <- data.frame()
   attempt <- 1
   max_attempts <- 3
 
-  while(attempt <= max_attempts && (is.null(check_result) || nrow(check_result) == 0)) {
-    try({
-      if (attempt > 0) {
+  while(attempt <= max_attempts && nrow(check_result) == 0) {
+    tryCatch({
+      if (attempt > 1 || attempt == 1) {
         message(paste("Attempt", attempt, "of", max_attempts))
       }
 
@@ -170,12 +170,19 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
       if (nrow(check_result) == 0) {
         message("Query succeeded but returned empty result. Retrying...")
       }
-    }, silent = TRUE)
+    }, error = function(e) {
+      message(paste("TNRS query failed:", conditionMessage(e)))
+      check_result <<- data.frame()
+    })
 
     attempt <- attempt + 1
-    if (nrow(check_result) == 0) {
+    if (nrow(check_result) == 0 && attempt <= max_attempts) {
       Sys.sleep(5)
     }
+  }
+
+  if (nrow(check_result) == 0) {
+    stop("Network error: TNRS API is unreachable. Please try again later.")
   }
 
   check_temp <- check_result[,.(ori_sp_name=Name_submitted,

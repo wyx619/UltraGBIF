@@ -1,7 +1,7 @@
 Package: UltraGBIF
 Title: Fast and Easy Compilation of GBIF Plant Occurrence Records in One R Package 
-Version: 3.2.7
-Date: 2026-03-31
+Version: 3.2.8
+Date: 2026-04-03
 Type: Package
 Maintainer: Anonymous <Anonymous@Anonymous.com>
 Authors@R: 

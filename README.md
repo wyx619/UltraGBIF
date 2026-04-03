@@ -12,9 +12,9 @@ To rectify this situation, we introduce UltraGBIF, an efficient R package that u
 
 ## Workflow
 
-***4 stages and 8 modules of UltraGBIF.** After core stages (module 1\~6), generally 25% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
+***4 stages and 8 modules of UltraGBIF.** After core stages (module 1\~6), generally 30% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
 
-UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into 3 core stages and 8 distinct modules.
+UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into 4 stages and 8 distinct modules.
 
 **Stage 1: Data Acquisition**
 
@@ -46,11 +46,11 @@ This stage restores key information for usable records from their duplicates wit
 
 -   Plot richness: This optional module is useful for creating a simple richness map from UltraGBIF-processed occurrence records above. It has drawn on `lets.presab.points` and `plot.PresenceAbsence` from R package [`letsR`](https://github.com/macroecology/letsR)(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
 
-Focused exclusively on GBIF plant occurrence records, UltraGBIF can compilie one million records within 15 minutes on a laptop without high memory usage. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
+Focused exclusively on GBIF plant occurrence records, UltraGBIF can compile one million records within 15 minutes on a laptop without high memory usage. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
 ## Installation
 
-UltraGBIF will be available on CRAN soon. In the meantime you can quickly install UltraGBIF via my temporary CRAN-self-hosted repository by [Drat](https://doi.org/10.32614/CRAN.package.drat){.uri} R Archive Template using the two commands below.
+UltraGBIF will be available on CRAN soon. In the meantime you can quickly install UltraGBIF via my temporary CRAN-self-hosted repository by [Drat](https://doi.org/10.32614/CRAN.package.drat) R Archive Template using the two commands below.
 
 ``` r
 options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
@@ -65,6 +65,67 @@ A comprehensive tutorial is available after installation at:
 library(UltraGBIF)
 vignette('Tutorial_of_UltraGBIF',package = 'UltraGBIF')
 ```
+
+## Minimal Complete Workflow
+
+The following code demonstrates the complete UltraGBIF workflow from data import to richness mapping:
+
+``` r
+# Step 1: Import GBIF occurrence records
+occ_import <- import_records(
+  GBIF_file = "path/to/gbif_download.zip",
+  only_PRESERVED_SPECIMEN = TRUE
+)
+
+# Step 2: Standardize taxonomic names
+taxa_checked <- check_occ_taxon(
+  occ_import = occ_import,
+  accuracy = 0.9
+)
+
+# Step 3: Standardize collector names
+collectors_dictionary <- check_collectors(
+  occ_import = occ_import,
+  min_char = 2
+)
+
+# Step 4: Generate collection event keys
+collection_key <- set_collection_mark(
+  occ_import = occ_import,
+  collectors_dictionary = collectors_dictionary
+)
+
+# Step 5: Select digital vouchers
+voucher <- set_digital_voucher(
+  occ_import = occ_import,
+  taxa_checked = taxa_checked,
+  collection_key = collection_key
+)
+
+# Step 6: Refine records (coordinate validation + native status)
+refined_records <- refine_records(
+  voucher = voucher,
+  threads = 4,
+  save_path = getwd()
+)
+
+# Optional: Visualize results
+map_records(refined_records = refined_records, precision = 4, cex = 4)
+richness <- plot_richness(refined_records = refined_records,
+                          main = "Species Richness")
+```
+
+## Performance
+
+UltraGBIF achieves outstanding performance through specific technical architectures:
+
+-   **C/C++ Backend Integration**: Leverages `data.table`, `stringi`, and `terra`, all implemented in C/C++
+-   **Vectorization Over Explicit Loops**: Bypasses R's interpretive overhead by dispatching to pre-compiled routines
+-   **SIMD Exploitation**: Vectorized operations enable compiler-level SIMD auto-vectorization
+-   **Memory-Efficient Design**: In-place modification (`set()`, `:=`) eliminates intermediate copies
+-   **Chunk-Based Parallelization**: Vectorized processing within chunks, parallel execution across chunks
+
+On a standard laptop, UltraGBIF can compile one million occurrence records within 15 minutes.
 
 ## Reference
 

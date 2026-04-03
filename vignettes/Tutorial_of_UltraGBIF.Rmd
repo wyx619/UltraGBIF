@@ -5,7 +5,9 @@ author:
     affiliation: anonymous University
     email: anonymous@anonymous.com
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: false
 vignette: >
   %\VignetteIndexEntry{Tutorial of UltraGBIF}
   %\VignetteEngine{knitr::rmarkdown}
@@ -125,7 +127,7 @@ The function processes the `recordedBy` field through the following steps:
 3.  **Primary name selection**: Extracts the longest token from the cleaned string, assuming it represents the primary collector's name
 4.  **Threshold filtering**: Names shorter than `min_char` characters or matching a predefined exclusion list are classified as "UNKNOWN"
 
-The function uses `tokenizers::tokenize_words()` for robust word tokenization. The longest word (rather than specifically the surname) is extracted as the primary collector identifier, filtering out initials, titles, and other short tokens.
+The function uses `tokenizers::tokenize_words()`[@tokenizers] for robust word tokenization. The longest word (rather than specifically the surname) is extracted as the primary collector identifier, filtering out initials, titles, and other short tokens.
 
 ```{r check_collectors, eval=FALSE, include=TRUE}
 collectors_dictionary <- check_collectors(
@@ -309,6 +311,7 @@ When `save_path` is specified, `native_records` and `other_records` are exported
 ### Summary core modules
 
 ```{r summary, eval=FALSE, include=TRUE}
+library(dplyr)
 UltraGBIF_summary%>%as.data.frame()%>%t()
 ```
 
