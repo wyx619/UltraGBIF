@@ -124,7 +124,7 @@
 check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
   start=Sys.time()
 
-  occ=occ_import$occ%>%setDT()
+  occ=occ_import$occ[, .(Ctrl_scientificName)]
 
   wcvp_na <- data.table(wcvp_plant_name_id  = NA_integer_,
                         wcvp_taxon_rank = NA_character_,
@@ -148,42 +148,56 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
 
   check_initial <- data.frame(ID = 1:length(name_search_wcvp),
                               taxon = name_search_wcvp)
-  check_result <- data.frame()
-  attempt <- 1
-  max_attempts <- 3
 
-  while(attempt <= max_attempts && nrow(check_result) == 0) {
-    tryCatch({
-      if (attempt > 1 || attempt == 1) {
-        message(paste("Attempt", attempt, "of", max_attempts))
+  chunk_list <- split(check_initial, ceiling(seq_len(nrow(check_initial)) / 4000))
+  n_chunks <- length(chunk_list)
+  check_result_list <- vector("list", n_chunks)
+
+  for (i in seq_len(n_chunks)) {
+    chunk <- chunk_list[[i]]
+    message(paste("Processing chunk", i, "of", n_chunks, "(rows", nrow(chunk), ")"))
+
+    chunk_result <- data.frame()
+    attempt <- 1
+    max_attempts <- 3
+
+    while (attempt <= max_attempts && nrow(chunk_result) == 0) {
+      tryCatch({
+        if (attempt > 1) {
+          message(paste("Retry attempt", attempt, "of", max_attempts))
+        }
+
+        chunk_result <- TNRS(chunk,
+                             sources = "wcvp",
+                             classification = "wfo",
+                             mode = "resolve",
+                             matches = "best",
+                             accuracy = 0.9,
+                             skip_internet_check = TRUE) %>%
+          data.table::setDT()
+
+        if (nrow(chunk_result) == 0) {
+          message("Query succeeded but returned empty result. Retrying...")
+        }
+      }, error = function(e) {
+        message(paste("TNRS query failed:", conditionMessage(e)))
+        chunk_result <<- data.frame()
+      })
+
+      attempt <- attempt + 1
+      if (nrow(chunk_result) == 0 && attempt <= max_attempts) {
+        Sys.sleep(5)
       }
-
-      check_result <- TNRS(check_initial,
-                           sources = "wcvp",
-                           classification = "wfo",
-                           mode = "resolve",
-                           matches = "best",
-                           accuracy = 0.9,
-                           skip_internet_check = TRUE) %>%
-        data.table::setDT()
-
-      if (nrow(check_result) == 0) {
-        message("Query succeeded but returned empty result. Retrying...")
-      }
-    }, error = function(e) {
-      message(paste("TNRS query failed:", conditionMessage(e)))
-      check_result <<- data.frame()
-    })
-
-    attempt <- attempt + 1
-    if (nrow(check_result) == 0 && attempt <= max_attempts) {
-      Sys.sleep(5)
     }
+
+    if (nrow(chunk_result) == 0) {
+      stop("Network error: TNRS API is unreachable for chunk", i, ". Please try again later.")
+    }
+
+    check_result_list[[i]] <- chunk_result
   }
 
-  if (nrow(check_result) == 0) {
-    stop("Network error: TNRS API is unreachable. Please try again later.")
-  }
+  check_result <- data.table::rbindlist(check_result_list)
 
   check_temp <- check_result[,.(ori_sp_name=Name_submitted,
                                 wcvp_plant_name_id_of_searchedName=Name_matched_id,
