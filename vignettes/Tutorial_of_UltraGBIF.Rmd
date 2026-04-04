@@ -317,27 +317,17 @@ UltraGBIF_summary%>%as.data.frame()%>%t()
 
 The summary statistics provide a quantitative overview of the data reduction throughout the UltraGBIF workflow:
 
-+--------------------------------+--------------------------------------------------------------------+
-| Statistic                      | Description                                                        |
-+================================+====================================================================+
-| `initial_records`              | Total number of GBIF occurrence records imported initially         |
-+--------------------------------+--------------------------------------------------------------------+
-| `initial_taxa`                 | Number of unique scientific names before taxonomy resolution       |
-+--------------------------------+--------------------------------------------------------------------+
-| `initial_collectors`           | Number of unique collector names before standardization            |
-+--------------------------------+--------------------------------------------------------------------+
-| `checked_collectors`           | Number of unique collector names after standardization             |
-+--------------------------------+--------------------------------------------------------------------+
-| `full_keys`                    | Number of complete collection event keys (groupable)               |
-+--------------------------------+--------------------------------------------------------------------+
-| `incomplete_keys`              | Number of incomplete keys (non-groupable)                          |
-+--------------------------------+--------------------------------------------------------------------+
-| `usable_records_before_refine` | Number of records classified as usable after voucher selection     |
-+--------------------------------+--------------------------------------------------------------------+
-| `usable_records_after_refine`  | Number of records retained after refinement                        |
-+--------------------------------+--------------------------------------------------------------------+
-| `final_taxa`                   | Number of unique accepted taxon names in the final refined dataset |
-+--------------------------------+--------------------------------------------------------------------+
+| Statistic | Description |
+|----|----|
+| `initial_records` | Total number of GBIF occurrence records imported initially |
+| `initial_taxa` | Number of unique scientific names before taxonomy resolution |
+| `initial_collectors` | Number of unique collector names before standardization |
+| `checked_collectors` | Number of unique collector names after standardization |
+| `full_keys` | Number of complete collection event keys (groupable) |
+| `incomplete_keys` | Number of incomplete keys (non-groupable) |
+| `usable_records_before_refine` | Number of records classified as usable after voucher selection |
+| `usable_records_after_refine` | Number of records retained after refinement |
+| `final_taxa` | Number of unique accepted taxon names in the final refined dataset |
 
 The workflow progressively filters the initial dataset through taxonomy resolution, collector name normalization, duplicate grouping, and quality scoring. The transition from `initial_taxa` to `final_taxa` reflects synonym resolution and the removal of unresolvable or invalid names. Similarly, the reduction from `initial_collectors` to `checked_collectors` demonstrates the consolidation of spelling variants and formatting inconsistencies in collector metadata. The ratio of `full_keys` to `incomplete_keys` indicates the proportion of records with sufficient information for reliable duplicate detection. After completing modules 1\~6, the core UltraGBIF workflow is fully executed, yielding a high-quality, non-redundant dataset ready for downstream analysis.
 

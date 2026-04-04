@@ -124,7 +124,7 @@
 check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
   start=Sys.time()
 
-  occ=occ_import$occ[, .(Ctrl_scientificName)]
+  occ=occ_import$occ[, .(Ctrl_gbifID,Ctrl_scientificName,Ctrl_taxonRank)]
 
   wcvp_na <- data.table(wcvp_plant_name_id  = NA_integer_,
                         wcvp_taxon_rank = NA_character_,
@@ -143,7 +143,7 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
 
   taxon_levels <- c('SPECIES', 'VARIETY', 'SUBSPECIES', 'FORM')
   occ_all <- cbind(occ[, .(Ctrl_gbifID,wcvp_searchedName = Ctrl_scientificName)], wcvp_na)
-  name_search_wcvp <- occ_all[stri_trans_toupper(occ[,Ctrl_taxonRank]) %in% taxon_levels, wcvp_searchedName]%>%unique()
+  name_search_wcvp <- occ_all[stri_trans_toupper(occ[,Ctrl_taxonRank]) %chin% taxon_levels, unique(wcvp_searchedName)]
 
 
   check_initial <- data.frame(ID = 1:length(name_search_wcvp),
