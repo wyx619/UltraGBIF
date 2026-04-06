@@ -1,3 +1,19 @@
+# UltraGBIF 3.3.0
+
+## Improvements
+
+-   `check_occ_taxon` Implemented timeout and automatic redial logic for data chunks to resolve connection hangs during TNRS queries, ensuring robust processing of large datasets under unstable network conditions.
+
+# UltraGBIF 3.2.9
+
+## Bug Fixes
+
+-   debug `check_occ_taxon`
+
+## Improvements
+
+-   perf(`check_occ_taxon`): Optimize TNRS query performance by processing large datasets in chunks
+
 # UltraGBIF 3.2.8
 
 ## Improvements

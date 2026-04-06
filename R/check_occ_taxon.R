@@ -160,6 +160,7 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
     chunk_result <- data.frame()
     attempt <- 1
     max_attempts <- 3
+    timeout_secs <- 20 * 60
 
     while (attempt <= max_attempts && nrow(chunk_result) == 0) {
       tryCatch({
@@ -167,6 +168,7 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
           message(paste("Retry attempt", attempt, "of", max_attempts))
         }
 
+        setTimeLimit(elapsed = timeout_secs, transient = TRUE)
         chunk_result <- TNRS(chunk,
                              sources = "wcvp",
                              classification = "wfo",
@@ -175,6 +177,7 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
                              accuracy = 0.9,
                              skip_internet_check = TRUE) %>%
           data.table::setDT()
+        setTimeLimit()
 
         if (nrow(chunk_result) == 0) {
           message("Query succeeded but returned empty result. Retrying...")
@@ -182,6 +185,7 @@ check_occ_taxon <- function(occ_import = NA,accuracy = 0.9){
       }, error = function(e) {
         message(paste("TNRS query failed:", conditionMessage(e)))
         chunk_result <<- data.frame()
+        setTimeLimit()
       })
 
       attempt <- attempt + 1
