@@ -34,11 +34,6 @@
 #' @param collection_key UltraGBIF_collection_key list from \code{\link{set_collection_mark}}
 #'
 #' @details
-#' \strong{Core Output Table:}
-#'
-#' The \code{occ_digital_voucher} data.table is the core output of \code{\link{set_digital_voucher}}.
-#' It contains all processed fields, including original occurrence data, quality scores, grouping
-#' information, taxonomic assignments, and final dataset classifications.
 #'
 #' \strong{Multi-Dimensional Quality Scoring System:}
 #'
@@ -74,7 +69,21 @@
 #'   \item \code{not groupable: no recordedBy}: Collector name is missing
 #' }
 #'
-#' \strong{Key Output Fields:}
+#'
+#'
+#' @return UltraGBIF_voucher list containing:
+#'   \itemize{
+#'     \item \code{occ_digital_voucher}: A data.table containing all processed fields, including
+#'     original occurrence data, quality scores, grouping information, taxonomic assignments,
+#'     and final dataset classifications
+#'     \item \code{occ_results}: A data.table containing only the quality assessment and result
+#'     fields (e.g., quality scores, voucher status, coordinate validation)
+#'     \item \code{runtime}: Execution time of the function
+#'   }
+#'
+#' The \code{occ_digital_voucher} data.table is the core output of \code{\link{set_digital_voucher}}.
+#' It contains all processed fields, including original occurrence data, quality scores, grouping
+#' information, taxonomic assignments, and final dataset classifications.
 #'
 #' The \code{occ_digital_voucher} table includes the following key fields:
 #' \itemize{
@@ -90,17 +99,6 @@
 #'   \item \code{UltraGBIF_dataset_result}: Final classification; one of "usable", "duplicate",
 #'   or "unusable"
 #' }
-#'
-#' @return UltraGBIF_voucher list containing:
-#'   \itemize{
-#'     \item \code{occ_digital_voucher}: A data.table containing all processed fields, including
-#'     original occurrence data, quality scores, grouping information, taxonomic assignments,
-#'     and final dataset classifications
-#'     \item \code{occ_results}: A data.table containing only the quality assessment and result
-#'     fields (e.g., quality scores, voucher status, coordinate validation)
-#'     \item \code{runtime}: Execution time of the function
-#'   }
-#'
 #' @import data.table
 #' @import stringi
 #' @importFrom dplyr %>% select
@@ -276,10 +274,10 @@ set_digital_voucher <- function(occ_import = NA,
 
     # Set coordinate information based on validation status
     UltraGBIF_decimalLatitude = fifelse(Ctrl_coordinates_validated_by_gbif_issue == TRUE,
-                                        Ctrl_decimalLatitude,
+                                        Ctrl_decimalLatitude%>%as.double(),
                                         NA_real_),
     UltraGBIF_decimalLongitude = fifelse(Ctrl_coordinates_validated_by_gbif_issue == TRUE,
-                                         Ctrl_decimalLongitude,
+                                         Ctrl_decimalLongitude%>%as.double(),
                                          NA_real_),
     UltraGBIF_useful_for_spatial_analysis = Ctrl_coordinates_validated_by_gbif_issue,
 

@@ -1,8 +1,8 @@
-#' @title Plot species richness map for native refined records on one-degree grids
-#' @name plot_richness
+#' @title Get species richness matrix for native refined records on grids and plot a richness map
+#' @name get_richness
 #'
 #' @description This optional module generates a species richness map by aggregating native refined
-#' records onto a one-degree geographic grid. Inspired by \code{lets.presab.points} and
+#' records onto a geographic grid with user-specified resolution. Inspired by \code{lets.presab.points} and
 #' \code{plot.PresenceAbsence} from the \code{letsR} package (Vilela & Villalobos, 2015), this
 #' implementation fully leverages vectorized \code{terra} operations to avoid iterative loops when
 #' filling large presence-absence matrices, achieving nearly a hundredfold speedup over traditional
@@ -10,7 +10,7 @@
 #'
 #' The function implements the following workflow:
 #' \itemize{
-#'   \item \strong{Grid construction}: Creates a one-degree resolution raster covering the
+#'   \item \strong{Grid construction}: Makes a raster with specified resolution covering the
 #'   full extent of the input occurrence coordinates, using the WGS84 coordinate reference system
 #'   \item \strong{Cell assignment}: Extracts the raster cell ID for each occurrence point,
 #'   then constructs a presence-absence matrix where rows represent grid cells and columns
@@ -25,13 +25,17 @@
 #' @param main character string specifying the main title of the plot. Default is "richness plot".
 #' @param xlab character string specifying the label for the x-axis. Default is "Longitude".
 #' @param ylab character string specifying the label for the y-axis. Default is "Latitude".
+#' @param resolution numeric value specifying the grid resolution in degrees (default = 1). 
+#' Common values are 0.5, 1, or 2 degrees depending on the study scale.
 #'
 #' @details
 #' \strong{Grid Resolution and Extent:}
 #'
 #' The raster grid is automatically constructed to cover the full spatial extent of the input
-#' native records, with a resolution of one degree (approximately 111 km at the equator). This
-#' resolution is commonly used in macroecological studies for continental-scale richness analyses.
+#' native records. The default resolution is 1 degree (approximately 111 km at the equator), 
+#' which is commonly used in macroecological studies for continental-scale richness analyses.
+#' Users can specify coarser (e.g., 2 degrees) or finer (e.g., 0.5 degrees) resolutions 
+#' depending on their study needs and data density.
 #'
 #' \strong{Presence-Absence Matrix:}
 #'
@@ -62,10 +66,15 @@
 #' @return UltraGBIF_richness list containing:
 #'   \itemize{
 #'     \item \code{presence}: A data.table representing the presence-absence matrix, with columns
-#'     for cell ID and one column per species, where values indicate the number of occurrences
-#'     of that species within the cell
+#'     for cell ID, cell center longitude and latitude, and one column per species, where values 1 means the presence
+#'     of that species within the cell and 0 means absence
 #'     \item \code{ras_richness}: A \code{SpatRaster} object containing the species richness values
 #'     for each grid cell, suitable for further spatial analysis or export
+#'     \item \code{richness}: A \code{data.table} giving species richness for each raster cell,
+#'     with columns for raster cell ID (\code{cell}), richness count (\code{count}),
+#'     and cell centroid coordinates (\code{Longitude}, \code{Latitude}).
+#'     \item \code{occupancy}: A \code{data.table} summarizing species occupancy across raster cells.
+#'     Each row represents one taxon and gives the number of grid cells in which that taxon was recorded.
 #'   }
 #'
 #' @references
@@ -74,18 +83,23 @@
 #' \doi{10.1111/2041-210X.12401}
 #'
 #' @import data.table
-#' @importFrom dplyr %>%
+#' @importFrom dplyr %>% left_join
 #'
 #' @examples
 #' \dontrun{
-#' richness <- plot_richness(refined_records = refined_records, main = 'richness map',
+#' # Default 1-degree resolution
+#' richness_data <- get_richness(refined_records = refined_records, main = 'richness map',
 #' xlab = "Longitude", ylab = "Latitude")
+#' 
+#' # Custom 2-degree resolution
+#' richness_data <- get_richness(refined_records = refined_records, resolution = 2)
 #'}
 #' @export
-plot_richness <- function(refined_records=NA,
+get_richness <- function(refined_records=NA,
                           main='richness plot',
                           xlab = "Longitude",
-                          ylab = "Latitude"){
+                          ylab = "Latitude",
+                          resolution = 1){
 
   crs = "+proj=longlat +datum=WGS84"
   xy <-  refined_records$native_records[,.(UltraGBIF_wcvp_taxon_name,
@@ -98,7 +112,7 @@ plot_richness <- function(refined_records=NA,
   xmx <- limits[2]
   ymn <- limits[3]
   ymx <- limits[4]
-  resol <- terra::res(terra::project(terra::rast(), crs))
+  resol <- c(resolution, resolution)
   ras <- terra::rast(xmin = xmn,
                      xmax = xmx,
                      ymin = ymn,
@@ -112,8 +126,20 @@ plot_richness <- function(refined_records=NA,
   ext_df <- terra::extract(ras, xy, cells = TRUE, ID = FALSE)%>%setDT()
   ext_df[,taxon:=xy$UltraGBIF_wcvp_taxon_name]
   ext_df <- unique(ext_df)
+
+  occupancy <- ext_df[, .(n_cells = uniqueN(cell)), by = taxon]
+  setorder(occupancy, -n_cells, taxon)
+
+
   Resultado <- dcast(ext_df, cell ~ taxon, fun.aggregate = length)
+  coords <- terra::xyFromCell(ras, Resultado$cell) %>% as.data.table()
+  setnames(coords, c("Longitude", "Latitude"))
+
+  Resultado <- cbind(Resultado, coords)
+  setcolorder(Resultado, c("cell", "Longitude", "Latitude",
+                           setdiff(names(Resultado), c("cell", "Longitude", "Latitude"))))
   richness <- ext_df[,.N,cell]%>%setnames(old='N',new='count')
+  richness <- left_join(richness,Resultado[,.(cell,Longitude,Latitude)],by = join_by(cell))
   ras_richness <- ras
   ras_richness[] <- NA
 
@@ -129,12 +155,16 @@ plot_richness <- function(refined_records=NA,
   c <- max(v, na.rm = TRUE)
   v[(v == 0)] <- NA
   terra::values(ras_richness) <- v
-  terra::plot(ras_richness, col = colfunc(c + 1)[-1],  main=main, xlab = xlab, ylab = ylab)
+  terra::plot(ras_richness, col = colfunc(c + 1)[-1],
+                               main=main, xlab = xlab, ylab = ylab)
   map <- terra::vect(rnaturalearthdata::countries110)
   terra::plot(map, add = TRUE)
   message('Finished!')
 
-  final=list(presence = Resultado,ras_richness = ras_richness)
+  final=list(presence = Resultado,
+             richness = richness,
+             occupancy = occupancy,
+             ras_richness = ras_richness)
   class(final) <- 'UltraGBIF_richness'
   return(final)
 

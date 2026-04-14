@@ -71,18 +71,7 @@
 #'   marked as accepted
 #' }
 #'
-#' \strong{Output Fields:}
 #'
-#' The returned \code{occ_wcvp_check_name} table includes the following WCVP-derived fields:
-#' \itemize{
-#'   \item \code{wcvp_plant_name_id}: WCVP identifier for the matched name
-#'   \item \code{wcvp_taxon_name}: Accepted taxon name
-#'   \item \code{wcvp_taxon_status}: Taxonomic status ("Accepted" or \code{NA})
-#'   \item \code{wcvp_family}: Accepted family name
-#'   \item \code{wcvp_taxon_rank}: Taxonomic rank of the accepted name
-#'   \item \code{wcvp_searchNotes}: Resolution outcome ("Accepted", "Updated", or "Not found")
-#'   \item \code{wcvp_reviewed}: Manual review flag ("N" indicates not yet reviewed)
-#' }
 #'
 #' \strong{Retry Mechanism:}
 #'
@@ -99,7 +88,16 @@
 #'     names requiring manual curation
 #'     \item \code{runtime}: Execution time of the function
 #'   }
-#'
+#' The returned \code{occ_wcvp_check_name} table includes the following WCVP-derived fields:
+#' \itemize{
+#'   \item \code{wcvp_plant_name_id}: WCVP identifier for the matched name
+#'   \item \code{wcvp_taxon_name}: Accepted taxon name
+#'   \item \code{wcvp_taxon_status}: Taxonomic status ("Accepted" or \code{NA})
+#'   \item \code{wcvp_family}: Accepted family name
+#'   \item \code{wcvp_taxon_rank}: Taxonomic rank of the accepted name
+#'   \item \code{wcvp_searchNotes}: Resolution outcome ("Accepted", "Updated", or "Not found")
+#'   \item \code{wcvp_reviewed}: Manual review flag ("N" indicates not yet reviewed)
+#' }
 #' @references
 #' \itemize{
 #'   \item Boyle, B. et al. (2013). The taxonomic name resolution service: an online tool for

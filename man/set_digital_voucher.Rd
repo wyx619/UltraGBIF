@@ -23,6 +23,25 @@ and final dataset classifications
 fields (e.g., quality scores, voucher status, coordinate validation)
 \item \code{runtime}: Execution time of the function
 }
+
+The \code{occ_digital_voucher} data.table is the core output of \code{\link{set_digital_voucher}}.
+It contains all processed fields, including original occurrence data, quality scores, grouping
+information, taxonomic assignments, and final dataset classifications.
+
+The \code{occ_digital_voucher} table includes the following key fields:
+\itemize{
+\item \code{UltraGBIF_digital_voucher}: Logical; \code{TRUE} if the record is selected as the
+master voucher for its group
+\item \code{UltraGBIF_duplicates}: Logical; \code{TRUE} if the record belongs to a group with
+multiple members
+\item \code{UltraGBIF_num_duplicates}: Integer; count of records within the same group
+\item \code{UltraGBIF_non_groupable_duplicates}: Logical; \code{TRUE} if the record cannot be
+grouped due to incomplete collection key components
+\item \code{UltraGBIF_duplicates_grouping_status}: Character; grouping outcome classification
+(see Grouping Status Classification above)
+\item \code{UltraGBIF_dataset_result}: Final classification; one of "usable", "duplicate",
+or "unusable"
+}
 }
 \description{
 This function identifies and selects the master digital voucher from groups of
@@ -54,12 +73,6 @@ taxon name is selected as the representative taxonomic identity
 }
 }
 \details{
-\strong{Core Output Table:}
-
-The \code{occ_digital_voucher} data.table is the core output of \code{\link{set_digital_voucher}}.
-It contains all processed fields, including original occurrence data, quality scores, grouping
-information, taxonomic assignments, and final dataset classifications.
-
 \strong{Multi-Dimensional Quality Scoring System:}
 
 The quality scoring system evaluates each record across two dimensions:
@@ -92,23 +105,6 @@ The \code{UltraGBIF_duplicates_grouping_status} field indicates the grouping out
 collection number are missing
 \item \code{not groupable: no recordNumber}: Collection number is missing
 \item \code{not groupable: no recordedBy}: Collector name is missing
-}
-
-\strong{Key Output Fields:}
-
-The \code{occ_digital_voucher} table includes the following key fields:
-\itemize{
-\item \code{UltraGBIF_digital_voucher}: Logical; \code{TRUE} if the record is selected as the
-master voucher for its group
-\item \code{UltraGBIF_duplicates}: Logical; \code{TRUE} if the record belongs to a group with
-multiple members
-\item \code{UltraGBIF_num_duplicates}: Integer; count of records within the same group
-\item \code{UltraGBIF_non_groupable_duplicates}: Logical; \code{TRUE} if the record cannot be
-grouped due to incomplete collection key components
-\item \code{UltraGBIF_duplicates_grouping_status}: Character; grouping outcome classification
-(see Grouping Status Classification above)
-\item \code{UltraGBIF_dataset_result}: Final classification; one of "usable", "duplicate",
-or "unusable"
 }
 }
 \examples{

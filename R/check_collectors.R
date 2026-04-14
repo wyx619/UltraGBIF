@@ -35,26 +35,20 @@
 #'   predefined exclusion list are classified as "UNKNOWN"
 #' }
 #'
-#' \strong{Output Structure:}
 #'
-#' The returned dictionary contains two columns:
-#' \itemize{
-#'   \item \code{Ctrl_recordedBy}: Original raw collector strings from GBIF
-#'   \item \code{Ctrl_nameRecordedBy_Standard}: Standardized primary collector names (uppercase, ASCII-only)
-#' }
 #'
-#' \strong{Recommendations:}
-#'
-#' Users are advised to review the standardized collector names in the output dictionary to ensure
-#' accuracy. Manual curation may be necessary for edge cases where automated extraction yields
-#' suboptimal results. The standardized names serve as the foundation for constructing collection
-#' event keys in downstream duplication analysis.
 #'
 #' @return UltraGBIF_collectors_dictionary list with runtime and data.table:
 #'   \itemize{
-#'     \item \code{collectors_dictionary}: A data.table mapping raw `recordedBy` strings to standardized collector names
+#'     \item \code{collectors_dictionary}: A data.table mapping raw `recordedBy` strings to standardized collector names.
 #'     \item \code{runtime}: Execution time of the function
 #'   }
+#'
+#'  The \code{collectors_dictionary} contains two columns:
+#'    \itemize{
+#'      \item \code{Ctrl_recordedBy}: Original raw collector strings from GBIF
+#'      \item \code{Ctrl_nameRecordedBy_Standard}: Standardized primary collector names (uppercase, ASCII-only)
+#'    }
 #'
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else
 #' @import stringi

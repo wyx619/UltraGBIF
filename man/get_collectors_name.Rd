@@ -28,8 +28,5 @@ get_collectors_name('Tomitarô-Makino, John')
 get_collectors_name(NA)
 get_collectors_name('')
 get_collectors_name('et al.')
-
 }
-
-
 }

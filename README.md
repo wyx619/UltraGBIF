@@ -57,15 +57,6 @@ options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902
 install.packages("UltraGBIF") ## install UltraGBIF in one minute
 ```
 
-## Tutorial of UltraGBIF
-
-A comprehensive tutorial is available after installation at:
-
-``` r
-library(UltraGBIF)
-vignette('Tutorial_of_UltraGBIF',package = 'UltraGBIF')
-```
-
 ## Minimal Complete Workflow
 
 The following code demonstrates the complete UltraGBIF workflow from data import to richness mapping:
@@ -102,7 +93,7 @@ voucher <- set_digital_voucher(
   collection_key = collection_key
 )
 
-# Step 6: Refine records (coordinate validation + native status)
+# Step 6: Refine records 
 refined_records <- refine_records(
   voucher = voucher,
   threads = 4,
@@ -111,7 +102,7 @@ refined_records <- refine_records(
 
 # Optional: Visualize results
 map_records(refined_records = refined_records, precision = 4, cex = 4)
-richness <- plot_richness(refined_records = refined_records,
+richness_data <- get_richness(refined_records = refined_records,
                           main = "Species Richness")
 ```
 

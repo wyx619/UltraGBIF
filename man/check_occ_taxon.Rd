@@ -24,6 +24,16 @@ taxonomic status, and family assignments
 names requiring manual curation
 \item \code{runtime}: Execution time of the function
 }
+The returned \code{occ_wcvp_check_name} table includes the following WCVP-derived fields:
+\itemize{
+\item \code{wcvp_plant_name_id}: WCVP identifier for the matched name
+\item \code{wcvp_taxon_name}: Accepted taxon name
+\item \code{wcvp_taxon_status}: Taxonomic status ("Accepted" or \code{NA})
+\item \code{wcvp_family}: Accepted family name
+\item \code{wcvp_taxon_rank}: Taxonomic rank of the accepted name
+\item \code{wcvp_searchNotes}: Resolution outcome ("Accepted", "Updated", or "Not found")
+\item \code{wcvp_reviewed}: Manual review flag ("N" indicates not yet reviewed)
+}
 }
 \description{
 This function standardizes and validates plant taxonomic names by querying the
@@ -88,19 +98,6 @@ name exists (e.g., invalid or illegitimate names), only the matched name is retu
 \item \strong{Select Best Match}: When multiple matches have identical scores, the Best Match
 Algorithm ranks candidates by match quality, preferring corrected synonyms over names already
 marked as accepted
-}
-
-\strong{Output Fields:}
-
-The returned \code{occ_wcvp_check_name} table includes the following WCVP-derived fields:
-\itemize{
-\item \code{wcvp_plant_name_id}: WCVP identifier for the matched name
-\item \code{wcvp_taxon_name}: Accepted taxon name
-\item \code{wcvp_taxon_status}: Taxonomic status ("Accepted" or \code{NA})
-\item \code{wcvp_family}: Accepted family name
-\item \code{wcvp_taxon_rank}: Taxonomic rank of the accepted name
-\item \code{wcvp_searchNotes}: Resolution outcome ("Accepted", "Updated", or "Not found")
-\item \code{wcvp_reviewed}: Manual review flag ("N" indicates not yet reviewed)
 }
 
 \strong{Retry Mechanism:}

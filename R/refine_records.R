@@ -75,15 +75,7 @@
 #'   \item \code{unknown}: No matching distribution data or area assignment available
 #' }
 #'
-#' \strong{Output Files:}
 #'
-#' When \code{save_path} is specified, two compressed CSV files are generated:
-#' \itemize{
-#'   \item \code{usable_refined_records.csv.gz}: All refined records with validated coordinates
-#'   and restored metadata
-#'   \item \code{native_refined_records.csv.gz}: Subset of refined records classified as native
-#'   occurrences
-#' }
 #'
 #' @return UltraGBIF_refine list containing:
 #'   \itemize{
@@ -93,7 +85,13 @@
 #'     extinct, location_doubtful, or unknown)
 #'     \item \code{runtime}: Execution time of the function
 #'   }
-#'
+#' When \code{save_path} is specified, two compressed CSV files are generated:
+#' \itemize{
+#'   \item \code{usable_refined_records.csv.gz}: All refined records with validated coordinates
+#'   and restored metadata
+#'   \item \code{native_refined_records.csv.gz}: Subset of refined records classified as native
+#'   occurrences
+#' }
 #' @references
 #' Zizka, A., Silvestro, D., Andermann, T., Azevedo, J., Duarte Ritter, C., Edler, D., Farooq, H.,
 #' Herdean, A., Ariza, M., Scharn, R., Svantesson, S., Wengstrom, N., Vitecek, S., & Antonelli, A.

@@ -1,7 +1,7 @@
 Package: UltraGBIF
 Title: Fast and Easy Compilation of GBIF Plant Occurrence Records in One R Package 
-Version: 3.3.0
-Date: 2026-04-05
+Version: 3.3.1
+Date: 2026-04-13
 Type: Package
 Maintainer: Anonymous <Anonymous@Anonymous.com>
 Authors@R: 
@@ -21,6 +21,7 @@ Suggests:
     rmarkdown,
     rnaturalearth,
     sf,
+    rgbif,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3

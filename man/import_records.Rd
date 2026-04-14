@@ -100,6 +100,10 @@ curl::curl_download(url, gbif_occurrence_file, quiet = FALSE)
 occ_import <- import_records(GBIF_file = gbif_occurrence_file,
                              only_PRESERVED_SPECIMEN = TRUE)
 
+# Or use file.choose() to choose the zip file
+occ_import <- import_records(GBIF_file = file.choose(),
+                             only_PRESERVED_SPECIMEN = TRUE)
+
 # View summary of detected GBIF issues
 head(occ_import$summary, 5)
 }

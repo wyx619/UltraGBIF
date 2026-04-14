@@ -39,6 +39,13 @@ including validated coordinates, restored metadata, and WGSRPD area codes
 extinct, location_doubtful, or unknown)
 \item \code{runtime}: Execution time of the function
 }
+When \code{save_path} is specified, two compressed CSV files are generated:
+\itemize{
+\item \code{usable_refined_records.csv.gz}: All refined records with validated coordinates
+and restored metadata
+\item \code{native_refined_records.csv.gz}: Subset of refined records classified as native
+occurrences
+}
 }
 \description{
 This module validates spatial information and restores detailed metadata for usable
@@ -99,16 +106,6 @@ WGSRPD Level 3 administrative areas and cross-referencing with WCVP distribution
 \item \code{extinct}: Record falls within an area where the species is documented as extinct
 \item \code{location_doubtful}: WCVP flags the distribution record as uncertain
 \item \code{unknown}: No matching distribution data or area assignment available
-}
-
-\strong{Output Files:}
-
-When \code{save_path} is specified, two compressed CSV files are generated:
-\itemize{
-\item \code{usable_refined_records.csv.gz}: All refined records with validated coordinates
-and restored metadata
-\item \code{native_refined_records.csv.gz}: Subset of refined records classified as native
-occurrences
 }
 }
 \examples{

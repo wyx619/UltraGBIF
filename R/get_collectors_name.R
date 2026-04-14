@@ -19,10 +19,7 @@
 #' get_collectors_name(NA)
 #' get_collectors_name('')
 #' get_collectors_name('et al.')
-#'
 #' }
-#'
-#'
 #' @import stringi data.table tokenizers
 #' @importFrom dplyr %>%
 #'

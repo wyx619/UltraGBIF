@@ -1,3 +1,10 @@
+# UltraGBIF 3.3.1
+
+## Improvements
+
+-   update help documents.
+-   rewrite function about richness.
+
 # UltraGBIF 3.3.0
 
 ## Improvements
