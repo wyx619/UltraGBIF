@@ -94,3 +94,26 @@
 #' @references
 #' Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. \emph{Sci Data}, 8, 215 (2021). \doi{10.1038/s41597-021-00997-6}
 "ref_wcvp_names"
+
+
+#' Example occ_import list from GBIF
+#'
+#' A small dataset containing initial Glaucium flavum Crantz occurrnce records from GBIF
+#'
+#' @format A occ_import list with:
+#' \describe{
+#'   \itemize{
+#'     \item \code{occ}: A data.table containing the processed occurrence records with all
+#'     column names prefixed by \code{Ctrl_}
+#'     \item \code{occ_gbif_issue}: A data.table containing binary indicators for each GBIF
+#'     issue type (one column per issue), plus the \code{Ctrl_gbifID} column for record linkage
+#'     \item \code{summary}: A data.table summarizing the frequency of each GBIF issue type,
+#'     sorted in descending order by occurrence count
+#'     \item \code{runtime}: Execution time of the function
+#'   }
+#'   }
+#' @source Download the Darwin Core Archive from \doi{10.15468/dl.23dufm} and then
+#' occ_omport <- import_records(GBIF_file = 'path/to/this/archive',only_PRESERVED_SPECIMEN = T)
+#' @references
+#' GBIF.org (21 August 2024) GBIF Occurrence Download. \doi{10.15468/dl.23dufm}
+"occ_import"

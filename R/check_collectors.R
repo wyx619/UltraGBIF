@@ -59,6 +59,11 @@
 #' collectors_dictionary <- check_collectors(occ_import = occ_import,
 #' min_char = 2)
 #'}
+#' @references
+#' De Melo, Pablo Hendrigo Alves, Nadia Bystriakova, Eve Lucas, and Alexandre K. Monro. 2024.
+#'   "A New R Package to Parse Plant Species Occurrence Records into Unique Collection Events
+#'   Efficiently Reduces Data Redundancy." \emph{Scientific Reports} 14 (1): 5450.
+#'   \doi{10.1038/s41598-024-56158-3}.
 #' @export
 check_collectors <- function(occ_import = NA,
                              min_char = 2)

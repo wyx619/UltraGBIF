@@ -101,16 +101,32 @@ score within each group selected as the digital voucher.
 The \code{UltraGBIF_duplicates_grouping_status} field indicates the grouping outcome for each record:
 \itemize{
 \item \code{groupable}: Complete collection key; duplicates identified and grouped
-\item \code{not groupable: no recordedBy and no recordNumber}: Both collector name and
-collection number are missing
-\item \code{not groupable: no recordNumber}: Collection number is missing
-\item \code{not groupable: no recordedBy}: Collector name is missing
+\item \code{not groupable}: Cannot be grouped due to missing information:
+\itemize{
+\item \code{no recordedBy and no recordNumber}: Both collector name and collection number are missing
+\item \code{no recordNumber}: Collection number is missing
+\item \code{no recordedBy}: Collector name is missing
+}
 }
 }
 \examples{
 \dontrun{
+taxa_checked <- check_occ_taxon(occ_import = occ_import,accuracy = 0.9)
+
+collectors_dictionary <- check_collectors(occ_import = occ_import,
+min_char = 2)
+
+collection_key <- set_collection_mark(occ_import = occ_import,
+collectors_dictionary = collectors_dictionary)
+
 voucher <- set_digital_voucher(occ_import = occ_import,
 taxa_checked = taxa_checked,
 collection_key = collection_key)
 }
+}
+\references{
+De Melo, Pablo Hendrigo Alves, Nadia Bystriakova, Eve Lucas, and Alexandre K. Monro. 2024.
+"A New R Package to Parse Plant Species Occurrence Records into Unique Collection Events
+Efficiently Reduces Data Redundancy." \emph{Scientific Reports} 14 (1): 5450.
+\doi{10.1038/s41598-024-56158-3}.
 }

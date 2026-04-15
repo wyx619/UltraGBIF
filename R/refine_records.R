@@ -93,11 +93,15 @@
 #'   occurrences
 #' }
 #' @references
-#' Zizka, A., Silvestro, D., Andermann, T., Azevedo, J., Duarte Ritter, C., Edler, D., Farooq, H.,
+#' \itemize{
+#'    \item Zizka, A., Silvestro, D., Andermann, T., Azevedo, J., Duarte Ritter, C., Edler, D., Farooq, H.,
 #' Herdean, A., Ariza, M., Scharn, R., Svantesson, S., Wengstrom, N., Vitecek, S., & Antonelli, A.
 #' (2019). CoordinateCleaner: Standardized cleaning of occurrence records from biological collection
 #' databases. \emph{Methods in Ecology and Evolution}, 10(5), 744-751. \doi{10.1111/2041-210X.13152}
-#'
+#'    \item Govaerts, R., Nic Lughadha, E., Black, N. et al. The World Checklist of Vascular Plants,
+#'    a continuously updated resource for exploring global plant diversity.
+#'    \emph{Sci Data} 8, 215 (2021). \doi{10.1038/s41597-021-00997-6}
+#'}
 #' @import data.table
 #' @importFrom dplyr %>%
 #' @import foreach
@@ -108,6 +112,18 @@
 #' @seealso \code{\link[CoordinateCleaner]{clean_coordinates}}
 #' @examples
 #' \dontrun{
+#' taxa_checked <- check_occ_taxon(occ_import = occ_import,accuracy = 0.9)
+#'
+#' collectors_dictionary <- check_collectors(occ_import = occ_import,
+#' min_char = 2)
+#'
+#' collection_key <- set_collection_mark(occ_import = occ_import,
+#' collectors_dictionary = collectors_dictionary)
+#'
+#' voucher <- set_digital_voucher(occ_import = occ_import,
+#' taxa_checked = taxa_checked,
+#' collection_key = collection_key)
+#'
 #' refined_records <- refine_records(voucher = voucher,
 #' threads = 4,
 #' save_path = getwd(),
@@ -365,9 +381,9 @@ refine_records<-function(voucher = NA,
              encoding = "UTF-8")
     }, error = function(e) {
       # Print error message but do not stop execution
-      message("File export failed: ", e$message)
+      warning("File export failed: ", e$message)
     })
-  } else {message('Check your save_path, remember to save results!')}
+  } else {warning('Check your save_path, remember to save results!')}
 
   end=Sys.time()
   used=end-start

@@ -80,6 +80,7 @@ geographic classification
 }
 \examples{
 \dontrun{
+# Make sur you have got refined_records from function refine_records
 # This function may open your browser in the background; please be aware.
 map_records(refined_records=refined_records,precision=4,cex=4)
 }

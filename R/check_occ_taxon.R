@@ -81,23 +81,39 @@
 #' @return UltraGBIF_taxa_checked list containing:
 #'   \itemize{
 #'     \item \code{occ_wcvp_check_name}: A data.table containing the original occurrence records
-#'     merged with WCVP taxonomic resolution results, including matched names, accepted names,
-#'     taxonomic status, and family assignments
-#'     \item \code{summary}: A data.table containing the unique taxonomic resolution results
+#'     merged with WCVP taxonomic resolution results. Each row represents one occurrence record
+#'     with its taxonomic resolution outcome. Key columns include:
+#'     \itemize{
+#'       \item \code{wcvp_searchedName}: The original scientific name as it appeared in the GBIF
+#'       occurrence record (i.e., the \code{scientificName} field before any taxonomic
+#'       standardization). This allows users to trace how each original name was resolved
+#'       \item \code{gbifID}: GBIF occurrence identifier
+#'       \item \code{wcvp_plant_name_id_of_searchedName}: WCVP identifier for the searched name
+#'       \item \code{wcvp_taxon_authors_of_searchedName}: Author citation for the searched name
+#'       \item \code{wcvp_taxon_status_of_searchedName}: Taxonomic status of the searched name
+#'       \item \code{wcvp_plant_name_id}: WCVP identifier for the accepted name
+#'       \item \code{wcvp_taxon_name}: Accepted taxon name (standardized)
+#'       \item \code{wcvp_taxon_authors}: Author citation for the accepted name
+#'       \item \code{wcvp_accepted_plant_name_id}: WCVP identifier of the accepted name
+#'       \item \code{wcvp_taxon_rank}: Taxonomic rank (e.g., "species", "subspecies", "variety")
+#'       \item \code{wcvp_family}: Accepted family name (e.g., "Saxifragaceae")
+#'       \item \code{wcvp_verified_author}: Verification score for author match (0-100)
+#'       \item \code{wcvp_verified_speciesName}: Verification score for species name match (0-100)
+#'       \item \code{wcvp_searchNotes}: Resolution outcome indicating how the name was matched:
+#'       \itemize{
+#'         \item "Accepted": The searched name is already an accepted name
+#'         \item "Updated": The searched name is a synonym resolved to an accepted name
+#'         \item "Not found": No match found in WCVP (returns \code{NA} for WCVP fields)
+#'       }
+#'       \item \code{wcvp_reviewed}: Manual review flag ("N" indicates not yet reviewed, can be
+#'       updated to "Y" after manual curation)
+#'     }
+#'     \item \code{summary}: A data.table containing unique taxonomic resolution results
 #'     (one row per submitted name), suitable for reviewing resolution outcomes and identifying
-#'     names requiring manual curation
+#'     names requiring manual curation. Contains the same WCVP fields as
+#'     \code{occ_wcvp_check_name} but aggregated by unique \code{wcvp_searchedName}
 #'     \item \code{runtime}: Execution time of the function
 #'   }
-#' The returned \code{occ_wcvp_check_name} table includes the following WCVP-derived fields:
-#' \itemize{
-#'   \item \code{wcvp_plant_name_id}: WCVP identifier for the matched name
-#'   \item \code{wcvp_taxon_name}: Accepted taxon name
-#'   \item \code{wcvp_taxon_status}: Taxonomic status ("Accepted" or \code{NA})
-#'   \item \code{wcvp_family}: Accepted family name
-#'   \item \code{wcvp_taxon_rank}: Taxonomic rank of the accepted name
-#'   \item \code{wcvp_searchNotes}: Resolution outcome ("Accepted", "Updated", or "Not found")
-#'   \item \code{wcvp_reviewed}: Manual review flag ("N" indicates not yet reviewed)
-#' }
 #' @references
 #' \itemize{
 #'   \item Boyle, B. et al. (2013). The taxonomic name resolution service: an online tool for

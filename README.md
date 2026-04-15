@@ -6,17 +6,17 @@
 
 Mapping plant distributions is fundamental to understanding biodiversity patterns, accurate distribution data and such information is necessary for researching plant diversity. Global Biodiversity Information Facility, known as [GBIF](https://www.gbif.org/), is a large repository for plant occurrence records worldwide. It has fueled over 18,200 peer-reviewed journal articles, with ecology (3,769 researches), climate change (2,953), conservation (1,915), and invasive species management (1,840) as of August 2025, supporting global policy frameworks like the Kunming-Montreal Global Biodiversity Framework.
 
-Researchers using GBIF occurrence records usually rely on a suite of packages and scrips, consuming lots of runtime, Such as [`rgbif`](https://doi.org/10.32614/CRAN.package.rgbif), [`TNRS`](https://doi.org/10.32614/CRAN.package.TNRS), [`CoordinateCleaner`](https://doi.org/10.32614/CRAN.package.CoordinateCleaner), [`bdc`](https://doi.org/10.32614/CRAN.package.bdc), [`plantR`](https://doi.org/10.1111/2041-210X.13779), [`NSR`](https://doi.org/10.32614/CRAN.package.NSR) and [`GVS`](https://doi.org/10.32614/CRAN.package.GVS) help to deal with GBIF occurrence records. Moreover, for million records datasets, current methods incur substantial computational overhead through manual chaining of disparate packages, necessitating high-performance infrastructure despite advancing computational capabilities.
+Researchers using GBIF occurrence records usually rely on a suite of packages and scrips, consuming lots of time, Such as [`rgbif`](https://doi.org/10.32614/CRAN.package.rgbif), [`TNRS`](https://doi.org/10.32614/CRAN.package.TNRS), [`CoordinateCleaner`](https://doi.org/10.32614/CRAN.package.CoordinateCleaner), [`bdc`](https://doi.org/10.32614/CRAN.package.bdc), [`plantR`](https://doi.org/10.1111/2041-210X.13779), [`NSR`](https://doi.org/10.32614/CRAN.package.NSR) and [`GVS`](https://doi.org/10.32614/CRAN.package.GVS) help to deal with GBIF occurrence records. Moreover, for million records datasets, current methods incur substantial computational overhead through manual chaining of disparate packages, necessitating high-performance infrastructure despite advancing computational capabilities.
 
 To rectify this situation, we introduce UltraGBIF, an efficient R package that unifies taxonomic resolution, spatial validation, duplicate consolidation, and botanical region annotation within a high-performance framework. Its optimized C/CPP-based dependencies, practical vectorized programming methods leveraging the SIMD instruction sets of modern computer CPUs and intelligent parallelization enable compiling one million GBIF occurrence records on a laptop within 15 minutes. In a word, UltraGBIF resolves challenges in reproducibility, scalability, and spatial-taxonomic integrity without increasing adoption barriers for biodiversity researchers.
 
 ## Workflow
 
-***4 stages and 8 modules of UltraGBIF.** After core stages (module 1\~6), generally 30% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
+***4 stages and 7 modules of UltraGBIF.** After module 1\~6, generally 30% of the initial occurrence records are retained.* ![Workflow](man/figures/Workflow.png "UltraGBIF workflow")
 
-UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into 4 stages and 8 distinct modules.
+UltraGBIF provides a reproducible, plant-optimized, and computationally efficient framework for transforming raw GBIF occurrence records into analysis-ready datasets. The package functions are categorized into 4 stages and 7 distinct modules.
 
-**Stage 1: Data Acquisition**
+**Stage 1: Data Acquisition and Preparation**
 
 This stage ensures data accuracy and consistency through three modules:
 
@@ -24,7 +24,7 @@ This stage ensures data accuracy and consistency through three modules:
 
 2.  Check Taxon Name: This module implements taxonomic name standardization to resolve and validate plant names by the [Taxonomic Name Resolution Service](https://doi.org/10.32614/CRAN.package.TNRS) (TNRS, Boyle et al. 2013), which unifies synonyms and corrects misspellings.
 
-3.  Check Collector Name: This module simplifies and extracts the name of the primary one among all collectors, then builds a dictionary to reduce inconsistencies that can fragment single collection events. This module reduces identification errors and improves the accuracy of subsequent duplication checks.
+3.  Check Collectors: This module simplifies and extracts the name of the primary one among all collectors, then builds a table to reduce inconsistencies that can fragment single collection events. This module reduces identification errors and improves the accuracy of subsequent duplication checks.
 
 **Stage 2: Duplicate Removal and Reliability Filtering**
 
@@ -40,11 +40,9 @@ This stage restores key information for usable records from their duplicates wit
 
 6.  Refine records: This module validates spatial information and restores detailed metadata for usable vouchers. It performs automated coordinate validation using CoordinateCleaner (Zizka et al., 2019) to flag spatial errors (e.g., centroids, capitals, institutions). It also extracts native status information to set records as native or others.
 
-**Optional Stages**
+**Stage 4: Visualization**
 
--   Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
-
--   Plot richness: This optional module is useful for creating a simple richness map from UltraGBIF-processed occurrence records above. It has drawn on `lets.presab.points` and `plot.PresenceAbsence` from R package [`letsR`](https://github.com/macroecology/letsR)(Vilela and Villalobos 2015), but fully leverages vectorization techniques to avoid looping when filling large matrices, thus achieving nearly a hundredfold speedup.
+7.  Map records: An optional visualization module that renders verified records onto customizable, dynamic maps, providing an intuitive interface for viewing spatial distributions and data density.
 
 Focused exclusively on GBIF plant occurrence records, UltraGBIF can compile one million records within 15 minutes on a laptop without high memory usage. In a word, UltraGBIF integrates these components into a unified, automated workflow that enhances data standardization, accuracy, and usability, which enables robust, reproducible, and scalable compiling of GBIF occurrence records for advanced biodiversity research.
 
@@ -101,9 +99,7 @@ refined_records <- refine_records(
 )
 
 # Optional: Visualize results
-map_records(refined_records = refined_records, precision = 4, cex = 4)
-richness_data <- get_richness(refined_records = refined_records,
-                          main = "Species Richness")
+map_records(refined_records = refined_records, precision = 2, cex = 4)
 ```
 
 ## Performance

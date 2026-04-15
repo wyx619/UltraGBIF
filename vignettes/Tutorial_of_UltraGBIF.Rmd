@@ -19,33 +19,33 @@ bibliography: references.bib
 
 UltraGBIF is a high-performance R package designed to compile, validate, and standardize plant occurrence records from the Global Biodiversity Information Facility (GBIF) into analysis-ready datasets. This tutorial demonstrates the complete UltraGBIF workflow using [*Saxifraga*](https://doi.org/10.15468/dl.bythb4) occurrence records as an example dataset.
 
-The UltraGBIF workflow consists of **4 stages** encompassing **8 functional modules**:
+The UltraGBIF workflow consists of **4 stages** encompassing **7 functional modules**:
 
-+-----------------------+-------------------------------------+-----------------------------+
-| Stage                 | Modules                             | Functions                   |
-+=======================+=====================================+=============================+
-| **Stage 1:**          | 1.  Import Records                  | 1.  `import_records()`      |
-|                       |                                     |                             |
-| **Data Acquisition**  | 2.  Check Taxon Name                | 2.  `check_occ_taxon()`     |
-|                       |                                     |                             |
-|                       | 3.  Check Collector Name            | 3.  `check_collectors()`    |
-+-----------------------+-------------------------------------+-----------------------------+
-| **Stage 2:**          | 4.  Generate Unique Collection Mark | 4.  `set_collection_mark()` |
-|                       |                                     |                             |
-| **Duplicate Removal** | 5.  Set Digital Voucher             | 5.  `set_digital_voucher()` |
-+-----------------------+-------------------------------------+-----------------------------+
-| **Stage 3:**          | 6.  Refine Records                  | 6.  `refine_records()`      |
-|                       |                                     |                             |
-| **Refine Records**    |                                     |                             |
-+-----------------------+-------------------------------------+-----------------------------+
-| **Stage 4:**          | 7.  Map Records                     | 7.  `map_records()`         |
-|                       |                                     |                             |
-| **Visualization**     | 8.  Get Richness                    | 8.  `get_richness()`        |
-+-----------------------+-------------------------------------+-----------------------------+
++-------------------------------------------------+-------------------------------------+-----------------------------+
+| Stage                                           | Modules                             | Functions                   |
++=================================================+=====================================+=============================+
+| **Stage 1:**                                    | 1.  Import Records                  | 1.  `import_records()`      |
+|                                                 |                                     |                             |
+| **Data Acquisition and Preparation**            | 2.  Check Taxon Name                | 2.  `check_occ_taxon()`     |
+|                                                 |                                     |                             |
+|                                                 | 3.  Check Collectors                | 3.  `check_collectors()`    |
++-------------------------------------------------+-------------------------------------+-----------------------------+
+| **Stage 2:**                                    | 4.  Generate Unique Collection Mark | 4.  `set_collection_mark()` |
+|                                                 |                                     |                             |
+| **Duplicate Removal and Reliability Filtering** | 5.  Set Digital Voucher             | 5.  `set_digital_voucher()` |
++-------------------------------------------------+-------------------------------------+-----------------------------+
+| **Stage 3:**                                    | 6.  Refine Records                  | 6.  `refine_records()`      |
+|                                                 |                                     |                             |
+| **Refine Records**                              |                                     |                             |
++-------------------------------------------------+-------------------------------------+-----------------------------+
+| **Stage 4:**                                    | 7.  Map Records                     | 7.  `map_records()`         |
+|                                                 |                                     |                             |
+| **Visualization**                               |                                     |                             |
++-------------------------------------------------+-------------------------------------+-----------------------------+
 
 After completing the three core stages (modules 1--6), approximately 25% of the initial occurrence records are typically retained as high-quality, non-redundant data.
 
-## Stage 1: Data Acquisition
+## Stage 1: Data Acquisition and Preparation
 
 This stage ensures data accuracy and consistency through three modules, laying the foundation for subsequent taxonomic and duplicate processing.
 
@@ -57,7 +57,7 @@ The function performs five sequential operations:
 
 1.  **File validation**: Verifies that the input is a valid GBIF zip file
 2.  **Decompression**: Automatically extracts the `occurrence.txt` file
-3.  **Data loading**: Reads occurrence records using `data.table::fread()` with optimized column selection (60 core fields)
+3.  **Data loading**: Reads occurrence records using `data.table::fread()` with optimized column selection (55 core fields)
 4.  **Issue extraction**: Parses the `issue` field to identify all GBIF quality flags
 5.  **Summary compilation**: Generates a frequency table of all detected issues
 
@@ -116,7 +116,7 @@ The output `taxa_checked` is an `UltraGBIF_taxa_checked` object containing:
 -   `summary`: Summary statistics of taxonomic resolution
 -   `runtime`: Execution time
 
-### Module 3: Check Collector Name
+### Module 3: Check Collectors
 
 Simplifies and extracts the primary collector's name from the `recordedBy` field, then builds a standardized collector dictionary. This module reduces inconsistencies that can fragment single collection events and improves the accuracy of subsequent duplicate detection.
 
@@ -216,10 +216,11 @@ The final quality score combines these two dimensions, with the record exhibitin
 
 The `UltraGBIF_duplicates_grouping_status` field indicates the grouping outcome for each record:
 
--   `groupable`: Complete collection key; duplicates identified and grouped
--   `not groupable: no recordedBy and no recordNumber`: Both collector name and collection number are missing
--   `not groupable: no recordNumber`: Collection number is missing
--   `not groupable: no recordedBy`: Collector name is missing
+1.  `groupable`: Complete collection key; duplicates identified and grouped
+2.  `not groupable:`
+    -   `no recordedBy and no recordNumber`: Both collector name and collection number are missing
+    -   `no recordNumber`: Collection number is missing
+    -   `no recordedBy`: Collector name is missing
 
 Records with incomplete keys are treated as singleton events, with metadata completeness and geospatial scores computed identically to ensure consistent quality assessment.
 
@@ -317,31 +318,31 @@ UltraGBIF_summary%>%as.data.frame()%>%t()
 
 The summary statistics provide a quantitative overview of the data reduction throughout the UltraGBIF workflow:
 
-+----------------------------------+--------------------------------------------------------------------+
-| Statistic                        | Description                                                        |
-+==================================+====================================================================+
-| `initial_records`                | Total number of GBIF occurrence records imported initially         |
-+----------------------------------+--------------------------------------------------------------------+
-| `initial_taxa`                   | Number of unique scientific names before taxonomy resolution       |
-+----------------------------------+--------------------------------------------------------------------+
-| `initial_collectors`             | Number of unique collector names before standardization            |
-+----------------------------------+--------------------------------------------------------------------+
-| `checked_collectors`             | Number of unique collector names after standardization             |
-+----------------------------------+--------------------------------------------------------------------+
-| `full_keys`                      | Number of complete collection event keys (groupable)               |
-+----------------------------------+--------------------------------------------------------------------+
-| `incomplete_keys`                | Number of incomplete keys (non-groupable)                          |
-+----------------------------------+--------------------------------------------------------------------+
-| `usable_records_before_refine`   | Number of records classified as usable after voucher selection     |
-+----------------------------------+--------------------------------------------------------------------+
-| `usable_records_after_refine`    | Number of records retained after refinement                        |
-+----------------------------------+--------------------------------------------------------------------+
-| `final_taxa`                     | Number of unique accepted taxon names in the final refined dataset |
-+----------------------------------+--------------------------------------------------------------------+
++--------------------------------+--------------------------------------------------------------------+
+| Statistic                      | Description                                                        |
++================================+====================================================================+
+| `initial_records`              | Total number of GBIF occurrence records imported initially         |
++--------------------------------+--------------------------------------------------------------------+
+| `initial_taxa`                 | Number of unique scientific names before taxonomy resolution       |
++--------------------------------+--------------------------------------------------------------------+
+| `initial_collectors`           | Number of unique collector names before standardization            |
++--------------------------------+--------------------------------------------------------------------+
+| `checked_collectors`           | Number of unique collector names after standardization             |
++--------------------------------+--------------------------------------------------------------------+
+| `full_keys`                    | Number of complete collection event keys (groupable)               |
++--------------------------------+--------------------------------------------------------------------+
+| `incomplete_keys`              | Number of incomplete keys (non-groupable)                          |
++--------------------------------+--------------------------------------------------------------------+
+| `usable_records_before_refine` | Number of records classified as usable after voucher selection     |
++--------------------------------+--------------------------------------------------------------------+
+| `usable_records_after_refine`  | Number of records retained after refinement                        |
++--------------------------------+--------------------------------------------------------------------+
+| `final_taxa`                   | Number of unique accepted taxon names in the final refined dataset |
++--------------------------------+--------------------------------------------------------------------+
 
 The workflow progressively filters the initial dataset through taxonomy resolution, collector name normalization, duplicate grouping, and quality scoring. The transition from `initial_taxa` to `final_taxa` reflects synonym resolution and the removal of unresolvable or invalid names. Similarly, the reduction from `initial_collectors` to `checked_collectors` demonstrates the consolidation of spelling variants and formatting inconsistencies in collector metadata. The ratio of `full_keys` to `incomplete_keys` indicates the proportion of records with sufficient information for reliable duplicate detection. After completing modules 1\~6, the core UltraGBIF workflow is fully executed, yielding a high-quality, non-redundant dataset ready for downstream analysis.
 
-## Stage 4: Visualization and Analysis
+## Stage 4: Visualization
 
 Two optional modules are available for data exploration and visualization after completing the core pipeline.
 
@@ -367,27 +368,6 @@ map_records(
   refined_records = refined_records,
   precision = 2,
   cex = 4
-)
-```
-
-### Module 8: Get and Plot Richness
-
-Generates a species richness map by aggregating native refined records onto a one-degree geographic grid . This module is based on `lets.presab.points` and `plot.PresenceAbsence` from the letsR package [@vilela2015] but fully leverages vectorized `terra` operations to avoid explicit looping when filling large presence-absence matrices, achieving nearly a hundredfold speedup.
-
-The output `richness_data` includes:
-
--   `presence`: A presence table with one row per grid cell and one column per species. The first column gives the raster cell ID (`cell`), followed by the centroid coordinates of each cell (`Longitude`, `Latitude`), and then binary presence values for each species.
-
--   `richness`: A summary table with one row per grid cell, including the raster cell ID (`cell`), the species richness value (`count`; i.e. the number of species recorded in that cell), and the centroid coordinates of the cell (`Longitude`, `Latitude`).
-
--   `occupancy`: A summary table with one row per species, including the species name and the number of grid cells in which that species occurs.
-
--   `ras_richness`: A `SpatRaster` object containing species richness values for each grid cell.
-
-```{r get_richness, eval=FALSE, include=TRUE}
-richness_data <- get_richness(
-  refined_records = refined_records,
-  main = "Saxifraga Richness"
 )
 ```
 
@@ -436,8 +416,7 @@ refined_records <- refine_records(
 
 # Optional: Visualize results
 map_records(refined_records = refined_records, precision = 4, cex = 4)
-richness_data <- get_richness(refined_records = refined_records,
-                          main = "Species Richness")
+
 ```
 
 ## Performance
