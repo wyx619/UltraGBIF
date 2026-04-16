@@ -43,7 +43,7 @@ The UltraGBIF workflow consists of **4 stages** encompassing **7 functional modu
 | **Visualization**                               |                                     |                             |
 +-------------------------------------------------+-------------------------------------+-----------------------------+
 
-After completing the three core stages (modules 1--6), approximately 25% of the initial occurrence records are typically retained as high-quality, non-redundant data.
+After completing the three core stages (modules 1--6), approximately 30% of the initial occurrence records are typically retained as high-quality, non-redundant data.
 
 ## Stage 1: Data Acquisition and Preparation
 

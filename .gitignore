@@ -9,5 +9,5 @@ references.bib
 .Rbuildignore
 .Rproj
 .RData
-/doc/
+
 /Meta/
