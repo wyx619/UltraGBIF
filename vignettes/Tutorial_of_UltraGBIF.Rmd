@@ -2,7 +2,7 @@
 title: "Tutorial of UltraGBIF"
 author:
   - name: anonymous
-    affiliation: anonymous University
+    affiliation: Anonymous University
     email: anonymous@anonymous.com
 date: "`r Sys.Date()`"
 output: 
@@ -14,6 +14,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
 ---
+
+> **[IMPORTANT]**
+>
+> We have updated a more comprehensive tutorial, please visit <https://anonymous.4open.science/w/UltraGBIF-7FD3/>
 
 ## Overview
 
