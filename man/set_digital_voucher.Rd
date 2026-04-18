@@ -46,7 +46,7 @@ or "unusable"
 \description{
 This function identifies and selects the master digital voucher from groups of
 duplicate GBIF records by applying a multi-dimensional quality scoring system. Records possessing
-a "full collection mark" (defined as the combination of standardized \code{Family + RecordBy +
+a "full collection mark" (defined as the combination of cleaned \code{Family + RecordBy +
 RecordNumber/EventDate}) are grouped, and those within each group are scored across multiple
 dimensions. The record exhibiting the highest metadata quality is retained as the digital voucher.
 Conversely, records lacking any component of this definition are treated as unique entities; each

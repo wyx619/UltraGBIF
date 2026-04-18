@@ -30,7 +30,7 @@ This stage ensures data accuracy and consistency through three modules:
 
 This stage improves data reliability by identifying high-quality, non-redundant occurrence records.
 
-4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific date or with a record number). Specifically, the collection event key/mark includes standardized `Family + RecordBy + RecordNumber/EventDate`.
+4.  Generate Unique Collection Mark: This module identifies and consolidates duplicates into unique collection events. A collection event represents a distinct sampling instance (a specific collector at a specific date or with a record number). Specifically, the collection event key/mark includes cleaned `Family + RecordBy + RecordNumber/EventDate`.
 
 5.  Set Digital Voucher: Records possessing a 'full collection mark' (defined as the combination of standardized `Family + RecordBy + RecordNumber/EventDate`) are grouped, and those within each group are scored across multiple dimensions. The record exhibiting the highest metadata quality is retained as the 'digital voucher.' Conversely, records lacking any component of this definition are treated as unique entities; each serves as its own grouping unit and proceeds directly to the multi-dimensional scoring phase without aggregation. This strategy preserves the most geographically informative data while minimizing redundancy, thereby enhancing spatial reliability.
 
@@ -54,6 +54,10 @@ UltraGBIF will be available on CRAN soon. In the meantime you can quickly instal
 options(repos = c(getOption("repos"),"https://anonymous.4open.science/r/Repo-902F"))
 install.packages("UltraGBIF") ## install UltraGBIF in one minute
 ```
+
+## Comprehensive Tutorial
+
+A comprehensive tutorial to guide you from downloading raw data from GBIF to performing downstream analysis with ***letsR*** is available at <https://anonymous.4open.science/w/UltraGBIF-7FD3/>
 
 ## Minimal Complete Workflow
 

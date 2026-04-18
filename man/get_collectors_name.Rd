@@ -12,7 +12,7 @@ get_collectors_name(x = "", min_char = 2)
 \item{min_char}{min characters in name}
 }
 \value{
-Standard name of the main collector
+cleaned name of the main collector
 }
 \description{
 This function simplifies and extracts the name of one collector

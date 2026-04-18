@@ -44,7 +44,7 @@ corrects misspellings, and assigns accepted names to ensure taxonomic consistenc
 
 \item \strong{3. Check Collectors} (\code{\link{check_collectors}}): Simplifies and
 extracts the primary collector's name from the \code{recordedBy} field, then builds
-a standardized collector table This reduces inconsistencies that can fragment
+a cleaned collector table This reduces inconsistencies that can fragment
 single collection events and improves the accuracy of subsequent duplicate detection.
 }
 

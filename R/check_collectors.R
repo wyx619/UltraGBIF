@@ -2,7 +2,7 @@
 #' @name check_collectors
 #'
 #' @description This module simplifies and extracts the name of the primary collector from the `recordedBy` field,
-#' then constructs a standardized collector dictionary to mitigate inconsistencies that may fragment
+#' then constructs a cleaned collector table to mitigate inconsistencies that may fragment
 #' single collection events. By reducing identification errors, this module enhances the accuracy of
 #' subsequent duplication checks.
 #'
@@ -13,7 +13,7 @@
 #'   \item \strong{Primary collector extraction}: Identifies and extracts the most informative token
 #'   (typically the longest word, representing the primary collector's surname) from multi-collector entries
 #'   \item \strong{Dictionary construction}: Compiles a unique mapping between raw `recordedBy` strings
-#'   and their standardized collector names, facilitating consistent representation across the dataset
+#'   and their cleaned collector names, facilitating consistent representation across the dataset
 #' }
 #'
 #' @param occ_import imported GBIF records from \code{\link{import_records}}
@@ -40,14 +40,14 @@
 #'
 #' @return UltraGBIF_collectors_dictionary list with runtime and data.table:
 #'   \itemize{
-#'     \item \code{collectors_dictionary}: A data.table mapping raw `recordedBy` strings to standardized collector names.
+#'     \item \code{collectors_dictionary}: A data.table mapping raw `recordedBy` strings to cleaned collector names.
 #'     \item \code{runtime}: Execution time of the function
 #'   }
 #'
 #'  The \code{collectors_dictionary} contains two columns:
 #'    \itemize{
 #'      \item \code{Ctrl_recordedBy}: Original raw collector strings from GBIF
-#'      \item \code{Ctrl_nameRecordedBy_Standard}: Standardized primary collector names (uppercase, ASCII-only)
+#'      \item \code{Ctrl_nameRecordedBy_Standard}: cleaned primary collector names (uppercase, ASCII-only)
 #'    }
 #'
 #' @importFrom dplyr %>% filter mutate select distinct case_when if_else

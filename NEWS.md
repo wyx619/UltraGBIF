@@ -1,3 +1,9 @@
+# UltraGBIF 3.3.2
+
+## Improvements
+
+-   fix some help documents.
+
 # UltraGBIF 3.3.1
 
 ## Improvements

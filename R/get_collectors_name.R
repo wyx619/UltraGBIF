@@ -7,7 +7,7 @@
 #' @param min_char min characters in name
 #'
 #' @return
-#' Standard name of the main collector
+#' cleaned name of the main collector
 #' @examples
 #' \donttest{
 #' # Normal conditions

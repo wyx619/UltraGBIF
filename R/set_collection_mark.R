@@ -3,20 +3,20 @@
 #' @name set_collection_mark
 #'
 #' @description This function constructs a composite key to identify physical and digital duplicates
-#' originating from the same collection event. By concatenating the taxon family name, the standardized
-#' primary collector surname, and the collection number, it generates a robust identifier that groups
+#' originating from the same collection event. By concatenating the taxon family name, the cleaned
+#' primary collector name, and the collection number/ eventDate, it generates a robust identifier that groups
 #' duplicate records associated with a single gathering event.
 #'
 #' The function performs the following operations:
 #' \itemize{
-#'   \item \strong{Collector name standardization}: Merges occurrence records with the collector
-#'   dictionary from \code{\link{check_collectors}} to assign verified standardized collector names
+#'   \item \strong{Collector name cleaning}: Merges occurrence records with the collector
+#'   table from \code{\link{check_collectors}} to assign cleaned collector names
 #'   \item \strong{Collection number normalization}: Extracts numeric components from the raw
 #'   \code{recordNumber} field, removing non-numeric characters and converting to integer format
 #'   \item \strong{Composite key generation}: Constructs a hierarchical key in the format
 #'   \code{FAMILY_COLLECTORNAME_RECORDNUMBER} to uniquely identify collection events
 #'   \item \strong{Key completeness classification}: Categorizes keys as "full" (complete with
-#'   valid collector and collection number) or "incomplete" (missing critical components)
+#'   all three fields) or "incomplete" (missing any components)
 #' }
 #'
 #' @param occ_import imported GBIF records from \code{\link{import_records}}
@@ -29,8 +29,8 @@
 #' by underscores:
 #' \enumerate{
 #'   \item \strong{Taxon family}: Uppercase botanical family name from the \code{Ctrl_family} field
-#'   \item \strong{Standardized collector name}: Primary collector surname from the collector
-#'   dictionary, or "UNKNOWN" if not identifiable
+#'   \item \strong{cleaned collector name}: Primary collector name from the collector
+#'   table, or "UNKNOWN" if missing
 #'   \item \strong{Standardized collection number}: Numeric-only extraction from \code{Ctrl_recordNumber};
 #'   if absent, falls back to \code{Ctrl_eventDate} when month information is available
 #' }
@@ -39,10 +39,8 @@
 #'
 #' Keys are classified based on the presence and validity of their components:
 #' \itemize{
-#'   \item \strong{Full keys}: Keys that do not end with an underscore and contain a valid collector
-#'   name (i.e., not "UNKNOWN", "CAPTURED", or "ANONYMOUS")
-#'   \item \strong{Incomplete keys}: Keys missing the collection number (ending with "_") or
-#'   containing unidentifiable collector names
+#'   \item \strong{Full keys}: Keys that contains all three fields
+#'   \item \strong{Incomplete keys}: Keys missing any one of the three fiels
 #' }
 #'
 #' \strong{Fallback Strategy:}
